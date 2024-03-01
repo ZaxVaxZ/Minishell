@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:10:59 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/01 15:33:55 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/01 20:56:11 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	size_t	j;
 	size_t	n;
 
-	if (!s)
+	if (!s || !len)
 		return (NULL);
 	n = ft_strlen(s);
-	if (start >= n || len == 0 || s[0] == '\0')
+	if (start >= n || s[0] == '\0')
 		return (ft_strdup(""));
 	if (start + len > n)
 		j = n - start;

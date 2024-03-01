@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:35 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/01 20:51:33 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/01 20:54:08 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,22 +69,22 @@ t_token	token_type(char *s)
 	return (Name);
 }
 
-// int	op_occur(char c, char *s)
-// {
-// 	int	cc;
+int	op_occur(char c, char *s)
+{
+	int	cc;
 
-// 	cc = 0;
-// 	if (!s || !*s)
-// 		return (-1);
-// 	while (*s == c)
-// 	{
-// 		s++;
-// 		cc++;
-// 		if (cc > 2)
-// 			return (-1);
-// 	}
-// 	return (cc);
-// }
+	cc = 0;
+	if (!s || !*s)
+		return (-1);
+	while (*s == c)
+	{
+		s++;
+		cc++;
+		if (cc > 2)
+			return (-1);
+	}
+	return (cc);
+}
 
 // char	*grab_word(char **s, t_bool start_under_score)
 // {

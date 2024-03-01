@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 13:21:55 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/01 20:52:48 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/01 20:57:28 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ t_bool	add_str_to_queue(t_queue **q, char *str)
 {
 	t_queue	*tmp;
 
+	if (!str)
+		return (True);
 	tmp = new_node(str);
 	if (!tmp)
 		free_queue(q);
@@ -69,7 +71,10 @@ t_bool	add_str_to_queue(t_queue **q, char *str)
 
 t_bool	add_to_queue(t_queue **q, char *str)
 {
-	
+	char	*segment;
+
+	if (!add_str_to_queue(q, ft_substr(str, op_occur(INF, str))))
+		return (False);
 }
 
 t_queue	*parse(char *s)
