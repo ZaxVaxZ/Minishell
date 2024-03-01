@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/01 13:36:18 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/01 15:24:05 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@
 # define CYAN_BACKGROUND   "\e[46m"   // Cyan
 # define WHITE_BACKGROUND  "\e[47m"   // White
 # define TEXT_RESET        "\e[0m"    // Text Reset
-
-# include <stdlib.h>
 
 typedef enum e_bool
 {

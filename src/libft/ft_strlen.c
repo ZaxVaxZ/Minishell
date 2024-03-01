@@ -1,34 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.h                                           :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/19 17:43:32 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/01 16:04:13 by ehammoud         ###   ########.fr       */
+/*   Created: 2023/11/02 16:10:20 by ehammoud          #+#    #+#             */
+/*   Updated: 2023/11/19 00:51:40 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER_H
-# define PARSER_H
+#include "libft.h"
 
-# define UNDERSCORE '_'
-# define LOWERCASE "abcdefghijklmnopqrstuvwxyz"
-# define UPPERCASE "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-# define DIGIT "0123456789"
-# define PIPE '|'
-# define DASH '-'
-# define AND '&'
-# define INF '<'
-# define OUF '>'
-# define FP '.'
-# define LP '('
-# define RP ')'
-# define DS '$'
+size_t	ft_strlen(const char *s)
+{
+	size_t	n;
 
-# include "general.h"
-# include "libft.h"
-# include "queues.h"
-
-#endif
+	n = 0;
+	while (s[n] != '\0')
+		n++;
+	return (n);
+}
