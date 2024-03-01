@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:32 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/01 16:04:13 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/01 20:52:00 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,8 @@
 # include "general.h"
 # include "libft.h"
 # include "queues.h"
+
+t_bool	found_in(char c, char *s);
+t_token	token_type(char *s);
 
 #endif

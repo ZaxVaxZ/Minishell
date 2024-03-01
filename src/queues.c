@@ -26,6 +26,7 @@ t_queue	*new_node(char *s)
 		return (NULL);
 	}
 	node->next = NULL;
+	node->type = Word;
 	return (node);
 }
 
