@@ -1,0 +1,2 @@
+command -> <multiple-env-var-assign?> <infile-redir?> <infile?> <command> <arguments> <outfile-redir?> <outfile?> <control-operator>
+returns: exit-status OR 128+signal
