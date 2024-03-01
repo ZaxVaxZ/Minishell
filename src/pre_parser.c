@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:35 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/01 13:36:16 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/01 19:04:06 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	op_occur(char c, char *s)
 	return (cc);
 }
 
+// allow_under_score might be unnecessary? as the parsing is indiscriminate
 t_bool	is_literal(char c, t_bool allow_under_score)
 {
 	int	i;

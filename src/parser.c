@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 13:21:55 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/01 16:47:22 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/01 19:04:27 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,22 @@ void	close_exists(t_queue **q, char c)
 	}
 }
 
-void	add_to_queue(t_queue **q, char *str)
+t_bool	add_str_to_queue(t_queue **q, char *str)
 {
 	t_queue	*tmp;
 
 	tmp = new_node(str);
 	if (!tmp)
-	{
-		free_queue(*q);
-		*q = NULL;
-		free(str);
-		return ;
-	}
-	queue(q, tmp);
+		free_queue(q);
+	else
+		queue(q, tmp);
 	free(str);
+	return (*q != NULL);
+}
+
+t_bool	add_to_queue(t_queue **q, char *str)
+{
+	
 }
 
 t_queue	*parse(char *s)
