@@ -37,7 +37,8 @@ bash.exe"-3.1$ > testing cat < del
 bash.exe"-3.1$ > del < testing > del > testing
 bash.exe"-3.1$ > del < testing > del >        
 bash.exe": syntax error near unexpected token `newline'
-bash.exe"-3.1$ > del < testing > del > testing ls*/
+bash.exe"-3.1$ > del < testing > del > testing ls
+*/
 
 int	add_str_to_queue(t_queue **q, char *str)
 {
