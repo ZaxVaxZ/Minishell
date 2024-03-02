@@ -1,2 +1,3 @@
 command -> <multiple-env-var-assign?> (<infile-redir> <infile>)? <command (not needed if infile)> <arguments?> <outfile-redir?> <outfile?> <control-operator>
 returns: exit-status OR 128+signal
+parse error is exit 258?
