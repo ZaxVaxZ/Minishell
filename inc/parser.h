@@ -18,11 +18,14 @@
 # define UPPERCASE "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 # define DIGIT "0123456789"
 # define EQUAL '='
+# define SPACE ' '
 # define PIPE '|'
 # define DASH '-'
+# define TAB '\t'
 # define AND '&'
 # define INF '<'
 # define OUF '>'
+# define NL '\n'
 # define FP '.'
 # define LP '('
 # define RP ')'
