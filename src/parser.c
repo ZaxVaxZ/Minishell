@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 13:21:55 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/02 15:36:24 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/02 20:12:53 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ t_bool	add_str_to_queue(t_queue **q, char *str)
 	if (!str)
 		return (False);
 	tmp = queue_end(q);
-	illegal = (is_control_operator(str) && str[0] != LP && (tmp->type == Op_logic
+	illegal = (is_control_op(str) && str[0] != LP && (tmp->type == Op_logic
 		|| tmp->type == Op_pipe || tmp->type == Bracket_open || tmp->type == Op_redir)
 		|| (str[0] == INF || str[0] == OUF) && tmp->type == Op_redir);
 	tmp = new_node(str);
@@ -106,8 +106,8 @@ t_bool	parse_command(t_queue **q, char **s)
 			return (False);
 		if (!parse_op(q, s, DS, 1))
 			return (False);
-		while (after_parse_word != *s)
-			parse_word(q, s);
+		if (!parse_word(q, s))
+			return (False);
 	}
 }
 
@@ -143,13 +143,17 @@ t_queue	*parse(char *s)
 	char	*prev_s;
 	t_queue	*q;
 
+	if (!s)
+		return (NULL);
 	q = NULL;
 	prev_s = NULL;
 	while (prev_s != s)
 	{
 		prev_s = s;
-		parse_command(&q, &s);
-		parse_control(&q, &s);
+		if (!parse_command(&q, &s))
+			return (NULL);
+		if (!parse_control(&q, &s))
+			return (NULL);
 	}
 }
 
@@ -161,7 +165,7 @@ t_queue	*parse(char *s)
 // 	if (!str)
 // 		return (0);
 // 	tmp = queue_end(q);
-// 	if (is_control_operator(str) && str[0] != LP && (tmp->type == Op_logic
+// 	if (is_control_op(str) && str[0] != LP && (tmp->type == Op_logic
 // 		|| tmp->type == Op_pipe || tmp->type == Bracket_open || tmp->type == Op_redir))
 // 		return (0);
 // 	if ((str[0] == INF || str[0] == OUF) && tmp->type == Op_redir)

@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:32 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/01 20:54:24 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/02 20:25:57 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # define INF '<'
 # define OUF '>'
 # define NL '\n'
-# define FP '.'
 # define LP '('
 # define RP ')'
 # define SC ';'
@@ -38,10 +37,11 @@
 
 int		op_occur(char c, char *s);
 t_bool	found_in(char c, char *s);
-t_bool	is_control_operator(char *str);
+t_bool	is_control_op(char *str);
 t_token	token_type(char *s);
 t_bool	found_in(char c, char *s);
 int	op_occur(char c, char *s);
-t_bool	is_control_operator(char *str);
+t_bool	is_control_op(char *str);
+t_bool	is_meta_char(char *str);
 
 #endif

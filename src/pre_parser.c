@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pre_parser.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:35 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/02 16:12:47 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/02 20:38:24 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,18 +61,25 @@ t_token	token_type(char *s)
 // If all goes perfectly, add the substr until the whitespace into the queue
 t_bool	grab_assign(t_queue **q, char **s)
 {
-	int	wlen;
-	
+	int		wlen;
+	t_bool	found_eq;
+
 	if (!s || !*s || !**s || found_in(**s, DIGIT))
 		return (True);
+	found_eq = False;
 	wlen = 0;
-	while (*s[wlen] && *s[wlen] != SPACE && *s[wlen] != TAB)
+	while (*s[wlen] && *s[wlen] != SPACE && *s[wlen] != TAB
+		&& !is_meta_char(*s + wlen))
 	{
-		if (!found_in(*s[wlen], UPPERCASE) && !found_in(*s[wlen], LOWERCASE) \
-			&& !found_in(*s[wlen], DIGIT) && *s[wlen] != UNDERSCORE && *s[wlen] != EQUAL)
+		if (!found_eq && !found_in(*s[wlen], UPPERCASE)
+			&& !found_in(*s[wlen], LOWERCASE) 
+			&& !found_in(*s[wlen], DIGIT) && *s[wlen] != UNDERSCORE)
 			return (True);
 		wlen++;
+		found_eq = (*s[wlen] == EQUAL);
 	}
+	if (!found_eq)
+		return (True);
 	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
 		return (False);
 	*s += wlen;
@@ -82,15 +89,11 @@ t_bool	grab_assign(t_queue **q, char **s)
 t_bool	parse_assigns(t_queue **q, char **s)
 {
 	t_queue	*prev_s;
-	int	i;
 
 	if (!s || !*s)
 		return (True);
-	i = 0;
 	while (prev_s != *s)
 	{
-		//while (*s[i] == SPACE || *s[i] == TAB)
-		//	i++;
 		while (*s == SPACE || *s == TAB)
 			*s++;
 		prev_s = *s;
@@ -104,21 +107,20 @@ t_bool	grab_word(t_queue **q, char **s)
 	t_bool	valid_name;
 	
 	wlen = 0;
+	valid_name = True;
 	if (found_in(*s[wlen], DIGIT))
 		valid_name = False;
-	valid_name = True;
-	while (*s[wlen] && *s[wlen] != SPACE && *s[wlen] != TAB && !is_control_operator(*s[wlen]))
+	while (*s[wlen] && *s[wlen] != SPACE && *s[wlen] != TAB
+		&& !is_meta_char(*s[wlen]))
 	{
-		if (!found_in(*s[wlen], UPPERCASE) && !found_in(*s[wlen], LOWERCASE) && *s[wlen] != UNDERSCORE && !found_in(*s[wlen], DIGIT))
-			return (True);
-		if (found_in(*s[wlen], DIGIT))
-			valid_name = True;
+		if (!found_in(*s[wlen], DIGIT) && !found_in(*s[wlen], LOWERCASE)
+			&& *s[wlen] != UNDERSCORE && !found_in(*s[wlen], UPPERCASE)
+			&& valid_name)
+			valid_name = False;
 		wlen++;
 	}
 	if (!add_str_to_queue(q, ft_substr(s, 0, wlen)))
 		return (False);
-	if (valid_name)
-		queue_end(*q)->type = Name;
 	*s += wlen;
 	return (True);
 }
@@ -130,7 +132,7 @@ t_bool	grab_word(t_queue **q, char **s)
 //	char	*word;
 //	t_token	ret;
 
-//	if (!s || !*s || !**s || is_control_operator(**s) || **s == OUF || **s == INF)
+//	if (!s || !*s || !**s || is_control_op(**s) || **s == OUF || **s == INF)
 //		return (Illegal);
 //	ret = Name;
 //	if (!found_in(**s, UPPERCASE) && !found_in(**s, LOWERCASE) && **s != UNDERSCORE)
