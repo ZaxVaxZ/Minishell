@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pre_parser.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:35 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/01 20:54:08 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/02 16:12:47 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ t_token	token_type(char *s)
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] != '_' && !found_in(s[i], DIGIT)
+		if (s[i] != UNDERSCORE && !found_in(s[i], DIGIT)
 			&& !found_in(s[i], LOWERCASE) && !found_in(s[i], UPPERCASE))
 			return (Word);
 		if (s[++i] == '=')
@@ -55,36 +55,104 @@ t_token	token_type(char *s)
 	return (Name);
 }
 
-t_token	grab_word(t_queue **q, char **s)
+// Has to be a combination of: UPPERCASE, LOWERCASE, UNDERSCORE and DIGIT (but no DIGIT in position 0).... until reaching EQUAL... then parse everything till the next SPACE or TAB
+// If the strict rule is broken then just return (True);
+// If EQUAL not found, return (True);
+// If all goes perfectly, add the substr until the whitespace into the queue
+t_bool	grab_assign(t_queue **q, char **s)
 {
-	int		i;
-	int		wlen;
-	char	*word;
-	t_token	ret;
-
-	if (!s || !*s || !**s || is_control_operator(**s) || **s == OUF || **s == INF)
-		return (Illegal);
-	ret = Name;
-	if (!found_in(**s, UPPERCASE) && !found_in(**s, LOWERCASE) && **s != UNDERSCORE)
-		ret = Word;
+	int	wlen;
+	
+	if (!s || !*s || !**s || found_in(**s, DIGIT))
+		return (True);
 	wlen = 0;
-	while (*s[wlen] && *s[wlen] != ' ' && *s[wlen] != '\t')
+	while (*s[wlen] && *s[wlen] != SPACE && *s[wlen] != TAB)
 	{
-		if (*s[wlen] == EQUAL && wlen > 0 && ret != Word)
-			ret = Assign;
-		//Scrutinize Name vs Assign vs Word
+		if (!found_in(*s[wlen], UPPERCASE) && !found_in(*s[wlen], LOWERCASE) \
+			&& !found_in(*s[wlen], DIGIT) && *s[wlen] != UNDERSCORE && *s[wlen] != EQUAL)
+			return (True);
 		wlen++;
 	}
-	word = malloc(sizeof(char) * (wlen + 1));
-	if (!word)
-		return (NULL);
-	i = 0;
-	while (i < wlen)
-	{
-		word[i] = *s[i];
-		i++;
-	}
-	word[i] = '\0';
+	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
+		return (False);
 	*s += wlen;
-	return (word);
+	return (True);
 }
+
+t_bool	parse_assigns(t_queue **q, char **s)
+{
+	t_queue	*prev_s;
+	int	i;
+
+	if (!s || !*s)
+		return (True);
+	i = 0;
+	while (prev_s != *s)
+	{
+		//while (*s[i] == SPACE || *s[i] == TAB)
+		//	i++;
+		while (*s == SPACE || *s == TAB)
+			*s++;
+		prev_s = *s;
+		grab_assign(q, s);
+	}
+}
+
+t_bool	grab_word(t_queue **q, char **s)
+{
+	int		wlen;
+	t_bool	valid_name;
+	
+	wlen = 0;
+	if (found_in(*s[wlen], DIGIT))
+		valid_name = False;
+	valid_name = True;
+	while (*s[wlen] && *s[wlen] != SPACE && *s[wlen] != TAB && !is_control_operator(*s[wlen]))
+	{
+		if (!found_in(*s[wlen], UPPERCASE) && !found_in(*s[wlen], LOWERCASE) && *s[wlen] != UNDERSCORE && !found_in(*s[wlen], DIGIT))
+			return (True);
+		if (found_in(*s[wlen], DIGIT))
+			valid_name = True;
+		wlen++;
+	}
+	if (!add_str_to_queue(q, ft_substr(s, 0, wlen)))
+		return (False);
+	if (valid_name)
+		queue_end(*q)->type = Name;
+	*s += wlen;
+	return (True);
+}
+
+//t_token	grab_word(t_queue **q, char **s)
+//{
+//	int		i;
+//	int		wlen;
+//	char	*word;
+//	t_token	ret;
+
+//	if (!s || !*s || !**s || is_control_operator(**s) || **s == OUF || **s == INF)
+//		return (Illegal);
+//	ret = Name;
+//	if (!found_in(**s, UPPERCASE) && !found_in(**s, LOWERCASE) && **s != UNDERSCORE)
+//		ret = Word;
+//	wlen = 0;
+//	while (*s[wlen] && *s[wlen] != ' ' && *s[wlen] != '\t')
+//	{
+//		if (*s[wlen] == EQUAL && wlen > 0 && ret != Word)
+//			ret = Assign;
+//		//Scrutinize Name vs Assign vs Word
+//		wlen++;
+//	}
+//	//word = malloc(sizeof(char) * (wlen + 1));
+//	//if (!word)
+//	//	return (NULL);
+//	//i = 0;
+//	//while (i < wlen)
+//	//{
+//	//	word[i] = *s[i];
+//	//	i++;
+//	//}
+//	//word[i] = '\0';
+//	//*s += wlen;
+//	//return (word);
+//}

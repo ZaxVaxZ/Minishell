@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 13:21:55 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/01 20:57:28 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/02 15:36:24 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,20 +38,21 @@ bash.exe"-3.1$ > del < testing > del > testing
 bash.exe"-3.1$ > del < testing > del >        
 bash.exe": syntax error near unexpected token `newline'
 bash.exe"-3.1$ > del < testing > del > testing ls
+
+should we handle $$ $* $_ $-?????? go ask an advanced student
 */
 
-int	add_str_to_queue(t_queue **q, char *str)
+t_bool	add_str_to_queue(t_queue **q, char *str)
 {
 	t_bool	illegal;
 	t_queue	*tmp;
 
 	if (!str)
-		return (0);
+		return (False);
 	tmp = queue_end(q);
 	illegal = (is_control_operator(str) && str[0] != LP && (tmp->type == Op_logic
-		|| tmp->type == Op_pipe || tmp->type == Bracket_open || tmp->type == Op_redir));
-	if ((str[0] == INF || str[0] == OUF) && tmp->type == Op_redir)
-		return (0);
+		|| tmp->type == Op_pipe || tmp->type == Bracket_open || tmp->type == Op_redir)
+		|| (str[0] == INF || str[0] == OUF) && tmp->type == Op_redir);
 	tmp = new_node(str);
 	if (!tmp)
 		free_queue(q);
@@ -64,8 +65,8 @@ int	add_str_to_queue(t_queue **q, char *str)
 	}
 	free(str);
 	if (!(*q))
-		return (-1);
-	return (ft_strlen(str));
+		return (False);
+	return (True);
 }
 
 t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
@@ -77,8 +78,7 @@ t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 		occurs = max_occurs;
 	if (occurs == 1 && op == AND)
 		return ;
-	occurs = add_str_to_queue(q, ft_substr(*s, 0, occurs));
-	if (occurs == -1)
+	if (!add_str_to_queue(q, ft_substr(*s, 0, occurs)))
 		return (False);
 	*s += occurs;
 	return (True);
@@ -100,8 +100,12 @@ t_bool	parse_command(t_queue **q, char **s)
 		while (*s == SPACE || *s == TAB)
 			(*s)++;
 		prev_s = *s;
-		parse_op(q, s, INF, 2);
-		parse_op(q, s, OUF, 2);
+		if (!parse_op(q, s, INF, 2))
+			return (False);
+		if (!parse_op(q, s, OUF, 2))
+			return (False);
+		if (!parse_op(q, s, DS, 1))
+			return (False);
 		while (after_parse_word != *s)
 			parse_word(q, s);
 	}
@@ -119,13 +123,18 @@ t_bool	parse_control(t_queue **q, char **s)
 		while (*s == SPACE || *s == TAB)
 			(*s)++;
 		prev_s = *s;
-		parse_op(q, s, DS, 1);
-		parse_op(q, s, LP, 1);
-		parse_op(q, s, AND, 2);
-		parse_op(q, s, PIPE, 2);
-		parse_op(q, s, RP, 1);
-		parse_op(q, s, SC, 1);
-		parse_op(q, s, NL, 1);
+		if (!parse_op(q, s, LP, 1))
+			return (False);
+		if (!parse_op(q, s, AND, 2))
+			return (False);
+		if (!parse_op(q, s, PIPE, 2))
+			return (False);
+		if (!parse_op(q, s, RP, 1))
+			return (False);
+		if (!parse_op(q, s, SC, 1))
+			return (False);
+		if (!parse_op(q, s, NL, 1))
+			return (False);
 	}
 }
 
