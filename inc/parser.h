@@ -17,6 +17,7 @@
 # define LOWERCASE "abcdefghijklmnopqrstuvwxyz"
 # define UPPERCASE "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 # define DIGIT "0123456789"
+# define EQUAL '='
 # define PIPE '|'
 # define DASH '-'
 # define AND '&'
@@ -25,6 +26,7 @@
 # define FP '.'
 # define LP '('
 # define RP ')'
+# define SC ';'
 # define DS '$'
 
 # include "general.h"
@@ -33,6 +35,10 @@
 
 int		op_occur(char c, char *s);
 t_bool	found_in(char c, char *s);
+t_bool	is_control_operator(char *str);
 t_token	token_type(char *s);
+t_bool	found_in(char c, char *s);
+int	op_occur(char c, char *s);
+t_bool	is_control_operator(char *str);
 
 #endif

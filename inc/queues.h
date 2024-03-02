@@ -25,7 +25,8 @@ typedef enum e_token
 	Op_logic,
 	Op_pipe,
 	Bracket_open,
-	Bracket_closed
+	Bracket_closed,
+	Illegal
 }	t_token;
 
 typedef struct s_queue
@@ -38,6 +39,7 @@ typedef struct s_queue
 t_queue	*new_node(char *s);
 void	queue(t_queue **q, t_queue *node);
 char	*dequeue(t_queue **q);
+t_queue	*queue_end(t_queue *q);
 void	free_queue(t_queue **q);
 
 #endif

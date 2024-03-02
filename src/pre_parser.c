@@ -26,20 +26,6 @@ control operator:
 		A token that performs a control function.  It is one of the following symbols:
 		|| & && ; ;; ( ) | <newline>
 */
-t_bool	found_in(char c, char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (c == s[i++])
-			return (True);
-	}
-	return (False);
-}
-
-
 t_token	token_type(char *s)
 {
 	int	i;
@@ -69,44 +55,36 @@ t_token	token_type(char *s)
 	return (Name);
 }
 
-int	op_occur(char c, char *s)
+t_token	grab_word(t_queue **q, char **s)
 {
-	int	cc;
+	int		i;
+	int		wlen;
+	char	*word;
+	t_token	ret;
 
-	cc = 0;
-	if (!s || !*s)
-		return (-1);
-	while (*s == c)
+	if (!s || !*s || !**s || is_control_operator(**s) || **s == OUF || **s == INF)
+		return (Illegal);
+	ret = Name;
+	if (!found_in(**s, UPPERCASE) && !found_in(**s, LOWERCASE) && **s != UNDERSCORE)
+		ret = Word;
+	wlen = 0;
+	while (*s[wlen] && *s[wlen] != ' ' && *s[wlen] != '\t')
 	{
-		s++;
-		cc++;
-		if (cc > 2)
-			return (-1);
+		if (*s[wlen] == EQUAL && wlen > 0 && ret != Word)
+			ret = Assign;
+		//Scrutinize Name vs Assign vs Word
+		wlen++;
 	}
-	return (cc);
+	word = malloc(sizeof(char) * (wlen + 1));
+	if (!word)
+		return (NULL);
+	i = 0;
+	while (i < wlen)
+	{
+		word[i] = *s[i];
+		i++;
+	}
+	word[i] = '\0';
+	*s += wlen;
+	return (word);
 }
-
-// char	*grab_word(char **s, t_bool start_under_score)
-// {
-// 	int		i;
-// 	int		wlen;
-// 	char	*word;
-
-// 	if (!s || !*s || !**s)
-// 		return (NULL);
-// 	wlen = 0;
-// 	while (**s && is_literal(**s, start_under_score || (wlen > 0)))
-// 		wlen++;
-// 	word = malloc(sizeof(char) * (wlen + 1));
-// 	if (!word)
-// 		return (NULL);
-// 	i = 0;
-// 	while (i < wlen)
-// 	{
-// 		word[i] = *s[i];
-// 		i++;
-// 	}
-// 	word[i] = '\0';
-// 	*s += wlen;
-// 	return (word);
-// }
