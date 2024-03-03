@@ -51,9 +51,9 @@ void	print_queue(t_queue *queue)
 		return ;
 	}
 	write(1, "|", 1);
-	prints("String", 10);
+	prints("  String", 10);
 	write(1, "|", 1);
-	prints("Type", 10);
+	prints("   Type", 10);
 	write(1, "|\n", 2);
 	while (queue)
 	{

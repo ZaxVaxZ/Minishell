@@ -47,10 +47,12 @@ t_bool	add_str_to_queue(t_queue **q, char *str)
 	t_bool	illegal;
 	t_queue	*tmp;
 
-	if (!str)
+	if (!q)
 		return (False);
+	if (!str)
+		return (True);
 	tmp = queue_end(*q);
-	illegal = ((is_control_op(str) && str[0] != LP && (tmp->type == Op_logic
+	illegal = *q && ((is_control_op(str) && str[0] != LP && (tmp->type == Op_logic
 		|| tmp->type == Op_pipe || tmp->type == Op_redir || tmp->type == Bracket_open))
 		|| ((str[0] == INF || str[0] == OUF) && tmp->type == Op_redir));
 	tmp = new_node(str);
