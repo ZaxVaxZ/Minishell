@@ -68,15 +68,15 @@ t_bool	grab_assign(t_queue **q, char **s)
 		return (True);
 	found_eq = False;
 	wlen = 0;
-	while (*s[wlen] && *s[wlen] != SPACE && *s[wlen] != TAB
+	while ((*s)[wlen] && (*s)[wlen] != SPACE && (*s)[wlen] != TAB
 		&& !is_meta_char(*s + wlen))
 	{
-		if (!found_eq && !found_in(*s[wlen], UPPERCASE)
-			&& !found_in(*s[wlen], LOWERCASE) 
-			&& !found_in(*s[wlen], DIGIT) && *s[wlen] != UNDERSCORE)
+		if (!found_eq && !found_in((*s)[wlen], UPPERCASE)
+			&& !found_in((*s)[wlen], LOWERCASE) 
+			&& !found_in((*s)[wlen], DIGIT) && (*s)[wlen] != UNDERSCORE)
 			return (True);
 		wlen++;
-		found_eq = (!found_eq && *s[wlen] == EQUAL);
+		found_eq = (!found_eq && (*s)[wlen] == EQUAL);
 	}
 	if (!found_eq)
 		return (True);
@@ -111,13 +111,13 @@ t_bool	grab_word(t_queue **q, char **s)
 	
 	wlen = 0;
 	valid_name = True;
-	if (found_in(*s[wlen], DIGIT))
+	if (found_in((*s)[wlen], DIGIT))
 		valid_name = False;
-	while (*s[wlen] && *s[wlen] != SPACE && *s[wlen] != TAB
+	while ((*s)[wlen] && (*s)[wlen] != SPACE && (*s)[wlen] != TAB
 		&& !is_meta_char(*s + wlen))
 	{
-		if (!found_in(*s[wlen], DIGIT) && !found_in(*s[wlen], LOWERCASE)
-			&& *s[wlen] != UNDERSCORE && !found_in(*s[wlen], UPPERCASE)
+		if (!found_in((*s)[wlen], DIGIT) && !found_in((*s)[wlen], LOWERCASE)
+			&& (*s)[wlen] != UNDERSCORE && !found_in((*s)[wlen], UPPERCASE)
 			&& valid_name)
 			valid_name = False;
 		wlen++;
@@ -141,9 +141,9 @@ t_bool	grab_word(t_queue **q, char **s)
 //	if (!found_in(**s, UPPERCASE) && !found_in(**s, LOWERCASE) && **s != UNDERSCORE)
 //		ret = Word;
 //	wlen = 0;
-//	while (*s[wlen] && *s[wlen] != ' ' && *s[wlen] != '\t')
+//	while ((*s)[wlen] && (*s)[wlen] != ' ' && (*s)[wlen] != '\t')
 //	{
-//		if (*s[wlen] == EQUAL && wlen > 0 && ret != Word)
+//		if ((*s)[wlen] == EQUAL && wlen > 0 && ret != Word)
 //			ret = Assign;
 //		//Scrutinize Name vs Assign vs Word
 //		wlen++;
@@ -154,7 +154,7 @@ t_bool	grab_word(t_queue **q, char **s)
 //	//i = 0;
 //	//while (i < wlen)
 //	//{
-//	//	word[i] = *s[i];
+//	//	word[i] = (*s)[i];
 //	//	i++;
 //	//}
 //	//word[i] = '\0';

@@ -15,6 +15,7 @@
 #include "queues.h"
 #include <signal.h>
 #include <stdio.h>
+#include <unistd.h>
 
 char	*type_to_str(t_token type)
 {
@@ -37,7 +38,10 @@ void	print_queue(t_queue *queue)
 {
 	printf(">> The Queue:\n");
 	if (!queue)
+	{
 		printf("The queue is empty!\n");
+		return ;
+	}
 	printf("|%10.10s|%10.10s|", "String", "Type");
 	while (queue)
 		printf("|%10.10s|%10.10s|\n", queue->s, type_to_str(queue->type));
@@ -56,6 +60,7 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac; (void)av; (void)env;
 	signal(SIGINT, handle);
+	write(1, "C:/User/ehammoud/> ", 19);
 	cmd_line = get_next_line(0);
 	while (cmd_line)
 	{
@@ -63,11 +68,8 @@ int	main(int ac, char **av, char **env)
 		print_queue(q);
 		free_queue(&q);
 		free(cmd_line);
+		write(1, "C:/User/ehammoud/> ", 19);
 		cmd_line = get_next_line(0);
 	}
 	return (0);
 }
-// write(1, "C:/User/ehammoud/> ", 19);
-// char *s = get_next_line(0);
-// printf("%s", s);
-// free(s);
