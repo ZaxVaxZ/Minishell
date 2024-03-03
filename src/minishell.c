@@ -44,10 +44,10 @@ char	*type_to_str(t_token type)
 
 void	print_queue(t_queue *queue)
 {
-	write(1, "\n>> The Queue:\n", 14);
+	write(1, "\n>> The Queue:\n", 15);
 	if (!queue)
 	{
-		write(1, "The queue is empty!\n\n", 20);
+		write(1, "The queue is empty!\n\n", 21);
 		return ;
 	}
 	write(1, "|----------|----------|\n", 24);
@@ -66,7 +66,7 @@ void	print_queue(t_queue *queue)
 		write(1, "|\n", 2);
 		queue = queue->next;
 	}
-	write(1, "|----------|----------|\n\n", 24);
+	write(1, "|----------|----------|\n\n", 25);
 }
 
 void	handle(int sig)
