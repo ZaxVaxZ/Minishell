@@ -1,10 +1,12 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
 INC = ./../inc/
 SFD = ./../src
+LFT = $(SFD)/libft
 GNL = $(SFD)/get_next_line
-SRCS = $(GNL)/get_next_line.c $(GNL)/get_next_line_utils.c
-SRCS += $(SFD)/parser.c $(SFD)/pre_parser.c
+SRCS += $(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c $(LFT)/ft_substr.c $(LFT)/ft_strchr.c $(LFT)/ft_split.c
+SRCS += $(GNL)/get_next_line.c $(GNL)/get_next_line_utils.c
+SRCS += $(SFD)/queues.c $(SFD)/parser.c $(SFD)/pre_parser.c $(SFD)/parser_utils.c
 SRCS += $(SFD)/minishell.c
 OBJS = $(SRCS:.c=.o)
 NAME = minishell
@@ -12,16 +14,16 @@ NAME = minishell
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(OBJS) -o $@
+	@$(CC) $(CFLAGS) $(OBJS) -o $@
 
 %.o: %.c
-	$(CC) -I$(INC) $(CFLAGS) -c $< -o $@
+	@$(CC) -I$(INC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJS)
+	@rm -rf $(OBJS)
 
 fclean: clean
-	rm -rf $(NAME)
+	@rm -rf $(NAME)
 
 re: fclean all
 

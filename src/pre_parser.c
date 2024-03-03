@@ -76,7 +76,7 @@ t_bool	grab_assign(t_queue **q, char **s)
 			&& !found_in(*s[wlen], DIGIT) && *s[wlen] != UNDERSCORE)
 			return (True);
 		wlen++;
-		found_eq = (*s[wlen] == EQUAL);
+		found_eq = (!found_eq && *s[wlen] == EQUAL);
 	}
 	if (!found_eq)
 		return (True);
@@ -88,17 +88,20 @@ t_bool	grab_assign(t_queue **q, char **s)
 
 t_bool	parse_assigns(t_queue **q, char **s)
 {
-	t_queue	*prev_s;
+	char	*prev_s;
 
-	if (!s || !*s)
+	if (!s || !*s || !**s || !q)
 		return (True);
+	prev_s = NULL;
 	while (prev_s != *s)
 	{
-		while (*s == SPACE || *s == TAB)
-			*s++;
+		while (**s == SPACE || **s == TAB)
+			(*s)++;
 		prev_s = *s;
-		grab_assign(q, s);
+		if (!grab_assign(q, s))
+			return (False);
 	}
+	return (True);
 }
 
 t_bool	grab_word(t_queue **q, char **s)
@@ -111,7 +114,7 @@ t_bool	grab_word(t_queue **q, char **s)
 	if (found_in(*s[wlen], DIGIT))
 		valid_name = False;
 	while (*s[wlen] && *s[wlen] != SPACE && *s[wlen] != TAB
-		&& !is_meta_char(*s[wlen]))
+		&& !is_meta_char(*s + wlen))
 	{
 		if (!found_in(*s[wlen], DIGIT) && !found_in(*s[wlen], LOWERCASE)
 			&& *s[wlen] != UNDERSCORE && !found_in(*s[wlen], UPPERCASE)
@@ -119,7 +122,7 @@ t_bool	grab_word(t_queue **q, char **s)
 			valid_name = False;
 		wlen++;
 	}
-	if (!add_str_to_queue(q, ft_substr(s, 0, wlen)))
+	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
 		return (False);
 	*s += wlen;
 	return (True);

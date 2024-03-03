@@ -30,6 +30,7 @@ char	*type_to_str(t_token type)
 		case Bracket_closed: return "Bracket_closed";
 		case Illegal: return "Illegal";
 	}
+	return "Unrecognized";
 }
 
 void	print_queue(t_queue *queue)
@@ -53,6 +54,7 @@ int	main(int ac, char **av, char **env)
 	char	*cmd_line;
 	t_queue	*q;
 
+	(void)ac; (void)av; (void)env;
 	signal(SIGINT, handle);
 	cmd_line = get_next_line(0);
 	while (cmd_line)

@@ -49,10 +49,10 @@ t_bool	add_str_to_queue(t_queue **q, char *str)
 
 	if (!str)
 		return (False);
-	tmp = queue_end(q);
-	illegal = (is_control_op(str) && str[0] != LP && (tmp->type == Op_logic
-		|| tmp->type == Op_pipe || tmp->type == Bracket_open || tmp->type == Op_redir)
-		|| (str[0] == INF || str[0] == OUF) && tmp->type == Op_redir);
+	tmp = queue_end(*q);
+	illegal = ((is_control_op(str) && str[0] != LP && (tmp->type == Op_logic
+		|| tmp->type == Op_pipe || tmp->type == Op_redir || tmp->type == Bracket_open))
+		|| ((str[0] == INF || str[0] == OUF) && tmp->type == Op_redir));
 	tmp = new_node(str);
 	if (!tmp)
 		free_queue(q);
@@ -77,7 +77,7 @@ t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 	if (occurs > max_occurs)
 		occurs = max_occurs;
 	if (occurs == 1 && op == AND)
-		return ;
+		return (True);
 	if (!add_str_to_queue(q, ft_substr(*s, 0, occurs)))
 		return (False);
 	*s += occurs;
@@ -87,17 +87,16 @@ t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 t_bool	parse_command(t_queue **q, char **s)
 {
 	char	*prev_s;
-	char	*after_parse_word;
 
 	if (q && *q && queue_end(*q)->type == Illegal)
 		return (True);
-	while (*s == SPACE || *s == TAB)
+	while (**s == SPACE || **s == TAB)
 			(*s)++;
 	parse_assigns(q, s);
 	prev_s = NULL;
 	while (prev_s != *s)
 	{
-		while (*s == SPACE || *s == TAB)
+		while (**s == SPACE || **s == TAB)
 			(*s)++;
 		prev_s = *s;
 		if (!parse_op(q, s, INF, 2))
@@ -106,9 +105,10 @@ t_bool	parse_command(t_queue **q, char **s)
 			return (False);
 		if (!parse_op(q, s, DS, 1))
 			return (False);
-		if (!parse_word(q, s))
+		if (!grab_word(q, s))
 			return (False);
 	}
+	return (True);
 }
 
 t_bool	parse_control(t_queue **q, char **s)
@@ -120,7 +120,7 @@ t_bool	parse_control(t_queue **q, char **s)
 	prev_s = NULL;
 	while (prev_s != *s)
 	{
-		while (*s == SPACE || *s == TAB)
+		while (**s == SPACE || **s == TAB)
 			(*s)++;
 		prev_s = *s;
 		if (!parse_op(q, s, LP, 1))
@@ -136,6 +136,7 @@ t_bool	parse_control(t_queue **q, char **s)
 		if (!parse_op(q, s, NL, 1))
 			return (False);
 	}
+	return (True);
 }
 
 t_queue	*parse(char *s)
@@ -155,6 +156,7 @@ t_queue	*parse(char *s)
 		if (!parse_control(&q, &s))
 			return (NULL);
 	}
+	return (q);
 }
 
 

@@ -48,6 +48,6 @@ t_bool	is_control_op(char *str)
 
 t_bool	is_meta_char(char *str)
 {
-	return (is_control_op(str[0]) || str[0] == INF || str[0] == OUF
+	return (is_control_op(str) || str[0] == INF || str[0] == OUF
 		|| str[0] == DS);
 }

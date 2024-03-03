@@ -12,16 +12,6 @@
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	n;
-
-	n = 0;
-	while (s[n] != '\0')
-		n++;
-	return (n);
-}
-
 static void	*ft_memmove(void *dst, const void *src, size_t count)
 {
 	size_t			i;
@@ -45,22 +35,6 @@ static void	*ft_memmove(void *dst, const void *src, size_t count)
 		}
 	}
 	return (dst);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i] != '\0')
-	{
-		if (s[i] == (unsigned char)c)
-			return ((char *)s + i);
-		i++;
-	}
-	if (s[i] == (unsigned char)c)
-		return ((char *)s + i);
-	return (NULL);
 }
 
 static void	special_join(char *full, char *s1, char *s2)
