@@ -16,7 +16,7 @@
 #include <signal.h>
 #include <unistd.h>
 
-char	*prints(char *s, int lim)
+void	prints(char *s, int lim)
 {
 	int i=0;
 	while (s[i] && i < lim)
