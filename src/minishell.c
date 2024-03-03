@@ -14,8 +14,16 @@
 #include "parser.h"
 #include "queues.h"
 #include <signal.h>
-#include <stdio.h>
 #include <unistd.h>
+
+char	*prints(char *s, int lim)
+{
+	int i=0;
+	while (s[i] && i < lim)
+		write(1, s + i++, 1);
+	while (i++ < lim)
+		write(1, " ", 1);
+}
 
 char	*type_to_str(t_token type)
 {
@@ -36,15 +44,25 @@ char	*type_to_str(t_token type)
 
 void	print_queue(t_queue *queue)
 {
-	printf(">> The Queue:\n");
+	write(1, ">> The Queue:\n", 14);
 	if (!queue)
 	{
-		printf("The queue is empty!\n");
+		write(1, "The queue is empty!\n", 20);
 		return ;
 	}
-	printf("|%10.10s|%10.10s|", "String", "Type");
+	write(1, "|", 1);
+	prints("String", 10);
+	write(1, "|", 1);
+	prints("Type", 10);
+	write(1, "|\n", 2);
 	while (queue)
-		printf("|%10.10s|%10.10s|\n", queue->s, type_to_str(queue->type));
+	{
+		write(1, "|", 1);
+		prints(queue->s, 10);
+		write(1, "|", 1);
+		prints(type_to_str(queue->type), 10);
+		write(1, "|\n", 2);
+	}
 }
 
 void	handle(int sig)
