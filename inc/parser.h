@@ -40,8 +40,12 @@ t_bool	found_in(char c, char *s);
 t_bool	is_control_op(char *str);
 t_token	token_type(char *s);
 t_bool	found_in(char c, char *s);
-int	op_occur(char c, char *s);
 t_bool	is_control_op(char *str);
 t_bool	is_meta_char(char *str);
+t_bool	add_str_to_queue(t_queue **q, char *str);
+t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs);
+t_bool	parse_command(t_queue **q, char **s);
+t_bool	parse_control(t_queue **q, char **s);
+t_queue	*parse(char *s);
 
 #endif
