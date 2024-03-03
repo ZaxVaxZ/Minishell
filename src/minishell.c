@@ -50,11 +50,13 @@ void	print_queue(t_queue *queue)
 		write(1, "The queue is empty!\n", 20);
 		return ;
 	}
+	write(1, "|----------|----------|\n", 24);
 	write(1, "|", 1);
 	prints("  String", 10);
 	write(1, "|", 1);
 	prints("   Type", 10);
 	write(1, "|\n", 2);
+	write(1, "|----------|----------|\n", 24);
 	while (queue)
 	{
 		write(1, "|", 1);
