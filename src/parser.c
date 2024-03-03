@@ -135,8 +135,6 @@ t_bool	parse_control(t_queue **q, char **s)
 			return (False);
 		if (!parse_op(q, s, SC, 1))
 			return (False);
-		if (!parse_op(q, s, NL, 1))
-			return (False);
 	}
 	return (True);
 }
@@ -150,7 +148,7 @@ t_queue	*parse(char *s)
 		return (NULL);
 	q = NULL;
 	prev_s = NULL;
-	while (prev_s != s)
+	while (prev_s != s && *s != NL)
 	{
 		prev_s = s;
 		if (!parse_command(&q, &s))

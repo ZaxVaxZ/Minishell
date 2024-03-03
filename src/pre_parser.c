@@ -114,7 +114,8 @@ t_bool	grab_word(t_queue **q, char **s)
 	if (found_in((*s)[wlen], DIGIT))
 		valid_name = False;
 	while ((*s)[wlen] && (*s)[wlen] != SPACE && (*s)[wlen] != TAB
-		&& !is_meta_char(*s + wlen))
+		&& (!is_meta_char(*s + wlen)
+		|| ((*s)[wlen] == AND && (*s)[wlen + 1] != AND)))
 	{
 		if (!found_in((*s)[wlen], DIGIT) && !found_in((*s)[wlen], LOWERCASE)
 			&& (*s)[wlen] != UNDERSCORE && !found_in((*s)[wlen], UPPERCASE)
