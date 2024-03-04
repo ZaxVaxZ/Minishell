@@ -75,7 +75,8 @@ t_bool	grab_assign(t_queue **q, char **s)
 			&& !found_in((*s)[wlen], DIGIT) && (*s)[wlen] != UNDERSCORE)
 			break;
 		wlen++;
-		found_eq = (!found_eq && (*s)[wlen] == EQUAL);
+		if (!found_eq && (*s)[wlen] == EQUAL)
+			found_eq = True;
 	}
 	if (!found_eq)
 		return (True);
@@ -105,7 +106,7 @@ t_bool	parse_assigns(t_queue **q, char **s)
 	return (True);
 }
 
-t_bool	grab_word(t_queue **q, char **s)
+t_bool	parse_word(t_queue **q, char **s)
 {
 	int		wlen;
 	t_bool	valid_name;
@@ -134,7 +135,7 @@ t_bool	grab_word(t_queue **q, char **s)
 	return (True);
 }
 
-//t_token	grab_word(t_queue **q, char **s)
+//t_token	parse_word(t_queue **q, char **s)
 //{
 //	int		i;
 //	int		wlen;

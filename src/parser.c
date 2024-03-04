@@ -76,7 +76,7 @@ t_bool	parse_command(t_queue **q, char **s)
 			return (False);
 		if (!parse_op(q, s, DS, 1))
 			return (False);
-		if (!grab_word(q, s))
+		if (!parse_word(q, s))
 			return (False);
 	}
 	return (True);
@@ -203,7 +203,7 @@ t_queue	*parse(char *s)
 // 		prev_s = s;
 // 		parse_metacharacters(&q, &s);
 // 		if (s == prev_s)
-// 			grab_word(&q, &s);
+// 			parse_word(&q, &s);
 // 		// fix here
 // 	}
 // }
