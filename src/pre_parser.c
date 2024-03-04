@@ -26,6 +26,7 @@ control operator:
 		A token that performs a control function.  It is one of the following symbols:
 		|| & && ; ;; ( ) | <newline>
 */
+
 t_token	token_type(char *s)
 {
 	int	i;
@@ -43,6 +44,8 @@ t_token	token_type(char *s)
 		return (Bracket_open);
 	if (!ft_strncmp(s, ")", -1))
 		return (Bracket_closed);
+	if (!ft_strncmp(s, ";", -1))
+		return (Semicolon);
 	i = 0;
 	while (s[i])
 	{
@@ -55,10 +58,6 @@ t_token	token_type(char *s)
 	return (Name);
 }
 
-// Has to be a combination of: UPPERCASE, LOWERCASE, UNDERSCORE and DIGIT (but no DIGIT in position 0).... until reaching EQUAL... then parse everything till the next SPACE or TAB
-// If the strict rule is broken then just return (True);
-// If EQUAL not found, return (True);
-// If all goes perfectly, add the substr until the whitespace into the queue
 t_bool	grab_assign(t_queue **q, char **s)
 {
 	int		wlen;
@@ -74,7 +73,7 @@ t_bool	grab_assign(t_queue **q, char **s)
 		if (!found_eq && !found_in((*s)[wlen], UPPERCASE)
 			&& !found_in((*s)[wlen], LOWERCASE) 
 			&& !found_in((*s)[wlen], DIGIT) && (*s)[wlen] != UNDERSCORE)
-			return (True);
+			break;
 		wlen++;
 		found_eq = (!found_eq && (*s)[wlen] == EQUAL);
 	}
@@ -91,6 +90,8 @@ t_bool	parse_assigns(t_queue **q, char **s)
 	char	*prev_s;
 
 	if (!s || !*s || !**s || !q)
+		return (True);
+	if (*q && queue_end(*q)->type != Assign && !is_control_op(queue_end(*q)->s))
 		return (True);
 	prev_s = NULL;
 	while (prev_s != *s)
@@ -125,6 +126,10 @@ t_bool	grab_word(t_queue **q, char **s)
 	}
 	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
 		return (False);
+	if (wlen && valid_name)
+		queue_end(*q)->type = Name;
+	else if (wlen)
+		queue_end(*q)->type = Word;
 	*s += wlen;
 	return (True);
 }

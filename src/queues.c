@@ -41,7 +41,7 @@ void	queue(t_queue **q, t_queue *node)
 {
 	if (!q || !node)
 		return ;
-	if (!(*q))
+	if (!*q)
 		*q = node;
 	else
 		queue_end(*q)->next = node;

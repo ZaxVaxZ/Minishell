@@ -15,6 +15,9 @@
 #include "queues.h"
 #include <signal.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void	prints(char *s, int lim)
 {
@@ -35,6 +38,7 @@ char	*type_to_str(t_token type)
 		case Op_pipe: return "Op_pipe";
 		case Op_redir: return "Op_redir";
 		case Op_logic: return "Op_logic";
+		case Semicolon: return "Semicolon";
 		case Bracket_open: return "Bracket_open";
 		case Bracket_closed: return "Bracket_closed";
 		case Illegal: return "Illegal";
@@ -71,16 +75,17 @@ void	print_queue(t_queue *queue)
 
 void	handle(int sig)
 {
+	write(1, "\n", 1);
 	if (sig == SIGINT)
 		exit (0);
 }
 
 int	main(int ac, char **av, char **env)
 {
+	(void)ac; (void)av; (void)env;
 	char	*cmd_line;
 	t_queue	*q;
 
-	(void)ac; (void)av; (void)env;
 	signal(SIGINT, handle);
 	write(1, "C:/User/ehammoud/> ", 19);
 	cmd_line = get_next_line(0);

@@ -24,6 +24,7 @@ typedef enum e_token
 	Op_redir,
 	Op_logic,
 	Op_pipe,
+	Semicolon,
 	Bracket_open,
 	Bracket_closed,
 	Illegal

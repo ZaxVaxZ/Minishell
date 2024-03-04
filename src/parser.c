@@ -66,7 +66,7 @@ t_bool	add_str_to_queue(t_queue **q, char *str)
 		queue(q, tmp);
 	}
 	free(str);
-	if (!(*q))
+	if (!*q)
 		return (False);
 	return (True);
 }
@@ -76,10 +76,10 @@ t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 	int	occurs;
 
 	occurs = op_occur(op, *s);
-	if (occurs > max_occurs)
-		occurs = max_occurs;
 	if (occurs == 1 && op == AND)
 		return (True);
+	if (occurs > max_occurs)
+		occurs = max_occurs;
 	if (!add_str_to_queue(q, ft_substr(*s, 0, occurs)))
 		return (False);
 	*s += occurs;
@@ -94,7 +94,8 @@ t_bool	parse_command(t_queue **q, char **s)
 		return (True);
 	while (**s == SPACE || **s == TAB)
 			(*s)++;
-	parse_assigns(q, s);
+	if (!parse_assigns(q, s))
+		return (False);
 	prev_s = NULL;
 	while (prev_s != *s)
 	{
@@ -120,7 +121,7 @@ t_bool	parse_control(t_queue **q, char **s)
 	if (q && *q && queue_end(*q)->type == Illegal)
 		return (True);
 	prev_s = NULL;
-	while (prev_s != *s)
+	while (prev_s != *s && **s != NL)
 	{
 		while (**s == SPACE || **s == TAB)
 			(*s)++;
@@ -148,7 +149,7 @@ t_queue	*parse(char *s)
 		return (NULL);
 	q = NULL;
 	prev_s = NULL;
-	while (prev_s != s && *s != NL)
+	while (prev_s != s)
 	{
 		prev_s = s;
 		if (!parse_command(&q, &s))
