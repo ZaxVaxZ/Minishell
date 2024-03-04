@@ -12,36 +12,6 @@
 
 #include "parser.h"
 
-/*
-blank:  A space or tab.
-word:   A sequence of characters considered as a single unit by the shell.  Also known as a token.
-name:   A word consisting only of alphanumeric characters and underscores, and beginning with an alphabetic character or an underscore.  Also referred to as an identifier.
-metacharacter:
-		A character that, when unquoted, separates words.  One of the following:
-		|  & ; ( ) < > space tab
-control operator:
-		A token that performs a control function.  It is one of the following symbols:
-		|| & && ; ;; ( ) | <newline>
-*/
-
-
-/*
-bash.exe"-3.1$ ls > del testing del testing testing del
-bash.exe"-3.1$ ls > del testing del testing testing del
-bash.exe"-3.1$ echo hi > del testing del testing testing del
-bash.exe"-3.1$ echo hi > del testing del testing testinga adsfasdf del
-bash.exe"-3.1$ echo > del hi this is a test                           
-bash.exe"-3.1$ ls > del -l
-bash.exe"-3.1$ > del ls -l
-bash.exe"-3.1$ > testing cat < del
-bash.exe"-3.1$ > del < testing > del > testing
-bash.exe"-3.1$ > del < testing > del >        
-bash.exe": syntax error near unexpected token `newline'
-bash.exe"-3.1$ > del < testing > del > testing ls
-
-should we handle $$ $* $_ $-?????? go ask an advanced student
-*/
-
 t_bool	add_str_to_queue(t_queue **q, char *str)
 {
 	t_bool	illegal;
