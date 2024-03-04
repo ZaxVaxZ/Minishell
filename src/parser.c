@@ -51,6 +51,10 @@ t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 	if (!add_str_to_queue(q, ft_substr(*s, 0, occurs)))
 		return (False);
 	*s += occurs;
+	if (op == DS && (**s == SPACE || **s == TAB))
+		queue_end(*q)->type = Word;
+	else if(op == DS && !is_control_op(*s))
+		parse_word(q, s, True);
 	return (True);
 }
 
@@ -76,7 +80,7 @@ t_bool	parse_command(t_queue **q, char **s)
 			return (False);
 		if (!parse_op(q, s, DS, 1))
 			return (False);
-		if (!parse_word(q, s))
+		if (!parse_word(q, s, False))
 			return (False);
 	}
 	return (True);
@@ -120,7 +124,15 @@ t_queue	*parse(char *s)
 	while (prev_s != s)
 	{
 		prev_s = s;
+		if (!parse_single_quote(&q, &s))
+			return (NULL);
+		if (!parse_double_quote(&q, &s))
+			return (NULL);
 		if (!parse_command(&q, &s))
+			return (NULL);
+		if (!parse_single_quote(&q, &s))
+			return (NULL);
+		if (!parse_double_quote(&q, &s))
 			return (NULL);
 		if (!parse_control(&q, &s))
 			return (NULL);

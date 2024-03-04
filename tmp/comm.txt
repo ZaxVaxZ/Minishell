@@ -1,3 +1,13 @@
 command -> <multiple-env-var-assign?> (<infile-redir> <infile>)? <command (not needed if infile)> <arguments?> <outfile-redir?> <outfile?> <control-operator>
 returns: exit-status OR 128+signal
 parse error is exit 258?
+
+
+
+
+Fix $ followed by space							#FIXED MF
+Fix $read until an illegal character and stop	#FIXED MOFO
+Add type for Dollar sign						#DONE MY FRIEND LOVELY FRIEND
+
+Handle SQ parse
+Handle DQ parse

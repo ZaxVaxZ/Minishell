@@ -46,6 +46,8 @@ t_token	token_type(char *s)
 		return (Bracket_closed);
 	if (!ft_strncmp(s, ";", -1))
 		return (Semicolon);
+	if (!ft_strncmp(s, "$", -1))
+		return (Variable);
 	i = 0;
 	while (s[i])
 	{
@@ -106,7 +108,7 @@ t_bool	parse_assigns(t_queue **q, char **s)
 	return (True);
 }
 
-t_bool	parse_word(t_queue **q, char **s)
+t_bool	parse_word(t_queue **q, char **s, t_bool legal_name_only)
 {
 	int		wlen;
 	t_bool	valid_name;
@@ -115,16 +117,24 @@ t_bool	parse_word(t_queue **q, char **s)
 	valid_name = True;
 	if (found_in((*s)[wlen], DIGIT))
 		valid_name = False;
-	while ((*s)[wlen] && (*s)[wlen] != SPACE && (*s)[wlen] != TAB
-		&& (!is_meta_char(*s + wlen)
+	while ((!legal_name_only || valid_name) && (*s)[wlen] && (*s)[wlen] != SPACE
+		&& (*s)[wlen] != TAB && (!is_meta_char(*s + wlen)
 		|| ((*s)[wlen] == AND && (*s)[wlen + 1] != AND)))
 	{
 		if (!found_in((*s)[wlen], DIGIT) && !found_in((*s)[wlen], LOWERCASE)
 			&& (*s)[wlen] != UNDERSCORE && !found_in((*s)[wlen], UPPERCASE)
 			&& valid_name)
+		{
 			valid_name = False;
+			if (legal_name_only)
+				break;
+		}
 		wlen++;
 	}
+	if ((*s)[wlen] == DS && ((*s)[wlen + 1] == SPACE || (*s)[wlen + 1] == TAB))
+		wlen++;
+	if (!wlen && legal_name_only)
+		wlen = 1;
 	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
 		return (False);
 	if (wlen && valid_name)

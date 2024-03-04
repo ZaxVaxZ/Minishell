@@ -38,7 +38,12 @@ char	*type_to_str(t_token type)
 		case Op_pipe: return "Op_pipe";
 		case Op_redir: return "Op_redir";
 		case Op_logic: return "Op_logic";
+		case Variable: return "Variable";
 		case Semicolon: return "Semicolon";
+		case Sq_open: return "Sq_open";
+		case Sq_closed: return "Sq_closed";
+		case Dq_open: return "Dq_open";
+		case Dq_closed: return "Dq_closed";
 		case Bracket_open: return "Bracket_open";
 		case Bracket_closed: return "Bracket_closed";
 		case Illegal: return "Illegal";

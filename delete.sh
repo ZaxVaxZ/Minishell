@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-make fclean -C ./bin/
 clear
+make fclean -C ./bin/
 echo "Deletion complete!"
