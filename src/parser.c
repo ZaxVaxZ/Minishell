@@ -22,9 +22,7 @@ t_bool	add_str_to_queue(t_queue **q, char *str)
 	if (!str)
 		return (True);
 	tmp = queue_end(*q);
-	illegal = *q && ((is_control_op(str) && str[0] != LP && (tmp->type == Op_logic
-		|| tmp->type == Op_pipe || tmp->type == Op_redir || tmp->type == Bracket_open))
-		|| ((str[0] == INF || str[0] == OUF) && tmp->type == Op_redir));
+	illegal = !is_legal(str, tmp);
 	tmp = new_node(str);
 	if (!tmp)
 		free_queue(q);

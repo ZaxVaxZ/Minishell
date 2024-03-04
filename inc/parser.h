@@ -38,6 +38,7 @@
 int		op_occur(char c, char *s);
 t_bool	found_in(char c, char *s);
 t_bool	is_control_op(char *str);
+t_bool	is_legal(char *str, t_queue *tmp);
 t_token	token_type(char *s);
 t_bool	found_in(char c, char *s);
 t_bool	is_control_op(char *str);
