@@ -39,8 +39,6 @@ t_bool	parse_single_quote(t_queue **q, char **s)
 	return (True);
 }
 
-
-
 t_bool	parse_double_quote(t_queue **q, char **s)
 {
 	int		wlen;
