@@ -65,7 +65,7 @@ t_bool	parse_double_quote(t_queue **q, char **s)
 		}
 		wlen++;
 	}
-	if (!add_str_to_queue(q, ft_substr(s, 0, wlen)))
+	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
 		return (False);
 	s += wlen;
 	return True;
