@@ -51,9 +51,9 @@ t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 	if (!add_str_to_queue(q, ft_substr(*s, 0, occurs)))
 		return (False);
 	*s += occurs;
-	if (op == DS && (**s == SPACE || **s == TAB))
+	if (op == DS && occurs > 0 && (**s == SPACE || **s == TAB))
 		queue_end(*q)->type = Word;
-	else if(op == DS && !is_control_op(*s))
+	else if(op == DS && occurs > 0 && !is_control_op(*s))
 		parse_word(q, s, True);
 	return (True);
 }
