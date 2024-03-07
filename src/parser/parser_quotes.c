@@ -39,7 +39,7 @@ t_bool	parse_single_quote(t_queue **q, char **s)
 	return (True);
 }
 
-t_bool	parse_inside_dq(t_queue **q, char **s)
+static t_bool	parse_inside_dq(t_queue **q, char **s)
 {
 	int	wlen;
 
