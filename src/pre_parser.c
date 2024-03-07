@@ -10,29 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// We need to handle -- being allowed as a parameter
-// Read up on $-
-// $_ : The underscore variable is set at shell startup and contains the absolute file name of the shell or script being executed as passed in the argument list. Subsequently, it expands to the last argument to the previous command, after expansion.
 #include "parser.h"
 
-/*
-blank:  A space or tab.
-word:   A sequence of characters considered as a single unit by the shell.  Also known as a token.
-name:   A word consisting only of alphanumeric characters and underscores, and beginning with an alphabetic character or an underscore.  Also referred to as an identifier.
-metacharacter:
-		A character that, when unquoted, separates words.  One of the following:
-		|  & ; ( ) < > space tab
-control operator:
-		A token that performs a control function.  It is one of the following symbols:
-		|| & && ; ;; ( ) | <newline>
-*/
-
-t_token	token_type(char *s)
+t_token	metacharacter_type(char *s)
 {
-	int	i;
-
-	if (!s || found_in(s[0], DIGIT))
-		return (Word);
 	if (!ft_strncmp(s, "<", -1) || !ft_strncmp(s, "<<", -1)
 		|| !ft_strncmp(s, ">", -1) ||!ft_strncmp(s, ">>", -1))
 		return (Op_redir);
@@ -48,6 +29,17 @@ t_token	token_type(char *s)
 		return (Semicolon);
 	if (!ft_strncmp(s, "$", -1))
 		return (Variable);
+	return (Illegal);
+}
+
+t_token	token_type(char *s)
+{
+	int	i;
+
+	if (!s || found_in(s[0], DIGIT))
+		return (Word);
+	if (metacharacter_type(s) != Illegal)
+		return (metacharacter_type(s));
 	i = 0;
 	while (s[i])
 	{
@@ -73,9 +65,9 @@ t_bool	grab_assign(t_queue **q, char **s)
 		&& !is_meta_char(*s + wlen))
 	{
 		if (!found_eq && !found_in((*s)[wlen], UPPERCASE)
-			&& !found_in((*s)[wlen], LOWERCASE) 
+			&& !found_in((*s)[wlen], LOWERCASE)
 			&& !found_in((*s)[wlen], DIGIT) && (*s)[wlen] != UNDERSCORE)
-			break;
+			break ;
 		wlen++;
 		if (!found_eq && (*s)[wlen] == EQUAL)
 			found_eq = True;
@@ -112,7 +104,7 @@ t_bool	parse_word(t_queue **q, char **s, t_bool legal_name_only)
 {
 	int		wlen;
 	t_bool	valid_name;
-	
+
 	wlen = 0;
 	valid_name = True;
 	if (found_in((*s)[wlen], DIGIT))
@@ -127,7 +119,7 @@ t_bool	parse_word(t_queue **q, char **s, t_bool legal_name_only)
 		{
 			valid_name = False;
 			if (legal_name_only)
-				break;
+				break ;
 		}
 		wlen++;
 	}
@@ -144,37 +136,3 @@ t_bool	parse_word(t_queue **q, char **s, t_bool legal_name_only)
 	*s += wlen;
 	return (True);
 }
-
-//t_token	parse_word(t_queue **q, char **s)
-//{
-//	int		i;
-//	int		wlen;
-//	char	*word;
-//	t_token	ret;
-
-//	if (!s || !*s || !**s || is_control_op(**s) || **s == OUF || **s == INF)
-//		return (Illegal);
-//	ret = Name;
-//	if (!found_in(**s, UPPERCASE) && !found_in(**s, LOWERCASE) && **s != UNDERSCORE)
-//		ret = Word;
-//	wlen = 0;
-//	while ((*s)[wlen] && (*s)[wlen] != ' ' && (*s)[wlen] != '\t')
-//	{
-//		if ((*s)[wlen] == EQUAL && wlen > 0 && ret != Word)
-//			ret = Assign;
-//		//Scrutinize Name vs Assign vs Word
-//		wlen++;
-//	}
-//	//word = malloc(sizeof(char) * (wlen + 1));
-//	//if (!word)
-//	//	return (NULL);
-//	//i = 0;
-//	//while (i < wlen)
-//	//{
-//	//	word[i] = (*s)[i];
-//	//	i++;
-//	//}
-//	//word[i] = '\0';
-//	//*s += wlen;
-//	//return (word);
-//}

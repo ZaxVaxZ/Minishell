@@ -53,7 +53,7 @@ t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 	*s += occurs;
 	if (op == DS && occurs > 0 && (**s == SPACE || **s == TAB))
 		queue_end(*q)->type = Word;
-	else if(op == DS && occurs > 0 && !is_control_op(*s))
+	else if (op == DS && occurs > 0 && !is_control_op(*s))
 		parse_word(q, s, True);
 	return (True);
 }
@@ -65,7 +65,7 @@ t_bool	parse_command(t_queue **q, char **s)
 	if (q && *q && queue_end(*q)->type == Illegal)
 		return (True);
 	while (**s == SPACE || **s == TAB)
-			(*s)++;
+		(*s)++;
 	if (!parse_assigns(q, s))
 		return (False);
 	prev_s = NULL;
@@ -139,83 +139,3 @@ t_queue	*parse(char *s)
 	}
 	return (q);
 }
-
-
-// int	add_str_to_queue(t_queue **q, char *str)
-// {
-// 	t_queue	*tmp;
-
-// 	if (!str)
-// 		return (0);
-// 	tmp = queue_end(q);
-// 	if (is_control_op(str) && str[0] != LP && (tmp->type == Op_logic
-// 		|| tmp->type == Op_pipe || tmp->type == Bracket_open || tmp->type == Op_redir))
-// 		return (0);
-// 	if ((str[0] == INF || str[0] == OUF) && tmp->type == Op_redir)
-// 		return (0);
-// 	tmp = new_node(str);
-// 	if (!tmp)
-// 		free_queue(q);
-// 	else
-// 	{
-// 		tmp->type = token_type(tmp->s);
-// 		queue(q, tmp);
-// 	}
-// 	free(str);
-// 	if (!(*q))
-// 		return (-1);
-// 	return (ft_strlen(str));
-// }
-
-// t_bool	extract_op(t_queue **q, char **s, char op, int max_occurs)
-// {
-// 	int		occurs;
-
-// 	occurs = op_occur(op, s);
-// 	if (occurs > max_occurs)
-// 		occurs = max_occurs;
-// 	if (occurs == 1 && op == '&')
-// 		return (True);
-// 	occurs = add_str_to_queue(q, ft_substr(*s, 0, occurs));
-// 	if (occurs == -1)
-// 		return (False);
-// 	*s += occurs;
-// 	return (True);
-// }
-
-// t_bool	parse_metacharacters(t_queue **q, char **str)
-// {
-// 	if (!extract_op(q, str, LP, 1))
-// 		return (False);
-// 	if (!extract_op(q, str, RP, 1))
-// 		return (False);
-// 	if (!extract_op(q, str, DS, 1))
-// 		return (False);
-// 	if (!extract_op(q, str, PIPE, 2))
-// 		return (False);
-// 	if (!extract_op(q, str, AND, 2))
-// 		return (False);
-// 	if (!extract_op(q, str, INF, 2))
-// 		return (False);
-// 	if (!extract_op(q, str, OUF, 2))
-// 		return (False);
-// 	return (True);
-// }
-
-// t_queue	*parse(char *s)
-// {
-// 	char	*prev_s;
-// 	t_queue	*q;
-
-// 	q = NULL;
-// 	while (s)
-// 	{
-// 		while (*s == SPACE || *s == TAB)
-// 			s++;
-// 		prev_s = s;
-// 		parse_metacharacters(&q, &s);
-// 		if (s == prev_s)
-// 			parse_word(&q, &s);
-// 		// fix here
-// 	}
-// }

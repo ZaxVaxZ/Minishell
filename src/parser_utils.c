@@ -59,7 +59,8 @@ t_bool	is_legal(char *str, t_queue *tmp)
 	if (!tmp)
 		return (True);
 	if (is_control_op(str) && str[0] != LP && (tmp->type == Op_logic
-		|| tmp->type == Op_pipe || tmp->type == Op_redir || tmp->type == Bracket_open))
+			|| tmp->type == Op_pipe || tmp->type == Op_redir
+			|| tmp->type == Bracket_open))
 		return (False);
 	if ((str[0] == INF || str[0] == OUF) && tmp->type == Op_redir)
 		return (False);
