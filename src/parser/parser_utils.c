@@ -12,6 +12,19 @@
 
 #include "parser.h"
 
+/* -----------------------
+ * Functions in the file:
+ *   found_in()
+ *   op_occur()
+ *   metacharacter_type()
+ *   token_type()
+ *   add_str_to_queue()
+ * -----------------------*/
+
+/// @brief Search for a character in a string
+/// @param c Character to look for
+/// @param s String to search in
+/// @return True if the character is found, False otherwise
 t_bool	found_in(char c, char *s)
 {
 	int	i;
@@ -25,6 +38,10 @@ t_bool	found_in(char c, char *s)
 	return (False);
 }
 
+/// @brief Counts contiguous occurances of a character at the start of string
+/// @param c Character to find at the start of string
+/// @param s String to count occurances in
+/// @return The number of times c appears uninterrupted at the start of s
 int	op_occur(char c, char *s)
 {
 	int	cc;
@@ -40,7 +57,10 @@ int	op_occur(char c, char *s)
 	return (cc);
 }
 
-t_token	metacharacter_type(char *s)
+/// @brief Label a string token as which type of meta-character
+/// @param s The token's string
+/// @return The type of meta-char it is. Illegal if it's not a meta-char
+static t_token	metacharacter_type(char *s)
 {
 	if (!ft_strncmp(s, "<", -1) || !ft_strncmp(s, "<<", -1)
 		|| !ft_strncmp(s, ">", -1) ||!ft_strncmp(s, ">>", -1))
@@ -60,7 +80,10 @@ t_token	metacharacter_type(char *s)
 	return (Illegal);
 }
 
-t_token	token_type(char *s)
+/// @brief Classify the string as what type of token it is
+/// @param s The string to classify
+/// @return The type of token the string represents, most general is Word.
+static t_token	token_type(char *s)
 {
 	int	i;
 
@@ -80,6 +103,10 @@ t_token	token_type(char *s)
 	return (Name);
 }
 
+/// @brief Take a string, label it and add it as a token to queue
+/// @param q The parse queue
+/// @param str The string to add to the queue
+/// @return False if any malloc fails, True otherwise
 t_bool	add_str_to_queue(t_queue **q, char *str)
 {
 	t_bool	illegal;

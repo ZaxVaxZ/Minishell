@@ -124,3 +124,6 @@
 // 	}
 // 	return (q);
 // }
+
+// (*s)[wlen] && (*s)[wlen] != SPACE && (*s)[wlen] != TAB
+// 		&& !is_meta_char(*s + wlen)

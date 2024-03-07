@@ -15,6 +15,7 @@
 
 # include "general.h"
 # include <stdlib.h>
+# include <unistd.h>
 
 char	*ft_strdup(const char *s1);
 char	**ft_split(char *s, char *sep);

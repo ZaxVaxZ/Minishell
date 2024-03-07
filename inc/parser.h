@@ -46,8 +46,8 @@ t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs);
 int		op_occur(char c, char *s);
 t_bool	found_in(char c, char *s);
 t_bool	grab_assign(t_queue **q, char **s);
-t_token	token_type(char *s);
 t_bool	add_str_to_queue(t_queue **q, char *str);
+t_bool	parse_word(t_queue **q, char **s, t_bool var_name);
 
 t_bool	is_control_op(char *str);
 t_bool	is_legal_control_op(char *str, t_queue *tmp);

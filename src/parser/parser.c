@@ -14,12 +14,45 @@
 
 /* -----------------------
  * Functions in the file:
- *   parser()
+ *   parse_word()
+ *   parse_assigns()
  *   parse_command()
  *   parse_control()
- *   parse_assigns()
- *   parse_word()
+ *   parse()
  * -----------------------*/
+
+/// @brief Parse non-meta characters up to a space or tab
+/// @param q The currently built parse queue
+/// @param s What's left unparsed of the string
+/// @param var_name If True, only parse chars legal in var names
+/// @return Returns False if a malloc, True otherwise
+t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
+{
+	int		wlen;
+	t_bool	valid_name;
+
+	wlen = 0;
+	valid_name = !found_in((*s)[0], DIGIT);
+	while (is_allowed_in_word(*s + wlen, valid_name, var_name))
+	{
+		valid_name = is_valid_var_char((*s)[wlen]);
+		if (!valid_name && var_name)
+			break ;
+		wlen++;
+	}
+	if ((*s)[wlen] == DS && ((*s)[wlen + 1] == SPACE || (*s)[wlen + 1] == TAB))
+		wlen++;
+	if (!wlen && var_name)
+		wlen = 1;
+	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
+		return (False);
+	if (wlen && valid_name)
+		queue_end(*q)->type = Name;
+	else if (wlen)
+		queue_end(*q)->type = Word;
+	*s += wlen;
+	return (True);
+}
 
 /// @brief Parse variable assigns until a non-assign
 /// @param q The currently built parse queue
@@ -42,31 +75,6 @@ static t_bool	parse_assigns(t_queue **q, char **s)
 		if (!grab_assign(q, s))
 			return (False);
 	}
-	return (True);
-}
-
-/// @brief Parse non-meta characters up to a space or tab
-/// @param q The currently built parse queue
-/// @param s What's left unparsed of the string
-/// @param var_name If True, only parse chars legal in var names
-/// @return Returns False if a malloc, True otherwise
-static t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
-{
-	int		wlen;
-	t_bool	valid_name;
-
-	wlen = find_word_end(s, &valid_name, var_name);
-	if ((*s)[wlen] == DS && ((*s)[wlen + 1] == SPACE || (*s)[wlen + 1] == TAB))
-		wlen++;
-	if (!wlen && var_name)
-		wlen = 1;
-	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
-		return (False);
-	if (wlen && valid_name)
-		queue_end(*q)->type = Name;
-	else if (wlen)
-		queue_end(*q)->type = Word;
-	*s += wlen;
 	return (True);
 }
 
