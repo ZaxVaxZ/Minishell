@@ -16,7 +16,7 @@ t_bool	parse_single_quote(t_queue **q, char **s)
 {
 	int		wlen;
 
-	if (!q || **s != SQ)
+	if (!q || !s || !*s || **s != SQ)
 		return (True);
 	if (*(*s + 1) == SQ)
 		*s += 2;
@@ -39,11 +39,34 @@ t_bool	parse_single_quote(t_queue **q, char **s)
 	return (True);
 }
 
+t_bool	parse_inside_dq(t_queue **q, char **s)
+{
+	int	wlen;
+
+	wlen = 0;
+	while ((*s)[wlen] && (*s)[wlen] != DQ)
+	{
+		if ((*s)[wlen++] == DS)
+		{
+			if (!add_str_to_queue(q, ft_substr(*s, 0, wlen - 1)))
+				return (False);
+			*s += wlen - 1;
+			if (!parse_op(q, s, DS, 1))
+				return (False);
+			if (!parse_word(q, s, True))
+				return (False);
+			wlen = 0;
+		}
+	}
+	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
+		return (False);
+	*s += wlen;
+	return (True);
+}
+
 t_bool	parse_double_quote(t_queue **q, char **s)
 {
-	int		wlen;
-
-	if (!q || **s != DQ)
+	if (!q || !s || !*s || **s != DQ)
 		return (True);
 	if (*(*s + 1) == DQ)
 		*s += 2;
@@ -52,30 +75,10 @@ t_bool	parse_double_quote(t_queue **q, char **s)
 	if (!parse_op(q, s, DQ, 1))
 		return (False);
 	queue_end(*q)->type = Dq_open;
-	wlen = 0;
-	while ((*s)[wlen] && (*s)[wlen] != DQ)// parse every letter before the second double quote
-	{
-		if ((*s)[wlen] == DS)	// if the current character is dollar sign, parse it as a variable
-		{
-			if (!parse_op(q, s, DS, 1))	// parse the dollar sign operator; this will also skip the dollar sign
-				return (False);
-			if (!parse_word(q, s, 1))	// parse the word which is a potential variable name
-				return (False);
-			wlen = 0;
-		}
-		wlen++;
-	}
-	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
+	if (!parse_inside_dq(q, s))
 		return (False);
-	s += wlen;
-	return True;
-	//if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
-	//	return (False);
-	//queue_end(*q)->type = Word;
-	//*s += wlen;
-	//if (!parse_op(q, s, SQ, 1))
-	//	return (False);
-	//queue_end(*q)->type = Sq_closed;
-	//*s += 1;
-	//return (True);
+	if (!parse_op(q, s, DQ, 1))
+		return (False);
+	queue_end(*q)->type = Dq_closed;
+	return (True);
 }
