@@ -1,5 +1,5 @@
 ### []+--------={ Commands and Flags }=--------+[] ###
-CC		=	gcc
+CC		=	cc
 CFLAGS	=	-Wall -Wextra -Werror #-fsanitize=address -g3
 
 ### []+--------={ Directories }=--------+[] ###
