@@ -89,9 +89,10 @@ t_bool	parse_double_quote(t_queue **q, char **s)
 	if (!q || !s || !*s || **s != DQ)
 		return (True);
 	if (*(*s + 1) == DQ)
+	{
 		*s += 2;
-	if (*(*s + 1) == DQ)
 		return (True);
+	}
 	if (!parse_op(q, s, DQ, 1))
 		return (False);
 	queue_end(*q)->type = Dq_open;
@@ -114,9 +115,10 @@ t_bool	parse_single_quote(t_queue **q, char **s)
 	if (!q || !s || !*s || **s != SQ)
 		return (True);
 	if (*(*s + 1) == SQ)
+	{
 		*s += 2;
-	if (*(*s + 1) == SQ)
 		return (True);
+	}
 	if (!parse_op(q, s, SQ, 1))
 		return (False);
 	queue_end(*q)->type = Sq_open;
