@@ -8,7 +8,7 @@ SFD		=	./../src
 UTL		=	$(SFD)/utils
 LFT		=	$(UTL)/libft
 GNL		=	$(UTL)/get_next_line
-BIF		=	$(SFD)/builtins
+BIF		=	$(SFD)/built-ins
 PRS		=	$(SFD)/parser
 
 ### []+--------={ Source Files }=--------+[] ###
