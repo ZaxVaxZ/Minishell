@@ -12,24 +12,11 @@
 
 #include "libft.h"
 
-void	echo(char *str, t_bool n)
+t_bool	echo(char *str, t_bool n)
 {
-	int	stat;
-
-	stat = 0;
-	if (n)
-	{
-		stat = write(1, str, ft_strlen(str));
-		if (!stat)
-			exit(0);
-		exit(1);
-	}
-	else
-	{
-		stat = write(1, str, ft_strlen(str));
-		stat += write(1, "\n", 1);
-		if (!stat)
-			exit(stat);
-		exit(1);
-	}
+	if (write(1, str, ft_strlen(str)) == -1)
+		return (False);
+	if (n && write(1, "\n", 1) == -1)
+		return (False);
+	return (True);
 }

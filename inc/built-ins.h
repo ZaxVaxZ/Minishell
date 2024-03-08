@@ -10,9 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILTINS_H
-# define BUILTINS_H
+#ifndef BUILT-INS_H
+# define BUILT-INS_H
 
 # include <unistd.h>
+# include "general.h"
+
+t_bool	echo(char *str, t_bool n);
 
 #endif
