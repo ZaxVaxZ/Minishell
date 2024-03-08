@@ -102,6 +102,8 @@ t_bool	parse_double_quote(t_queue **q, char **s)
 	if (!parse_op(q, s, DQ, 1))
 		return (False);
 	queue_end(*q)->type = Dq_closed;
+	if (!parse_op(q, s, SPACE, 1))
+		return (False);
 	return (True);
 }
 
@@ -133,6 +135,8 @@ t_bool	parse_single_quote(t_queue **q, char **s)
 	if (!parse_op(q, s, SQ, 1))
 		return (False);
 	queue_end(*q)->type = Sq_closed;
+	if (!parse_op(q, s, SPACE, 1))
+		return (False);
 	return (True);
 }
 
@@ -147,6 +151,8 @@ t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 	int	occurs;
 
 	occurs = op_occur(op, *s);
+	if (!occurs && op == SPACE)
+		occurs = op_occur(TAB, *s);
 	if (occurs == 1 && op == AND)
 		return (True);
 	if (occurs > max_occurs)

@@ -1,21 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins.h                                         :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 13:07:12 by pipolint          #+#    #+#             */
-/*   Updated: 2024/03/02 13:07:32 by pipolint         ###   ########.fr       */
+/*   Created: 2023/11/02 16:10:20 by ehammoud          #+#    #+#             */
+/*   Updated: 2023/11/19 00:51:40 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILT-INS_H
-# define BUILT-INS_H
+#include "libft.h"
 
-# include <unistd.h>
-# include "general.h"
+size_t	ft_strlen(const char *s)
+{
+	size_t	n;
 
-t_bool	echo(char *str, t_bool n);
-
-#endif
+	n = 0;
+	while (s[n] != '\0')
+		n++;
+	return (n);
+}
