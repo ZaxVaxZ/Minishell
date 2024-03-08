@@ -76,6 +76,7 @@ static t_bool	parse_inside_dq(t_queue **q, char **s)
 	}
 	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
 		return (False);
+	queue_end(*q)->type = Word;
 	*s += wlen;
 	return (True);
 }
@@ -132,7 +133,6 @@ t_bool	parse_single_quote(t_queue **q, char **s)
 	if (!parse_op(q, s, SQ, 1))
 		return (False);
 	queue_end(*q)->type = Sq_closed;
-	*s += 1;
 	return (True);
 }
 

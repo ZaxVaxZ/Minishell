@@ -75,7 +75,7 @@ t_bool	is_allowed_in_word(char *s, t_bool valid_name, t_bool var_name)
 /// @return True if it's valid syntax for the control op, False otherwise
 t_bool	is_legal_control_op(char *str, t_queue *q_end)
 {
-	if (!q_end && is_control_op(str))
+	if (!q_end && is_control_op(str) && str[0] != LP)
 		return (False);
 	if (!q_end)
 		return (True);
