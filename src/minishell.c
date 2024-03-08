@@ -46,6 +46,7 @@ char	*type_to_str(t_token type)
 		case Dq_closed: return "Dq_closed";
 		case Bracket_open: return "Bracket_open";
 		case Bracket_closed: return "Bracket_closed";
+		case Whitespace: return "Whitespace";
 		case Illegal: return "Illegal";
 	}
 	return "Unrecognized";

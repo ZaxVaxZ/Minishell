@@ -77,6 +77,8 @@ static t_token	metacharacter_type(char *s)
 		return (Semicolon);
 	if (!ft_strncmp(s, "$", -1))
 		return (Variable);
+	if (!ft_strncmp(s, " ", -1) || !ft_strncmp(s, "\t", -1))
+		return (Whitespace);
 	return (Illegal);
 }
 

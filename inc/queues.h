@@ -32,6 +32,7 @@ typedef enum e_token
 	Dq_closed,
 	Bracket_open,
 	Bracket_closed,
+	Whitespace,
 	Illegal
 }	t_token;
 

@@ -69,8 +69,8 @@ static t_bool	parse_assigns(t_queue **q, char **s)
 	prev_s = NULL;
 	while (prev_s != *s)
 	{
-		while (**s == SPACE || **s == TAB)
-			(*s)++;
+		// while (**s == SPACE || **s == TAB)
+		// 	(*s)++;
 		prev_s = *s;
 		if (!grab_assign(q, s))
 			return (False);
@@ -88,15 +88,15 @@ static t_bool	parse_command(t_queue **q, char **s)
 
 	if (q && *q && queue_end(*q)->type == Illegal)
 		return (True);
-	while (**s == SPACE || **s == TAB)
-		(*s)++;
+	// while (**s == SPACE || **s == TAB)
+	// 	(*s)++;
 	if (!parse_assigns(q, s))
 		return (False);
 	prev_s = NULL;
 	while (prev_s != *s)
 	{
-		while (**s == SPACE || **s == TAB)
-			(*s)++;
+		// while (**s == SPACE || **s == TAB)
+		// 	(*s)++;
 		prev_s = *s;
 		if (!parse_op(q, s, INF, 2))
 			return (False);
@@ -154,16 +154,16 @@ t_queue	*parse(char *s)
 	prev_s = NULL;
 	while (prev_s != s)
 	{
+		if (q && queue_end(q)->type != Whitespace)
+			parse_op(&q, &s, SPACE, 1);
+		while (*s == SPACE || *s == TAB)
+			s++;
 		prev_s = s;
 		if (!parse_single_quote(&q, &s))
 			return (NULL);
 		if (!parse_double_quote(&q, &s))
 			return (NULL);
 		if (!parse_command(&q, &s))
-			return (NULL);
-		if (!parse_single_quote(&q, &s))
-			return (NULL);
-		if (!parse_double_quote(&q, &s))
 			return (NULL);
 		if (!parse_control(&q, &s))
 			return (NULL);

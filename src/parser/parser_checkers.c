@@ -81,7 +81,7 @@ t_bool	is_legal_control_op(char *str, t_queue *q_end)
 		return (True);
 	if (is_control_op(str) && str[0] != LP && (q_end->type == Op_logic
 			|| q_end->type == Op_pipe || q_end->type == Op_redir
-			|| q_end->type == Bracket_open))
+			|| q_end->type == Bracket_open || q_end->type == Semicolon))
 		return (False);
 	if ((str[0] == INF || str[0] == OUF) && q_end->type == Op_redir)
 		return (False);
