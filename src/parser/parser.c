@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 13:21:55 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/02 20:12:53 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/11 21:36:24 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static t_bool	parse_assigns(t_queue **q, char **s)
 
 	if (!s || !*s || !**s || !q)
 		return (True);
-	if (*q && queue_end(*q)->type != Assign && !is_control_op(queue_end(*q)->s))
+	if (!assign_before(*q))
 		return (True);
 	prev_s = NULL;
 	while (prev_s != *s)
@@ -123,8 +123,8 @@ static t_bool	parse_control(t_queue **q, char **s)
 	prev_s = NULL;
 	while (prev_s != *s && **s != NL)
 	{
-		while (**s == SPACE || **s == TAB)
-			(*s)++;
+		//while (**s == SPACE || **s == TAB)
+		//	(*s)++;
 		prev_s = *s;
 		if (!parse_op(q, s, LP, 1))
 			return (False);

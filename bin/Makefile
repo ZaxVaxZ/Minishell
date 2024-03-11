@@ -18,7 +18,7 @@ SRCS	+=	$(GNL)/get_next_line.c $(GNL)/get_next_line_utils.c
 SRCS	+=	$(BIF)/echo.c
 SRCS	+=	$(UTL)/queues.c
 SRCS	+=	$(PRS)/parser.c $(PRS)/parser_utils.c $(PRS)/parser_extras.c \
-			$(PRS)/parser_checkers.c
+			$(PRS)/parser_checkers.c $(PRS)/parser_utils2.c
 SRCS	+=	$(SFD)/minishell.c
 
 ### []+--------={ Object files and Program name }=--------+[] ###

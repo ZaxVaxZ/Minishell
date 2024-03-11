@@ -42,6 +42,7 @@ t_queue	*parse(char *s);
 t_bool	parse_double_quote(t_queue **q, char **s);
 t_bool	parse_single_quote(t_queue **q, char **s);
 t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs);
+t_bool	assign_before(t_queue *q);
 
 int		op_occur(char c, char *s);
 t_bool	found_in(char c, char *s);

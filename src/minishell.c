@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/01 13:36:15 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/11 20:04:52 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,16 @@ void	prints(char *s, int lim)
 {
 	int i=0;
 	while (s[i] && i < lim)
-		write(1, s + i++, 1);
+	{
+		if (i == lim - 1 && (*s == ' ' || *s == '\t' || *s == '\n'))
+			write(1, "\\", 1 + (0 * i++));
+		else if (*s == '\t')
+			write(1, "\\t", 2 + (0 * (i+++--lim)));
+		else if (*s == '\n')
+			write(1, "\\n", 2 + (0 * (i+++--lim)));
+		else
+			write(1, s + i++, 1);
+	}
 	while (i++ < lim)
 		write(1, " ", 1);
 }

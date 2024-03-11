@@ -44,9 +44,9 @@ typedef struct s_queue
 }	t_queue;
 
 t_queue	*new_node(char *s);
-void	queue(t_queue **q, t_queue *node);
 char	*dequeue(t_queue **q);
 t_queue	*queue_end(t_queue *q);
 void	free_queue(t_queue **q);
+void	queue(t_queue **q, t_queue *node);
 
 #endif
