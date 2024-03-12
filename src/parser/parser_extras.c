@@ -39,8 +39,6 @@ static t_bool	parse_inside_dq(t_queue **q, char **s)
 			*s += wlen - 1;
 			if (!parse_op(q, s, DS, 1))
 				return (False);
-			//if (!parse_word(q, s, True))
-			//	return (False);
 			wlen = 0;
 		}
 	}
@@ -135,6 +133,8 @@ t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 {
 	int	occurs;
 
+	if (q && *q && queue_end(*q)->type == Illegal)
+		return (True);
 	occurs = op_occur(op, *s);
 	if (!occurs && op == SPACE)
 		occurs = op_occur(TAB, *s);

@@ -15,7 +15,7 @@
 /* -----------------------
  * Functions in the file:
  *   parse_word()
- *   parse_assigns()
+ *   parse_assign()
  *   parse_command()
  *   parse_control()
  *   parse()
@@ -54,27 +54,36 @@ t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
 	return (True);
 }
 
-/// @brief Parse variable assigns until a non-assign
+/// @brief Parse a variable assign
 /// @param q The currently built parse queue
 /// @param s What's left unparsed of the string
 /// @return Returns False if a malloc, True otherwise
-static t_bool	parse_assigns(t_queue **q, char **s)
+static t_bool	parse_assign(t_queue **q, char **s)
 {
-	char	*prev_s;
+	int		wlen;
+	t_queue	*tmp;
+	t_bool	assign_b4;
 
-	if (!s || !*s || !**s || !q)
-		return (True);
-	if (!assign_before(*q))
-		return (True);
-	prev_s = NULL;
-	while (prev_s != *s)
+	tmp = *q;
+	assign_b4 = (!tmp || tmp->type == Assign);
+	while (tmp)
 	{
-		// while (**s == SPACE || **s == TAB)
-		// 	(*s)++;
-		prev_s = *s;
-		if (!grab_assign(q, s))
-			return (False);
+		if (tmp->type == Assign || is_control_op(tmp->s))
+			assign_b4 = True;
+		if (tmp->type == Whitespace && tmp->next && tmp->next->type != Assign)
+			assign_b4 = False;
+		tmp = tmp->next;
 	}
+	if (!s || !*s || !**s || found_in(**s, DIGIT) || !assign_b4)
+		return (True);
+	wlen = 0;
+	while (is_valid_var_char((*s)[wlen]))
+		wlen++;
+	if ((*s)[wlen++] != EQUAL)
+		return (True);
+	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
+		return (False);
+	*s += wlen;
 	return (True);
 }
 
@@ -88,15 +97,11 @@ static t_bool	parse_command(t_queue **q, char **s)
 
 	if (q && *q && queue_end(*q)->type == Illegal)
 		return (True);
-	// while (**s == SPACE || **s == TAB)
-	// 	(*s)++;
-	if (!parse_assigns(q, s))
+	if (!parse_assign(q, s))
 		return (False);
 	prev_s = NULL;
 	while (prev_s != *s)
 	{
-		// while (**s == SPACE || **s == TAB)
-		// 	(*s)++;
 		prev_s = *s;
 		if (!parse_op(q, s, INF, 2))
 			return (False);
@@ -123,8 +128,6 @@ static t_bool	parse_control(t_queue **q, char **s)
 	prev_s = NULL;
 	while (prev_s != *s && **s != NL)
 	{
-		//while (**s == SPACE || **s == TAB)
-		//	(*s)++;
 		prev_s = *s;
 		if (!parse_op(q, s, LP, 1))
 			return (False);
