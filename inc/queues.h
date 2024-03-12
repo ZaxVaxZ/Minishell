@@ -39,6 +39,7 @@ typedef enum e_token
 typedef struct s_queue
 {
 	char			*s;
+	int				opened;
 	t_token			type;
 	struct s_queue	*next;
 }	t_queue;

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:35 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/11 21:31:47 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/12 17:04:13 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ t_bool	parse_double_quote(t_queue **q, char **s)
 	if (!parse_op(q, s, DQ, 1))
 		return (False);
 	queue_end(*q)->type = Dq_open;
+	queue_end(*q)->opened = 1;
 	if (!parse_inside_dq(q, s))
 		return (False);
 	if (!parse_op(q, s, DQ, 1))
@@ -72,6 +73,7 @@ t_bool	parse_double_quote(t_queue **q, char **s)
 	if (ft_strncmp(queue_end(*q)->s, "\"", -1))
 		return (True);
 	queue_end(*q)->type = Dq_closed;
+	queue_end(*q)->opened = 0;
 	if (!parse_op(q, s, SPACE, 1))
 		return (False);
 	return (True);
@@ -132,7 +134,7 @@ t_bool	parse_single_quote(t_queue **q, char **s)
 t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 {
 	int	occurs;
-
+	
 	if (q && *q && queue_end(*q)->type == Illegal)
 		return (True);
 	occurs = op_occur(op, *s);
@@ -149,6 +151,8 @@ t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 		queue_end(*q)->type = Word;
 	else if (op == DS && occurs > 0 && (**s == SQ))
 		parse_single_quote(q, s);
+	else if (op == DS && occurs > 0 && (**s == DQ) && (*q)->opened)
+		return (True);
 	else if (op == DS && occurs > 0 && (**s == DQ))
 		parse_double_quote(q, s);
 	else if (op == DS && occurs > 0 && !is_control_op(*s))
