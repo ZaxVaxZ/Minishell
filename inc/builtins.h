@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <dirent.h>
+# include <sys/wait.h>
 # include "general.h"
 # include "libft.h"
 # include "parser.h"
@@ -32,6 +33,5 @@ typedef struct	s_builtins
 t_bool	echo(char *str, t_bool n);
 void	cd(t_builtins *b, char *dir);
 void	exiting(int code);
-void	working_dir(t_builtins *b);
 
 #endif
