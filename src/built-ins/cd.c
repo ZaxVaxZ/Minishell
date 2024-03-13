@@ -1,22 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 13:06:04 by pipolint          #+#    #+#             */
-/*   Updated: 2024/03/13 12:43:09 by pipolint         ###   ########.fr       */
+/*   Created: 2024/03/02 13:31:22 by pipolint          #+#    #+#             */
+/*   Updated: 2024/03/13 15:28:46 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../inc/builtins.h"
 
-t_bool	echo(char *str, t_bool n)
+void	cd(t_builtins *b, char *dir)
 {
-	if (write(1, str, ft_strlen(str)) == -1)
-		return (False);
-	if (n && write(1, "\n", 1) == -1)
-		return (False);
-	return (True);
+	b->old_pwd = b->pwd;
+	//b->pwd = getenv("PWD");
+	if (chdir(dir) == -1)
+		perror(NULL);
+	printf("Old PWD: %s\n", b->old_pwd);
+	printf("Current PWD: %s\n", b->pwd);
 }

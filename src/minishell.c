@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/11 20:04:52 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/13 18:50:16 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,8 @@ int	main(int ac, char **av, char **env)
 	t_queue	*q;
 
 	signal(SIGINT, handle);
-	write(1, "C:/User/ehammoud/> ", 19);
+	write(1, getenv("PWD"), ft_strlen(getenv("PWD")));
+	write(1, ">", 1);
 	cmd_line = get_next_line(0);
 	while (cmd_line)
 	{
@@ -110,7 +111,8 @@ int	main(int ac, char **av, char **env)
 		print_queue(q);
 		free_queue(&q);
 		free(cmd_line);
-		write(1, "C:/User/ehammoud/> ", 19);
+		write(1, getenv("PWD"), ft_strlen(getenv("PWD")));
+		write(1, ">", 1);
 		cmd_line = get_next_line(0);
 	}
 	return (0);
