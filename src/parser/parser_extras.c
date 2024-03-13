@@ -147,9 +147,9 @@ t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
 		wlen++;
 	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
 		return (False);
-	if (var_name)
+	if (var_name && wlen)
 		queue_end(*q)->type = Name;
-	else
+	else if (wlen)
 		queue_end(*q)->type = Word;
 	*s += wlen;
 	return (True);

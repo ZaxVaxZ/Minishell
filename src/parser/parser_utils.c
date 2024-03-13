@@ -102,7 +102,7 @@ t_bool	add_str_to_queue(t_queue **q, char *str)
 	if (!str)
 		return (True);
 	tmp = queue_end(*q);
-	illegal = !is_legal_control_op(str, tmp);
+	illegal = !is_legal_control_op(str, *q);
 	tmp = new_node(str);
 	if (!tmp)
 		free_queue(q);

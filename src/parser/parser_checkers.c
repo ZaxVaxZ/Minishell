@@ -71,14 +71,27 @@ t_bool	is_allowed_in_word(char *s, t_bool valid_name, t_bool var_name)
 
 /// @brief Helps with catching illegal parsing with misplaced control ops
 /// @param str The remaining unparsed string
-/// @param q_end The last node in the queue. NULL if the queue is empty
+/// @param q The parse queue
 /// @return True if it's valid syntax for the control op, False otherwise
-t_bool	is_legal_control_op(char *str, t_queue *q_end)
+t_bool	is_legal_control_op(char *str, t_queue *q)
 {
+	int		opened;
+	t_queue	*q_end;
+
+	q_end = queue_end(q);
+	opened = 0;
+	while (q)
+	{
+		opened += (q->type == Bracket_open);
+		opened -= (q->type == Bracket_closed);
+		q = q->next;
+	}
 	if (!q_end && is_control_op(str) && str[0] != LP)
 		return (False);
 	if (!q_end)
 		return (True);
+	if (str[0] == RP && !opened)
+		return (False);
 	if (is_control_op(str) && str[0] != LP && (q_end->type == Op_logic
 			|| q_end->type == Op_pipe || q_end->type == Op_redir
 			|| q_end->type == Bracket_open || q_end->type == Semicolon))

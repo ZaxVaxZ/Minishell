@@ -48,7 +48,7 @@ t_bool	add_str_to_queue(t_queue **q, char *str);
 t_bool	parse_word(t_queue **q, char **s, t_bool var_name);
 
 t_bool	is_control_op(char *str);
-t_bool	is_legal_control_op(char *str, t_queue *tmp);
+t_bool	is_legal_control_op(char *str, t_queue *q);
 t_bool	is_meta_char(char *str);
 t_bool	is_valid_var_char(char c);
 t_bool	is_allowed_in_word(char *s, t_bool valid_name, t_bool var_name);
