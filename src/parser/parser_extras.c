@@ -140,7 +140,7 @@ t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
 	valid_name = !found_in((*s)[0], DIGIT);
 	while (is_allowed_in_word(*s + wlen, valid_name, var_name))
 		valid_name = is_valid_var_char((*s)[wlen++]);
-	if ((*s)[wlen] == DS && !var_name && ((*s)[wlen + 1] == SPACE
+	while ((*s)[wlen] == DS && !var_name && ((*s)[wlen + 1] == SPACE
 			|| (*s)[wlen + 1] == TAB || is_meta_char(*s + wlen + 1)))
 		wlen++;
 	if (found_in((*s)[wlen], DIGIT))
@@ -149,6 +149,8 @@ t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
 		return (False);
 	if (var_name)
 		queue_end(*q)->type = Name;
+	else
+		queue_end(*q)->type = Word;
 	*s += wlen;
 	return (True);
 }
