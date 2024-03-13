@@ -9,6 +9,3 @@ To Do List:
 Minishell built-ins
 "$" (dollar sign in double quotes handling what's after it)
 clean up and double check all cases of $
-better handle assign parsing:
-	parse variable name up until equals (same code as current)
-	after that parse until space or tab, BUT when finding SQ or DQ, parse that

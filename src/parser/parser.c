@@ -14,43 +14,39 @@
 
 /* -----------------------
  * Functions in the file:
- *   parse_word()
+ *   parse_op()
  *   parse_assign()
  *   parse_command()
  *   parse_control()
  *   parse()
  * -----------------------*/
 
-/// @brief Parse non-meta characters up to a space or tab
-/// @param q The currently built parse queue
-/// @param s What's left unparsed of the string
-/// @param var_name If True, only parse chars legal in var names
-/// @return Returns False if a malloc, True otherwise
-t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
+/// @brief Check for and parse an operator at the start of the string
+/// @param q The parse queue
+/// @param s The unparsed string
+/// @param op The operator to parse
+/// @param max_occurs The max number of continuous occurances parsed
+/// @return False if any malloc fails, True otherwise
+t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 {
-	int		wlen;
-	t_bool	valid_name;
+	int	occurs;
 
-	wlen = 0;
-	valid_name = !found_in((*s)[0], DIGIT);
-	while (is_allowed_in_word(*s + wlen, valid_name, var_name))
-	{
-		valid_name = is_valid_var_char((*s)[wlen]);
-		if (!valid_name && var_name)
-			break ;
-		wlen++;
-	}
-	if ((*s)[wlen] == DS && ((*s)[wlen + 1] == SPACE || (*s)[wlen + 1] == TAB))
-		wlen++;
-	if (!wlen && var_name)
-		wlen = 1;
-	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
+	if (q && *q && queue_end(*q)->type == Illegal)
+		return (True);
+	occurs = op_occur(op, *s);
+	if (!occurs && op == SPACE)
+		occurs = op_occur(TAB, *s);
+	if (occurs == 1 && op == AND)
+		return (True);
+	if (occurs > max_occurs)
+		occurs = max_occurs;
+	if (!add_str_to_queue(q, ft_substr(*s, 0, occurs)))
 		return (False);
-	if (wlen && valid_name)
-		queue_end(*q)->type = Name;
-	else if (wlen)
+	*s += occurs;
+	if (op == DS && occurs > 0 && is_valid_var_char(**s))
+		parse_word(q, s, True);
+	else if (op == DS && occurs > 0)
 		queue_end(*q)->type = Word;
-	*s += wlen;
 	return (True);
 }
 

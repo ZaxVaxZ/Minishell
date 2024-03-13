@@ -57,7 +57,7 @@ t_bool	is_allowed_in_word(char *s, t_bool valid_name, t_bool var_name)
 {
 	if (var_name && !valid_name)
 		return (False);
-	if (!(*s) || *s == SPACE || *s == TAB || *s == DQ || *s == SQ)
+	if (!*s || *s == SPACE || *s == TAB || *s == DQ || *s == SQ)
 		return (False);
 	if (is_meta_char(s))
 	{

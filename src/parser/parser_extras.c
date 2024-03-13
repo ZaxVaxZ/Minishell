@@ -18,9 +18,9 @@
  *   parse_double_quote()
  *   parse_inside_sq()
  *   parse_single_quote()
- *   parse_op()
+ *   parse_word()
  * -----------------------*/
-#include <stdio.h>
+
 /// @brief Helper function to parse string sequence inside of double quotes 
 /// @param q The parse queue
 /// @param s The unparsed string
@@ -32,19 +32,22 @@ static t_bool	parse_inside_dq(t_queue **q, char **s)
 	wlen = 0;
 	while ((*s)[wlen] && (*s)[wlen] != DQ)
 	{
-		if ((*s)[wlen++] == DS)
+		if ((*s)[wlen] == DS && is_valid_var_char((*s)[wlen + 1]))
 		{
-			if (!add_str_to_queue(q, ft_substr(*s, 0, wlen - 1)))
+			if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
 				return (False);
-			*s += wlen - 1;
+			*s += wlen;
 			if (!parse_op(q, s, DS, 1))
 				return (False);
 			wlen = 0;
 		}
+		else
+			wlen++;
 	}
 	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
 		return (False);
-	queue_end(*q)->type = Word;
+	if (wlen)
+		queue_end(*q)->type = Word;
 	*s += wlen;
 	return (True);
 }
@@ -65,7 +68,6 @@ t_bool	parse_double_quote(t_queue **q, char **s)
 	if (!parse_op(q, s, DQ, 1))
 		return (False);
 	queue_end(*q)->type = Dq_open;
-	queue_end(*q)->opened = 1;
 	if (!parse_inside_dq(q, s))
 		return (False);
 	if (!parse_op(q, s, DQ, 1))
@@ -73,7 +75,6 @@ t_bool	parse_double_quote(t_queue **q, char **s)
 	if (ft_strncmp(queue_end(*q)->s, "\"", -1))
 		return (True);
 	queue_end(*q)->type = Dq_closed;
-	queue_end(*q)->opened = 0;
 	if (!parse_op(q, s, SPACE, 1))
 		return (False);
 	return (True);
@@ -125,37 +126,29 @@ t_bool	parse_single_quote(t_queue **q, char **s)
 	return (True);
 }
 
-/// @brief Check for and parse an operator at the start of the string
-/// @param q The parse queue
-/// @param s The unparsed string
-/// @param op The operator to parse
-/// @param max_occurs The max number of continuous occurances parsed
-/// @return False if any malloc fails, True otherwise
-t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
+/// @brief Parse non-meta characters up to a space or tab
+/// @param q The currently built parse queue
+/// @param s What's left unparsed of the string
+/// @param var_name If True, only parse chars legal in var names
+/// @return Returns False if a malloc, True otherwise
+t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
 {
-	int	occurs;
-	
-	if (q && *q && queue_end(*q)->type == Illegal)
-		return (True);
-	occurs = op_occur(op, *s);
-	if (!occurs && op == SPACE)
-		occurs = op_occur(TAB, *s);
-	if (occurs == 1 && op == AND)
-		return (True);
-	if (occurs > max_occurs)
-		occurs = max_occurs;
-	if (!add_str_to_queue(q, ft_substr(*s, 0, occurs)))
+	int		wlen;
+	t_bool	valid_name;
+
+	wlen = 0;
+	valid_name = !found_in((*s)[0], DIGIT);
+	while (is_allowed_in_word(*s + wlen, valid_name, var_name))
+		valid_name = is_valid_var_char((*s)[wlen++]);
+	if ((*s)[wlen] == DS && !var_name && ((*s)[wlen + 1] == SPACE
+			|| (*s)[wlen + 1] == TAB || is_meta_char(*s + wlen + 1)))
+		wlen++;
+	if (found_in((*s)[wlen], DIGIT))
+		wlen++;
+	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
 		return (False);
-	*s += occurs;
-	if (op == DS && occurs > 0 && (**s == SPACE || **s == TAB))
-		queue_end(*q)->type = Word;
-	else if (op == DS && occurs > 0 && (**s == SQ))
-		parse_single_quote(q, s);
-	else if (op == DS && occurs > 0 && (**s == DQ) && (*q)->opened)
-		return (True);
-	else if (op == DS && occurs > 0 && (**s == DQ))
-		parse_double_quote(q, s);
-	else if (op == DS && occurs > 0 && !is_control_op(*s))
-		parse_word(q, s, True);
+	if (var_name)
+		queue_end(*q)->type = Name;
+	*s += wlen;
 	return (True);
 }

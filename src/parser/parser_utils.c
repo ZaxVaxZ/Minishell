@@ -16,7 +16,6 @@
  * Functions in the file:
  *   found_in()
  *   op_occur()
- *   metacharacter_type()
  *   token_type()
  *   add_str_to_queue()
  * -----------------------*/
@@ -57,11 +56,13 @@ int	op_occur(char c, char *s)
 	return (cc);
 }
 
-/// @brief Label a string token as which type of meta-character
-/// @param s The token's string
-/// @return The type of meta-char it is. Illegal if it's not a meta-char
-static t_token	metacharacter_type(char *s)
+/// @brief Classify the string as what type of token it is
+/// @param s The string to classify
+/// @return The type of token the string represents, most general is Word.
+static t_token	token_type(char *s)
 {
+	if (!s || found_in(s[0], DIGIT))
+		return (Word);
 	if (!ft_strncmp(s, "<", -1) || !ft_strncmp(s, "<<", -1)
 		|| !ft_strncmp(s, ">", -1) ||!ft_strncmp(s, ">>", -1))
 		return (Op_redir);
@@ -79,30 +80,12 @@ static t_token	metacharacter_type(char *s)
 		return (Variable);
 	if (!ft_strncmp(s, " ", -1) || !ft_strncmp(s, "\t", -1))
 		return (Whitespace);
-	return (Illegal);
-}
-
-/// @brief Classify the string as what type of token it is
-/// @param s The string to classify
-/// @return The type of token the string represents, most general is Word.
-static t_token	token_type(char *s)
-{
-	int	i;
-
-	if (!s || found_in(s[0], DIGIT))
-		return (Word);
-	if (metacharacter_type(s) != Illegal)
-		return (metacharacter_type(s));
-	i = 0;
-	while (s[i])
+	while (*s && is_valid_var_char(*s))
 	{
-		if (s[i] != UNDERSCORE && !found_in(s[i], DIGIT)
-			&& !found_in(s[i], LOWERCASE) && !found_in(s[i], UPPERCASE))
-			return (Word);
-		if (s[++i] == '=')
+		if (*(++s) == '=')
 			return (Assign);
 	}
-	return (Name);
+	return (Word);
 }
 
 /// @brief Take a string, label it and add it as a token to queue
