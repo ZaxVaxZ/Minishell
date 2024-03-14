@@ -46,6 +46,8 @@ int		op_occur(char c, char *s);
 t_bool	found_in(char c, char *s);
 t_bool	add_str_to_queue(t_queue **q, char *str);
 t_bool	parse_word(t_queue **q, char **s, t_bool var_name);
+int		parse_clean_up(t_queue **h);
+int		syntax_error(t_queue **q, char *token, t_bool missing);
 
 t_bool	is_control_op(char *str);
 t_bool	is_legal_control_op(char *str, t_queue *q);

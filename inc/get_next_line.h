@@ -17,14 +17,10 @@
 #  define BUFFER_SIZE 64
 # endif
 
-# include <stdlib.h>
-# include <unistd.h>
-# include <stdio.h>
 # include <limits.h>
+# include "libft.h"
 
-char	*get_next_line(int fd);
 char	*ft_add_next(char *line, char *buffer);
-size_t	ft_strlen(const char *s);
-char	*ft_strchr(const char *s, int c);
+char	*get_next_line(int fd);
 
 #endif

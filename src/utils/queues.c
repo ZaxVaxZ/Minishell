@@ -61,17 +61,16 @@ char	*dequeue(t_queue **q)
 	return (ret);
 }
 
-void	free_queue(t_queue **q)
+t_bool	free_queue(t_queue **q)
 {
 	t_queue	*tmp;
 
-	if (!q || !(*q))
-		return ;
-	while (*q)
+	while (q && *q)
 	{
 		tmp = *q;
 		*q = (*q)->next;
 		free(tmp->s);
 		free(tmp);
 	}
+	return (False);
 }

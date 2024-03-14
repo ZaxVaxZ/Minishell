@@ -17,21 +17,21 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <dirent.h>
-# include <sys/wait.h>
+// # include <sys/wait.h>
 # include "general.h"
 # include "libft.h"
 # include "parser.h"
 
-typedef struct	s_builtins
+typedef struct s_env
 {
 	char	**path;
 	char	**env;
 	char	*pwd;
 	char	*old_pwd;
-}	t_builtins;
+}	t_env;
 
 t_bool	echo(char *str, t_bool n);
-void	cd(t_builtins *b, char *dir);
+void	cd(t_env *b, char *dir);
 void	exiting(int code);
 
 #endif

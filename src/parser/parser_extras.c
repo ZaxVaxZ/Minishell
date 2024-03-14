@@ -139,7 +139,7 @@ t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
 	wlen = 0;
 	valid_name = !found_in((*s)[0], DIGIT);
 	while (is_allowed_in_word(*s + wlen, valid_name, var_name))
-		valid_name = is_valid_var_char((*s)[wlen++]);
+		valid_name = is_valid_var_char((*s)[++wlen]);
 	while ((*s)[wlen] == DS && !var_name && ((*s)[wlen + 1] == SPACE
 			|| (*s)[wlen + 1] == TAB || is_meta_char(*s + wlen + 1)))
 		wlen++;

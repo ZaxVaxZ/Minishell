@@ -88,6 +88,18 @@ static t_token	token_type(char *s)
 	return (Word);
 }
 
+int	syntax_error(t_queue **q, char *token, t_bool missing)
+{
+	if (missing)
+		write(2, "syntax error due to missing token `", 35);
+	else
+		write(2, "syntax error near unexpected token `", 36);
+	write(2, token, ft_strlen(token));
+	write(2, "`\n", 2);
+	free_queue(q);
+	return (1);
+}
+
 /// @brief Take a string, label it and add it as a token to queue
 /// @param q The parse queue
 /// @param str The string to add to the queue

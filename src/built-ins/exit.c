@@ -14,5 +14,5 @@
 
 void	exiting(int code)
 {
-	exit(WEXITSTATUS(code));
+	exit(code);
 }

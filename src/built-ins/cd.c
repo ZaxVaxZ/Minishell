@@ -12,7 +12,7 @@
 
 #include "builtins.h"
 
-void	cd(t_builtins *b, char *dir)
+void	cd(t_env *b, char *dir)
 {
 	b->old_pwd = b->pwd;
 	if (chdir(dir) == -1)
