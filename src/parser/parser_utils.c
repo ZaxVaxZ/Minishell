@@ -16,6 +16,7 @@
  * Functions in the file:
  *   found_in()
  *   op_occur()
+ *   syntax_error()
  *   token_type()
  *   add_str_to_queue()
  * -----------------------*/
@@ -56,6 +57,23 @@ int	op_occur(char c, char *s)
 	return (cc);
 }
 
+/// @brief Print a message for the syntax error then free the queue
+/// @param q The parse queue, passed to be freed
+/// @param token The token string that caused the syntax error
+/// @param missing If the syntax error is due to a missing quote or bracket
+/// @return Returns 1 to signal to the main that a syntax error occurred
+int	syntax_error(t_queue **q, char *token, t_bool missing)
+{
+	if (missing)
+		write(2, "syntax error due to missing token `", 35);
+	else
+		write(2, "syntax error near unexpected token `", 36);
+	write(2, token, ft_strlen(token));
+	write(2, "`\n", 2);
+	free_queue(q);
+	return (1);
+}
+
 /// @brief Classify the string as what type of token it is
 /// @param s The string to classify
 /// @return The type of token the string represents, most general is Word.
@@ -86,18 +104,6 @@ static t_token	token_type(char *s)
 			return (Assign);
 	}
 	return (Word);
-}
-
-int	syntax_error(t_queue **q, char *token, t_bool missing)
-{
-	if (missing)
-		write(2, "syntax error due to missing token `", 35);
-	else
-		write(2, "syntax error near unexpected token `", 36);
-	write(2, token, ft_strlen(token));
-	write(2, "`\n", 2);
-	free_queue(q);
-	return (1);
 }
 
 /// @brief Take a string, label it and add it as a token to queue

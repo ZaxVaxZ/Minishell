@@ -12,6 +12,17 @@
 
 #include "parser.h"
 
+/* -----------------------
+ * Functions in the file:
+ *   delete_next()
+ *   join_quote()
+ *   join_words()
+ *   unpack_vars()
+ *   parse_clean_up()
+ * -----------------------*/
+
+/// @brief Takes a node and deletes the node after it in the queue
+/// @param q The node whose next will be deleted
 static void	delete_next(t_queue **q)
 {
 	t_queue	*tmp;
@@ -24,6 +35,10 @@ static void	delete_next(t_queue **q)
 	free(tmp);
 }
 
+/// @brief Collapse a Double or Single quote sequence into a full string
+/// @param q The starting node with an open quote
+/// @param type The type of quote the node has: Sq_open or Dq_open
+/// @return False if any malloc fails, True otherwise
 static t_bool	join_quote(t_queue *q, t_token type)
 {
 	char	*addition;
@@ -52,6 +67,9 @@ static t_bool	join_quote(t_queue *q, t_token type)
 	return (True);
 }
 
+/// @brief Joins all quotes and consecutive words when found
+/// @param h The top node of the queue
+/// @return False if any malloc fails, True otherwise
 static t_bool	join_words(t_queue **h)
 {
 	t_queue	*q;
@@ -79,7 +97,11 @@ static t_bool	join_words(t_queue **h)
 	return (True);
 }
 
-static t_bool	unpack(t_queue **h, int *open)
+/// @brief Resolves variables to their value and handles open quotes or brackets
+/// @param h The top node of the queue
+/// @param open Array with the number of quotes or brackets left open
+/// @return False if any malloc fails, True otherwise
+static t_bool	unpack_vars(t_queue **h, int *open)
 {
 	t_queue	*q;
 
@@ -108,6 +130,9 @@ static t_bool	unpack(t_queue **h, int *open)
 	return (True);
 }
 
+/// @brief Cleans up the queue post-parsing for an easier execution run
+/// @param h The top node of the queue
+/// @return 1 if there's a parsing issue, -1 if a malloc fails, 0 otherwise
 int	parse_clean_up(t_queue **h)
 {
 	int		open[3];
@@ -131,7 +156,7 @@ int	parse_clean_up(t_queue **h)
 		open[2] -= (q->type == Bracket_closed);
 		q = q->next;
 	}
-	if (!unpack(h, open) || !join_words(h))
+	if (!unpack_vars(h, open) || !join_words(h))
 		return (-1);
 	return (0);
 }
