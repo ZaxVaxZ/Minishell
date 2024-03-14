@@ -19,7 +19,7 @@ SRCS	+=	$(BIF)/cd.c $(BIF)/exit.c $(BIF)/echo.c
 SRCS	+=	$(UTL)/queues.c
 SRCS	+=	$(PRS)/parser.c $(PRS)/parser_utils.c $(PRS)/parser_extras.c \
 			$(PRS)/parser_checkers.c $(PRS)/parser_cleanup.c
-SRCS	+=	$(SFD)/minishell2.c
+SRCS	+=	$(SFD)/minishell.c
 
 ### []+--------={ Object files and Program name }=--------+[] ###
 OBJS	=	$(SRCS:.c=.o)
