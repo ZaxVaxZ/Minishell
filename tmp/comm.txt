@@ -2,10 +2,29 @@ command -> <multiple-env-var-assign?> (<infile-redir> <infile>)? <command (not n
 returns: exit-status OR 128+signal
 parse error is exit 258?
 
+Add ? to env as variable
+Know how to add variables to env to begin with
+and then just handeling... thats not how you spell handling and you forgot the apostrophe are you ok bro? anyway should i tell you the new line as well?
+Yeah
+Are you gonna write your yeah? Okay
+*laughs*
+Oh wow we have stage directions too. Daang this script has all my thoughts *chuckles*
+Anyway ummmm... i forgot broooooo my brain cant handle
+okay :(
+learn about env
+*thumbs up*
+no :( tjats mpt fair you dident even [ut yut in parenl..]
+....are your stroke? :'))
+You skipped a aword having.. OHHH. you you you the word having
+Skipped wheres the word skipped you skipped skip
+Are yoiu makging a sketch out of this? *roflmao*
+thanks for the addition
+SCENE
 
+Figure out how to manipulate env
+Add ? to env as a variable
 
-
-To Do List:
-Minishell built-ins
-"$" (dollar sign in double quotes handling what's after it)
-clean up and double check all cases of $
+For env:
+create a linked list for the env which will consist of a key value pair
+copy the queues functions for it lol
+create a function to convert the linked list into a double array for execve uwu

@@ -1,37 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins.h                                         :+:      :+:    :+:   */
+/*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/02 13:07:12 by pipolint          #+#    #+#             */
-/*   Updated: 2024/03/15 16:52:57 by pipolint         ###   ########.fr       */
+/*   Created: 2024/03/15 15:14:13 by pipolint          #+#    #+#             */
+/*   Updated: 2024/03/15 17:03:43 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILTINS_H
-# define BUILTINS_H
+#ifndef ENV_H
+# define ENV_H
 
-# include <unistd.h>
 # include <stdlib.h>
-# include <stdio.h>
-# include <dirent.h>
-# include <sys/wait.h>
 # include "general.h"
 # include "libft.h"
-# include "parser.h"
 
-typedef struct s_blt
+typedef struct s_env
 {
-	char	**path;
-	char	**env;
-	char	*pwd;
-	char	*old_pwd;
-}	t_blt;
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
 
-t_bool	echo(char *str, t_bool n);
-void	cd(t_blt *b, char *dir);
-void	exiting(int code);
+t_env	*new_env_node(char *key, char *value);
+t_bool	free_env(t_env **q);
+void	add_to_env(t_env **env, t_env *to_add);
+void	env_to_list(char **envp, t_env **e);
+void	print_list(t_env *env);
 
 #endif

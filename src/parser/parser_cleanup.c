@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_handler.c                                    :+:      :+:    :+:   */
+/*   parser_cleanup.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 04:46:55 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/08 04:46:55 by marvin           ###   ########.fr       */
+/*   Updated: 2024/03/15 13:08:14 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 /// @brief Takes a node and deletes the node after it in the queue
 /// @param q The node whose next will be deleted
-static void	delete_next(t_queue **q)
+void	delete_next(t_queue **q)
 {
 	t_queue	*tmp;
 
@@ -105,11 +105,11 @@ static t_bool	join_words(t_queue **h)
 static int	unpack_vars(t_queue **h, t_queue *q, int *open)
 {
 	if (open[0])
-		return (syntax_error(h, "'", True));
+		return (syntax_error(h, "'", True, False));
 	if (open[1])
-		return (syntax_error(h, "\"", True));
+		return (syntax_error(h, "\"", True, False));
 	if (open[2])
-		return (syntax_error(h, ")", True));
+		return (syntax_error(h, ")", True, False));
 	while (q)
 	{
 		if (q->type == Variable)
@@ -145,7 +145,7 @@ int	parse_clean_up(t_queue **h)
 	open[2] = 0;
 	q = *h;
 	if (queue_end(q)->type == Illegal)
-		return (syntax_error(h, queue_end(q)->s, False));
+		return (syntax_error(h, queue_end(q)->s, False, (queue_end(q)->s == NULL)));
 	while (q)
 	{
 		open[0] += (q->type == Sq_open) - (q->type == Sq_closed);

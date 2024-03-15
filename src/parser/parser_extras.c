@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:35 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/12 17:04:13 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/15 13:13:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static t_bool	parse_inside_dq(t_queue **q, char **s)
 /// @return False if any malloc fails, True otherwise.
 t_bool	parse_double_quote(t_queue **q, char **s)
 {
-	if (!q || !s || !*s || **s != DQ)
+	if (!q || !s || !*s || **s != DQ || (*q && queue_end(*q)->type == Illegal))
 		return (True);
 	if (*(*s + 1) == DQ)
 	{
@@ -104,7 +104,7 @@ t_bool	parse_inside_sq(t_queue **q, char **s)
 /// @return False if any malloc fails, True otherwise.
 t_bool	parse_single_quote(t_queue **q, char **s)
 {
-	if (!q || !s || !*s || **s != SQ)
+	if (!q || !s || !*s || **s != SQ || (*q && queue_end(*q)->type == Illegal))
 		return (True);
 	if (*(*s + 1) == SQ)
 	{
@@ -141,9 +141,11 @@ t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
 	while (is_allowed_in_word(*s + wlen, valid_name, var_name))
 		valid_name = is_valid_var_char((*s)[++wlen]);
 	while ((*s)[wlen] == DS && !var_name && ((*s)[wlen + 1] == SPACE
-			|| (*s)[wlen + 1] == TAB || is_meta_char(*s + wlen + 1)))
+			|| (*s)[wlen + 1] == TAB || is_meta_char(*s + wlen + 1, False)))
 		wlen++;
 	if (found_in((*s)[wlen], DIGIT))
+		wlen++;
+	if (!wlen && var_name && (*s)[wlen] == '?')
 		wlen++;
 	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
 		return (False);

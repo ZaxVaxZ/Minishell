@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 13:21:55 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/11 21:36:24 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/15 13:33:45 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 	if (!add_str_to_queue(q, ft_substr(*s, 0, occurs)))
 		return (False);
 	*s += occurs;
-	if (op == DS && occurs > 0 && is_valid_var_char(**s))
+	if (op == DS && occurs > 0 && (is_valid_var_char(**s) || **s == '?'))
 		parse_word(q, s, True);
 	else if (op == DS && occurs > 0)
 		queue_end(*q)->type = Word;
@@ -64,7 +64,7 @@ static t_bool	parse_assign(t_queue **q, char **s)
 	assign_b4 = (!tmp || tmp->type == Assign);
 	while (tmp)
 	{
-		if (tmp->type == Assign || is_control_op(tmp->s))
+		if (tmp->type == Assign || is_meta_char(tmp->s, True))
 			assign_b4 = True;
 		if (tmp->type == Whitespace && tmp->next && tmp->next->type != Assign)
 			assign_b4 = False;
@@ -157,14 +157,12 @@ t_queue	*parse(char *s)
 			parse_op(&q, &s, SPACE, 1);
 		while (*s == SPACE || *s == TAB)
 			s++;
+		if (!is_legal_queue_end(q, s))
+			return (q);
 		prev_s = s;
-		if (!parse_single_quote(&q, &s))
+		if (!parse_single_quote(&q, &s) || !parse_double_quote(&q, &s))
 			return (NULL);
-		if (!parse_double_quote(&q, &s))
-			return (NULL);
-		if (!parse_command(&q, &s))
-			return (NULL);
-		if (!parse_control(&q, &s))
+		if (!parse_command(&q, &s) || !parse_control(&q, &s))
 			return (NULL);
 	}
 	return (q);

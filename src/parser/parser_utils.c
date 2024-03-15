@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 20:22:48 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/02 20:25:47 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/15 13:01:58 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,18 @@ int	op_occur(char c, char *s)
 /// @param token The token string that caused the syntax error
 /// @param missing If the syntax error is due to a missing quote or bracket
 /// @return Returns 1 to signal to the main that a syntax error occurred
-int	syntax_error(t_queue **q, char *token, t_bool missing)
+int	syntax_error(t_queue **q, char *token, t_bool missing, t_bool at_end)
 {
 	if (missing)
 		write(2, "syntax error due to missing token `", 35);
+	else if (!at_end)
+		write(2, "syntax error near unexpected token `", 36);
 	else
 		write(2, "syntax error near unexpected token `", 36);
-	write(2, token, ft_strlen(token));
+	if (!at_end)
+		write(2, token, ft_strlen(token));
+	else
+		write(2, "newline", 7);
 	write(2, "`\n", 2);
 	free_queue(q);
 	return (1);
@@ -119,7 +124,6 @@ t_bool	add_str_to_queue(t_queue **q, char *str)
 		return (False);
 	if (!str)
 		return (True);
-	tmp = queue_end(*q);
 	illegal = !is_legal_control_op(str, *q);
 	tmp = new_node(str);
 	if (!tmp)
