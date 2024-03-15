@@ -98,36 +98,35 @@ static t_bool	join_words(t_queue **h)
 }
 
 /// @brief Resolves variables to their value and handles open quotes or brackets
-/// @param h The top node of the queue
+/// @param h Reference to the top node of the queue
+/// @param q The top node passed by value to loop through the queue
 /// @param open Array with the number of quotes or brackets left open
 /// @return False if any malloc fails, True otherwise
-static t_bool	unpack_vars(t_queue **h, int *open)
+static int	unpack_vars(t_queue **h, t_queue *q, int *open)
 {
-	t_queue	*q;
-
 	if (open[0])
 		return (syntax_error(h, "'", True));
 	if (open[1])
 		return (syntax_error(h, "\"", True));
 	if (open[2])
 		return (syntax_error(h, ")", True));
-	q = *h;
 	while (q)
 	{
 		if (q->type == Variable)
 		{
 			q->type = Word;
 			free(q->s);
-			q->s = ft_strdup("");
 			if (getenv(q->next->s))
 				q->s = ft_strdup(getenv(q->next->s));
+			else
+				q->s = ft_strdup("");
 			if (!q->s)
-				return (free_queue(h));
+				return (free_queue(h) - 1);
 			delete_next(&q);
 		}
 		q = q->next;
 	}
-	return (True);
+	return (0);
 }
 
 /// @brief Cleans up the queue post-parsing for an easier execution run
@@ -136,6 +135,7 @@ static t_bool	unpack_vars(t_queue **h, int *open)
 int	parse_clean_up(t_queue **h)
 {
 	int		open[3];
+	int		ret;
 	t_queue	*q;
 
 	if (!h || !*h)
@@ -148,15 +148,13 @@ int	parse_clean_up(t_queue **h)
 		return (syntax_error(h, queue_end(q)->s, False));
 	while (q)
 	{
-		open[0] += (q->type == Sq_open);
-		open[0] -= (q->type == Sq_closed);
-		open[1] += (q->type == Dq_open);
-		open[1] -= (q->type == Dq_closed);
-		open[2] += (q->type == Bracket_open);
-		open[2] -= (q->type == Bracket_closed);
+		open[0] += (q->type == Sq_open) - (q->type == Sq_closed);
+		open[1] += (q->type == Dq_open) - (q->type == Dq_closed);
+		open[2] += (q->type == Bracket_open) - (q->type == Bracket_closed);
 		q = q->next;
 	}
-	if (!unpack_vars(h, open) || !join_words(h))
+	ret = unpack_vars(h, *h, open);
+	if (!join_words(h))
 		return (-1);
-	return (0);
+	return (ret);
 }

@@ -10,6 +10,7 @@ LFT		=	$(UTL)/libft
 GNL		=	$(UTL)/get_next_line
 BIF		=	$(SFD)/built-ins
 PRS		=	$(SFD)/parser
+EXE		=	$(SFD)/run
 
 ### []+--------={ Source Files }=--------+[] ###
 SRCS	+=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c \
@@ -19,6 +20,7 @@ SRCS	+=	$(BIF)/cd.c $(BIF)/exit.c $(BIF)/echo.c
 SRCS	+=	$(UTL)/queues.c
 SRCS	+=	$(PRS)/parser.c $(PRS)/parser_utils.c $(PRS)/parser_extras.c \
 			$(PRS)/parser_checkers.c $(PRS)/parser_cleanup.c
+# SRCS	+=	$(EXE)/executor.c
 SRCS	+=	$(SFD)/minishell.c
 
 ### []+--------={ Object files and Program name }=--------+[] ###
