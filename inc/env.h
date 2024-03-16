@@ -28,6 +28,7 @@ t_env	*new_env_node(char *key, char *value);
 t_bool	free_env(t_env **q);
 void	add_to_env(t_env **env, t_env *to_add);
 void	env_to_list(char **envp, t_env **e);
+char	**list_to_env(t_env **env);
 void	print_list(t_env *env);
 
 #endif

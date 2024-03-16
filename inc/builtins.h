@@ -33,5 +33,6 @@ typedef struct s_blt
 t_bool	echo(char *str, t_bool n);
 void	cd(t_blt *b, char *dir);
 void	exiting(int code);
+void	export(t_env **env, char *variable);
 
 #endif

@@ -100,26 +100,26 @@ void	handle(int sig)
 		exit (0);
 }
 
-void	execute(t_queue *q)
-{
-	t_blt	b;
-
-	b.pwd = getenv("PWD");
-	while (q)
-	{
-		if (!ft_strncmp(q->s, "echo", 4))
-			echo((q->next && q->next->next ? q->next->next->s : "No string"), !ft_strncmp(q->next->s, "-n", -1));
-		else if (!ft_strncmp(q->s, "cd", 2))
-			cd(&b, q->next && q->next->next ? q->next->next->s : NULL);
-		//else if (!ft_strncmp(q->s, "pwd", 3))
-			//working_dir(&b);
-		else if (!ft_strncmp(q->s, "exit", 4))
-			exiting(1);
-		else if (!ft_strncmp(q->s, "export", 6))
-			putenv(q->next && q->next->next ? q->next->next->s : NULL);
-		q = q->next;
-	}
-}
+// void	execute(t_queue *q)
+// {
+// 	t_blt	b;
+//
+// 	b.pwd = getenv("PWD");
+// 	while (q)
+// 	{
+// 		if (!ft_strncmp(q->s, "echo", 4))
+// 			echo((q->next && q->next->next ? q->next->next->s : "No string"), !ft_strncmp(q->next->s, "-n", -1));
+// 		else if (!ft_strncmp(q->s, "cd", 2))
+// 			cd(&b, q->next && q->next->next ? q->next->next->s : NULL);
+// 		//else if (!ft_strncmp(q->s, "pwd", 3))
+// 			//working_dir(&b);
+// 		else if (!ft_strncmp(q->s, "exit", 4))
+// 			exiting(1);
+// 		else if (!ft_strncmp(q->s, "export", 6))
+// 			putenv(q->next && q->next->next ? q->next->next->s : "");
+// 		q = q->next;
+// 	}
+// }
 
 int	main(int ac, char **av, char **env)
 {
@@ -145,7 +145,7 @@ int	main(int ac, char **av, char **env)
 		}
 		clean_whitespace(q);
 		print_queue(q);
-		execute(q);
+		// execute(q);
 		free_queue(&q);
 		free(cmd_line);
 		write(1, getenv("PWD"), ft_strlen(getenv("PWD")));
