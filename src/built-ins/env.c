@@ -1,18 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/13 21:48:00 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/15 08:56:37 by pipolint         ###   ########.fr       */
+/*   Created: 2024/03/16 23:39:56 by marvin            #+#    #+#             */
+/*   Updated: 2024/03/16 23:39:56 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-void	exiting(int code)
+t_bool	env(t_env *env)
 {
-	exit(code);
+	while (env)
+	{
+		if (printf("%s=%s\n", env->key, env->value) == -1)
+			return (False);
+		env = env->next;
+	}
 }

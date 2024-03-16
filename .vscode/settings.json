@@ -3,6 +3,8 @@
 		"parser.h": "c",
 		"stdio.h": "c",
 		"general.h": "c",
-		"libft.h": "c"
+		"libft.h": "c",
+		"env.h": "c",
+		"dirent.h": "c"
 	}
 }

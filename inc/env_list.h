@@ -25,10 +25,12 @@ typedef struct s_env
 }	t_env;
 
 t_env	*new_env_node(char *key, char *value);
-t_bool	free_env(t_env **q);
-void	add_to_env(t_env **env, t_env *to_add);
-void	env_to_list(char **envp, t_env **e);
-char	**list_to_env(t_env **env);
-void	print_list(t_env *env);
+void	add_env_node(t_env **env, t_env *to_add);
+void	free_env_node(t_env *node);
+int		env_size(t_env *env);
+t_bool	free_env(t_env **env);
+void	delete_var(t_env **env, char *key);
+t_env	*to_env_list(char **strs);
+char	**to_char_arr(t_env **env);
 
 #endif
