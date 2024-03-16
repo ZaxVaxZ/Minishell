@@ -15,7 +15,7 @@
 #include "queues.h"
 #include "builtins.h"
 #include "executor.h"
-#include "env.h"
+#include "env_list.h"
 #include <signal.h>
 #include <unistd.h>
 #include <stdio.h>

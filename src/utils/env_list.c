@@ -25,7 +25,7 @@
 /// @param key Variable name as the key
 /// @param value The value stored for the variable
 /// @return Returns the created node. NULL if a malloc fails
-t_env	*new_env_node(char *key, char *value)
+t_env	*new_env_node(char *key, char *value, t_bool exported)
 {
 	t_env	*node;
 
@@ -46,6 +46,7 @@ t_env	*new_env_node(char *key, char *value)
 		free(node);
 		return (NULL);
 	}
+	node->exported = exported;
 	return (node);
 }
 
@@ -89,9 +90,12 @@ int	env_size(t_env *env)
 /// @param node The env node
 void	free_env_node(t_env *node)
 {
-	free(node->key);
-	free(node->value);
-	free(node);
+	if (node && node->key)
+		free(node->key);
+	if (node && node->value)
+		free(node->value);
+	if (node)
+		free(node);
 }
 
 /// @brief Free each node of an env list, and their contents
