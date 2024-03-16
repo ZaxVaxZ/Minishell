@@ -120,7 +120,7 @@ char	**to_char_arr(t_env **env)
 	int		i;
 	t_env	*env;
 
-	env = (*e);
+	env = NULL;
 	envp = malloc(sizeof(char *) * env_size(env) + 1);
 	if (!envp)
 		return (NULL);
@@ -130,7 +130,7 @@ char	**to_char_arr(t_env **env)
 		envp[i] = malloc(sizeof(char) * (ft_strlen(env->key) + ft_strlen(env->value)) + 1);
 		if (!envp[i])
 		{
-			free_env(e);
+			free_env(env);
 			return (NULL);
 		}
 		envp[i] = ft_strjoin(env->key, env->value);
