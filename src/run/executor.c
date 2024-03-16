@@ -59,6 +59,23 @@ t_bool	free_and_return(t_queue **q, t_command **cmd, char **temp)
 	}
 	if (q)
 		free_queue(q);
+	return (False);
+}
+
+t_bool	is_builtin(t_queue *q, t_command *cmd, t_env **env)
+{
+	if (!ft_strncmp(cmd->params[0], "exit", 4))
+		exiting(1);
+	else if (!ft_strncmp(cmd->params[0], "echo", 4))
+	{
+		if (!ft_strncmp(cmd->params[1], "-n", 2))
+			echo(cmd->params[2], 1);
+		else
+			echo(cmd->params[1], 0);
+	}
+	else if (!ft_strncmp(cmd->params[0], "export", 6))
+		printf("export\n");
+	(void)q;
 	return (True);
 }
 
@@ -81,21 +98,19 @@ t_bool	execute(t_queue *q, t_command *cmd)
 			tmp = ft_substr(q->s, 0, ft_strlen(q->s) - 1);
 			if (!tmp)
 				return (free_and_return(&q, &cmd, &tmp));
-			// setenv(tmp, q->next->s, 1);
-			q = q->next;
 		}
 		else if (q->type == Op_redir)
 		{
-			if (!ft_strncmp(q->s, "<", 1))
-			{
+			if (!ft_strncmp(q->s, "<", 1) && q->next)
+			{	
 				cmd->input = ft_strdup(q->next->s);
 				if (!cmd->input)
 					return (free_and_return(&q, &cmd, &tmp));
 			}
-			if (!ft_strncmp(q->s, "<", 1))
+			if (!ft_strncmp(q->s, ">", 1) && q->next)
 			{
-				cmd->input = ft_strdup(q->next->s);
-				if (!cmd->input)
+				cmd->output = ft_strdup(q->next->s);
+				if (!cmd->output)
 					return (free_and_return(&q, &cmd, &tmp));
 			}
 		}

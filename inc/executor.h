@@ -16,6 +16,7 @@
 # include <stdlib.h>
 # include "libft.h"
 # include "parser.h"
+# include "builtins.h"
 
 typedef enum e_cmd_type
 {
@@ -41,5 +42,7 @@ typedef struct s_command
 }	t_command;
 
 void	clean_whitespace(t_queue *q);
+t_bool	is_builtin(t_queue *q, t_command *cmd);
+t_bool	execute(t_queue *q, t_command *cmd);
 
 #endif

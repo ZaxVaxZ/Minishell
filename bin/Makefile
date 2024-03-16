@@ -17,7 +17,7 @@ SRCS	+=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c \
 			$(LFT)/ft_substr.c $(LFT)/ft_strchr.c $(LFT)/ft_strjoin.c
 SRCS	+=	$(GNL)/get_next_line.c $(GNL)/get_next_line_utils.c
 SRCS	+=	$(BIF)/cd.c $(BIF)/exit.c $(BIF)/echo.c
-SRCS	+=	$(UTL)/queues.c $(UTL)/env.c
+SRCS	+=	$(UTL)/queues.c $(UTL)/env_tools.c $(UTL)/env_list.c
 SRCS	+=	$(PRS)/parser.c $(PRS)/parser_utils.c $(PRS)/parser_extras.c \
 			$(PRS)/parser_checkers.c $(PRS)/parser_cleanup.c
 SRCS	+=	$(EXE)/executor.c

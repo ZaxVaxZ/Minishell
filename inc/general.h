@@ -50,6 +50,8 @@
 # define WHITE_BACKGROUND  "\e[47m"   // White
 # define TEXT_RESET        "\e[0m"    // Text Reset
 
+# include <stdio.h>
+
 typedef enum e_bool
 {
 	False,

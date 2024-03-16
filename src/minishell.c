@@ -133,7 +133,9 @@ int	main(int ac, char **av, char **env)
 	cmd_line = get_next_line(0);
 	t_env *envp;
 	env_to_list(env, &envp);
-	print_list(envp);
+	// print_list(envp);
+	t_command cmds[1024];
+	int i = 0;
 	while (cmd_line)
 	{
 		q = parse(cmd_line);
@@ -145,7 +147,10 @@ int	main(int ac, char **av, char **env)
 		}
 		clean_whitespace(q);
 		print_queue(q);
-		// execute(q);
+		execute(q, &cmds[i++]);
+		// for (int j = 0; cmds[i - 1].params[j]; j++)
+		// 	printf("%s\n", cmds[i - 1].params[j]);
+		is_builtin(q, &cmds[i - 1]);
 		free_queue(&q);
 		free(cmd_line);
 		write(1, getenv("PWD"), ft_strlen(getenv("PWD")));
