@@ -47,9 +47,10 @@ t_env	*new_env_node(char *key, char *value, t_bool exported)
 		return (NULL);
 	}
 	node->exported = exported;
+	node->next = NULL;
 	return (node);
 }
-
+#include <stdio.h>
 /// @brief Adds an env node to an env list
 /// @param env The env list
 /// @param to_add The node to be added
@@ -59,9 +60,9 @@ void	add_env_node(t_env **env, t_env *to_add)
 
 	if (!env || !to_add)
 		return ;
-	if (!(*env))
+	if (!*env)
 	{
-		(*env) = to_add;
+		*env = to_add;
 		return ;
 	}
 	trav = (*env);

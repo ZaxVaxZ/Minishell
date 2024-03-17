@@ -23,8 +23,11 @@ t_bool	echo(char **str, t_bool n)
 	{
 		if (printf("%s", str[i]) == -1)
 			return (False);
-		if (!n && printf("\n") == -1)
+		if (str[i + 1] && printf(" ") == -1)
 			return (False);
+		i++;
 	}
+	if (!n && printf("\n") == -1)
+		return (False);
 	return (True);
 }

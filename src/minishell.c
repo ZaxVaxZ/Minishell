@@ -76,7 +76,7 @@ void	print_queue(t_queue *queue)
 	}
 	write(1, "|----------|----------|\n", 24);
 	write(1, "|", 1);
-	prints("  String", 70);
+	prints("  String", 10);
 	write(1, "|", 1);
 	prints("   Type", 10);
 	write(1, "|\n", 2);
@@ -84,7 +84,7 @@ void	print_queue(t_queue *queue)
 	while (queue)
 	{
 		write(1, "|", 1);
-		prints(queue->s, 70);
+		prints(queue->s, 10);
 		write(1, "|", 1);
 		prints(type_to_str(queue->type), 10);
 		write(1, "|\n", 2);
@@ -140,14 +140,14 @@ int	main(int ac, char **av, char **env)
 	while (cmd_line)
 	{
 		q = parse(cmd_line);
-		print_queue(q);
+		// print_queue(q);
 		if (parse_clean_up(&q))
 		{
 			free(cmd_line);
 			return (1);
 		}
 		clean_whitespace(q);
-		print_queue(q);
+		// print_queue(q);
 		execute(q, &cmds[i++]);
 		// for (int j = 0; cmds[i - 1].params[j]; j++)
 		// 	printf("%s\n", cmds[i - 1].params[j]);

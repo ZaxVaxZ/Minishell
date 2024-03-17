@@ -64,9 +64,6 @@ t_bool	free_and_return(t_queue **q, t_command **cmd, char **temp)
 
 t_bool	resolve_builtin(t_command *cmd, t_env **env)
 {
-	printf("TEST:\n");
-	for (int i=0;cmd->params[i];i++)
-		printf("%s\n", cmd->params[i]);
 	if (!ft_strncmp(cmd->params[0], "exit", -1))
 		exiting(0);
 	else if (!ft_strncmp(cmd->params[0], "echo", -1))
@@ -106,7 +103,6 @@ t_bool	execute(t_queue *q, t_command *cmd)
 	int		i;
 	char	*tmp;
 
-	printf("TEST2\n");
 	(void)q;
 	clean_whitespace(q);
 	cmd->params = malloc(sizeof(char *) * (count_words(q) + 1));
