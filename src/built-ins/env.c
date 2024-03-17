@@ -20,4 +20,5 @@ t_bool	print_env(t_env *env)
 			return (False);
 		env = env->next;
 	}
+	return (True);
 }

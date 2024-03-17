@@ -100,7 +100,7 @@ void	delete_var(t_env **env, char *key)
 		curr = curr->next;
 	}
 }
-
+#include <stdio.h>
 /// @brief Turns an array of key=value pairs as strings into an env list
 /// @param strs The list of strings containing key=value strings
 /// @return The env list created from the strings. NULL if a malloc fails

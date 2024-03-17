@@ -127,12 +127,13 @@ int	main(int ac, char **av, char **env)
 	char	*cmd_line;
 	t_queue	*q;
 
+	(void)q; (void)cmd_line;
 	signal(SIGINT, handle);
-	write(1, getenv("PWD"), ft_strlen(getenv("PWD")));
-	write(1, ">", 1);
+	printf("%s> ", getenv("PWD"));
 	cmd_line = get_next_line(0);
 	t_env *envp;
 	envp = to_env_list(env);
+	print_env(envp);
 	// print_list(envp);
 	t_command cmds[1024];
 	int i = 0;
@@ -150,11 +151,12 @@ int	main(int ac, char **av, char **env)
 		execute(q, &cmds[i++]);
 		// for (int j = 0; cmds[i - 1].params[j]; j++)
 		// 	printf("%s\n", cmds[i - 1].params[j]);
-		is_builtin(q, &cmds[i - 1]);
+		resolve_builtin(&cmds[i - 1], &envp);
+		free_env(&envp);
 		free_queue(&q);
 		free(cmd_line);
-		write(1, getenv("PWD"), ft_strlen(getenv("PWD")));
-		write(1, "> ", 2);
+		return (0);
+		printf("%s> ", getenv("PWD"));
 		cmd_line = get_next_line(0);
 	}
 	return (0);

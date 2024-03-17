@@ -23,12 +23,12 @@
 # include "parser.h"
 # include "env_list.h"
 
-t_bool	echo(char **str, t_bool n);
-t_bool	print_env(t_env *env);
-void	pwd(t_env *env);
-void	exiting(int code);
 int		cd(char *pwd, char *dir);
+void	exiting(int code);
 void	unset(char *var_name, t_env **env);
-void	export(t_env **env, char *variable);
+t_bool	pwd(t_env *env);
+t_bool	print_env(t_env *env);
+t_bool	echo(char **str, t_bool n);
+t_bool	export(t_env **env, char *variable, char *value);
 
 #endif
