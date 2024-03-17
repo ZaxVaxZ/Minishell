@@ -12,11 +12,19 @@
 
 #include "builtins.h"
 
-t_bool	echo(char *str, t_bool n)
+t_bool	echo(char **str, t_bool n)
 {
-	if (write(1, str, ft_strlen(str)) == -1)
-		return (False);
-	if (!n && write(1, "\n", 1) == -1)
-		return (False);
+	int	i;
+
+	if (!str)
+		return (True);
+	i = 0;
+	while (str[i])
+	{
+		if (printf("%s", str[i]) == -1)
+			return (False);
+		if (!n && printf("\n") == -1)
+			return (False);
+	}
 	return (True);
 }

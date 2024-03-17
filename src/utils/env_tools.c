@@ -24,16 +24,19 @@
 /// @brief Sets a variable's value. Creates the variable if it doesn't exist
 /// @param env The env list
 /// @param key The name of the variable
-/// @param value The value to be assigned to the variable
+/// @param value The value to be assigned to the variable. NULL to keep it as is
+/// @param exported 1/0 To set exported state to True/False. -1 to keep it as is
 /// @return False if any malloc fails. True otherwise
 t_bool	set_var(t_env **env, char *key, char *value, int exported)
 {
 	t_env	*tmp;
 
-	if (!env || !key || !value)
+	if (!env || !key)
 		return (True);
 	if (!get_var(*env, key))
 	{
+		if (!value)
+			return (True);
 		tmp = new_env_node(key, value, exported + (exported < 0));
 		if (!tmp)
 			return (free_env(env));
@@ -44,7 +47,8 @@ t_bool	set_var(t_env **env, char *key, char *value, int exported)
 	while (tmp && ft_strncmp(tmp->key, key, -1))
 		tmp = tmp->next;
 	free(tmp->value);
-	tmp->value = ft_strdup(value);
+	if (value)
+		tmp->value = ft_strdup(value);
 	if (!tmp->value)
 		return (free_env(env));
 	tmp->exported = exported + (exported < 0);
@@ -114,13 +118,13 @@ t_env	*to_env_list(char **strs)
 	while (strs[i])
 	{
 		tmp = malloc(sizeof(t_env));
-		if (!tmp && !free_env(env))
+		if (!tmp && !free_env(&env))
 			return (NULL);
 		eqp = ft_strchr(strs[i], '=');
 		tmp->key = ft_substr(strs[i], 0, eqp - strs[i]);
 		tmp->value = ft_substr(strs[i], eqp - strs[i] + 1, ft_strlen(eqp + 1));
-		add_to_env(env, tmp);
-		if ((!tmp->key || !tmp->value) && !free_env(env))
+		add_env_node(&env, tmp);
+		if ((!tmp->key || !tmp->value) && !free_env(&env))
 			return (NULL);
 		i++;
 	}
@@ -137,17 +141,13 @@ char	**to_char_arr(t_env **env)
 	t_env	*tmp;
 	t_bool	fail;
 
-	strs = malloc(sizeof(char *) * (env_size(env) + 1));
+	strs = malloc(sizeof(char *) * (env_size(*env) + 1));
 	fail = (strs == NULL);
 	tmp = *env;
 	i = 0;
 	while (tmp && !fail)
 	{
-		strs[i] = ft_strjoin(tmp->key, "=");
-		if (!strs[i])
-			fail = !free_env(env);
-		else
-			strs[i] = ft_strjoin(strs[i], tmp->value);
+		strs[i] = ft_strjoin_chr(tmp->key, '=', tmp->value);
 		if (!strs[i++])
 			fail = !free_env(env);
 		tmp = tmp->next;

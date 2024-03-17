@@ -14,9 +14,11 @@ EXE		=	$(SFD)/run
 
 ### []+--------={ Source Files }=--------+[] ###
 SRCS	+=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c \
-			$(LFT)/ft_substr.c $(LFT)/ft_strchr.c $(LFT)/ft_strjoin.c
+			$(LFT)/ft_substr.c $(LFT)/ft_strchr.c $(LFT)/ft_strjoin.c \
+			$(LFT)/ft_strjoin_chr.c
 SRCS	+=	$(GNL)/get_next_line.c $(GNL)/get_next_line_utils.c
-SRCS	+=	$(BIF)/cd.c $(BIF)/exit.c $(BIF)/echo.c
+SRCS	+=	$(BIF)/unset.c $(BIF)/pwd.c $(BIF)/echo.c $(BIF)/export.c \
+			$(BIF)/exit.c $(BIF)/env.c $(BIF)/cd.c
 SRCS	+=	$(UTL)/queues.c $(UTL)/env_list.c $(UTL)/env_tools.c
 SRCS	+=	$(PRS)/parser.c $(PRS)/parser_utils.c $(PRS)/parser_extras.c \
 			$(PRS)/parser_checkers.c $(PRS)/parser_cleanup.c

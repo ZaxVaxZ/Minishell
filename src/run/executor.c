@@ -62,20 +62,39 @@ t_bool	free_and_return(t_queue **q, t_command **cmd, char **temp)
 	return (False);
 }
 
-t_bool	is_builtin(t_queue *q, t_command *cmd, t_env **env)
+t_bool	resolve_builtin(t_command *cmd, t_env **env)
 {
-	if (!ft_strncmp(cmd->params[0], "exit", 4))
-		exiting(1);
-	else if (!ft_strncmp(cmd->params[0], "echo", 4))
+	if (!ft_strncmp(cmd->params[0], "exit", -1))
+		exiting(0);
+	else if (!ft_strncmp(cmd->params[0], "echo", -1))
 	{
-		if (!ft_strncmp(cmd->params[1], "-n", 2))
-			echo(cmd->params[2], 1);
-		else
-			echo(cmd->params[1], 0);
+		if (!ft_strncmp(cmd->params[1], "-n", 2) && cmd->params[2])
+			echo(cmd->params + 2, 1);
+		else if (cmd->params[1])
+			echo(cmd->params + 1, 0);
 	}
-	else if (!ft_strncmp(cmd->params[0], "export", 6))
-		printf("export\n");
-	(void)q;
+	else if (!ft_strncmp(cmd->params[0], "cd", -1) && cmd->params[1])
+	{
+		cd(get_var(*env, "PWD"), cmd->params[1]);
+	}
+	else if (!ft_strncmp(cmd->params[0], "env", -1))
+	{
+		print_env(*env);
+	}
+	else if (!ft_strncmp(cmd->params[0], "unset", -1))
+	{
+		delete_var(env, cmd->params[1]);
+	}
+	else if (!ft_strncmp(cmd->params[0], "pwd", -1))
+	{
+		printf("%s\n", get_var(*env, "PWD"));
+	}
+	else if (!ft_strncmp(cmd->params[0], "export", -1))
+	{
+		
+	}
+	else
+		return (False);
 	return (True);
 }
 

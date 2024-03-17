@@ -12,12 +12,46 @@
 
 #include "builtins.h"
 
-void	cd(t_blt *b, char *dir)
+static int	is_directory(char *dir)
 {
-	b->old_pwd = b->pwd;
-	if (chdir(dir) == -1)
-		perror(NULL);
-	b->pwd = getenv("PWD");
-	printf("Old PWD: %s\n", b->old_pwd);
-	printf("Current PWD: %s\n", b->pwd);
+	struct stat	s;
+
+	if (!stat(dir, &s))
+	{
+		if (!S_ISDIR(s.st_mode))
+			return (1);
+		else
+			return (0);
+	}
+	else
+	{
+		perror("stat()");
+		return (-1);
+	}
+}
+
+int	cd(char *pwd, char *dir)
+{
+	int			is_dir;
+	char		*tmp;
+
+	if (!pwd || !*pwd || !dir || !*dir)
+	{
+		if (printf("Error in getting current working directory\n") == -1)
+			return (-2);
+		return (0);
+	}
+	if (dir[0] != '\\' && dir[0] != '/')
+	{
+		tmp = ft_strjoin_chr(pwd, '/', dir);
+		if (!tmp)
+			return (-1);
+		is_dir = is_directory(tmp);
+		if (is_dir)
+			return (is_dir);
+	}
+	is_dir = is_directory(tmp);
+	if (is_dir == 1)
+		return (2);
+	return (is_dir);
 }

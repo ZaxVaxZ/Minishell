@@ -1,23 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   ft_strjoin_chr.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/16 23:39:56 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/16 23:39:56 by marvin           ###   ########.fr       */
+/*   Created: 2023/11/02 13:37:53 by ehammoud          #+#    #+#             */
+/*   Updated: 2024/03/17 06:39:03 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "libft.h"
 
-t_bool	print_env(t_env *env)
+char	*ft_strjoin_chr(char *s1, char c, char *s2)
 {
-	while (env)
+	size_t	i;
+	size_t	j;
+	char	*ret;
+
+	ret = malloc((ft_strlen(s1) + ft_strlen(s2) + 2) * sizeof(char));
+	if (!ret)
+		return (NULL);
+	i = 0;
+	while (s1[i] != '\0')
 	{
-		if (env->exported && printf("%s=%s\n", env->key, env->value) == -1)
-			return (False);
-		env = env->next;
+		ret[i] = s1[i];
+		i++;
 	}
+	ret[i++] = c;
+	j = 0;
+	while (s2[j] != '\0')
+	{
+		ret[i + j] = s2[j];
+		j++;
+	}
+	ret[i + j] = '\0';
+	return (ret);
 }

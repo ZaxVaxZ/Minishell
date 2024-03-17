@@ -42,7 +42,7 @@ typedef struct s_command
 }	t_command;
 
 void	clean_whitespace(t_queue *q);
-t_bool	is_builtin(t_queue *q, t_command *cmd);
+t_bool	resolve_builtin(t_command *cmd, t_env **env);
 t_bool	execute(t_queue *q, t_command *cmd);
 
 #endif

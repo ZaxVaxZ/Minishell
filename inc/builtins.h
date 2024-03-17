@@ -16,24 +16,19 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
-# include <dirent.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 # include "general.h"
 # include "libft.h"
 # include "parser.h"
 # include "env_list.h"
 
-typedef struct s_blt
-{
-	char	**path;
-	char	**env;
-	char	*pwd;
-	char	*old_pwd;
-}	t_blt;
-
-t_bool	echo(char *str, t_bool n);
-void	cd(t_blt *b, char *dir);
+t_bool	echo(char **str, t_bool n);
+t_bool	print_env(t_env *env);
+void	pwd(t_env *env);
 void	exiting(int code);
+int		cd(char *pwd, char *dir);
+void	unset(char *var_name, t_env **env);
 void	export(t_env **env, char *variable);
-t_bool	env(t_env *env);
 
 #endif

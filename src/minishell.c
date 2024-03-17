@@ -132,7 +132,7 @@ int	main(int ac, char **av, char **env)
 	write(1, ">", 1);
 	cmd_line = get_next_line(0);
 	t_env *envp;
-	env_to_list(env, &envp);
+	envp = to_env_list(env);
 	// print_list(envp);
 	t_command cmds[1024];
 	int i = 0;
