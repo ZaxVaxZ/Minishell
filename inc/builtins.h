@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 13:07:12 by pipolint          #+#    #+#             */
-/*   Updated: 2024/03/15 16:52:57 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/18 15:19:56 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include "parser.h"
 # include "env_list.h"
 
-int		cd(char *pwd, char *dir);
+int		cd(char *pwd, char *dir, t_env **env);
 void	exiting(int code);
 void	unset(char *var_name, t_env **env);
 t_bool	pwd(t_env *env);

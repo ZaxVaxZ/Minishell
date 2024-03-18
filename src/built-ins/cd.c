@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 13:31:22 by pipolint          #+#    #+#             */
-/*   Updated: 2024/03/15 16:53:25 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/18 15:54:57 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,12 @@ static int	is_directory(char *dir)
 	}
 }
 
-int	cd(char *pwd, char *dir)
+int	cd(char *pwd, char *dir, t_env **env)
 {
 	int			is_dir;
 	char		*tmp;
 
+	tmp = NULL;
 	if (!pwd || !*pwd || !dir || !*dir)
 	{
 		if (printf("Error in getting current working directory\n") == -1)
@@ -50,8 +51,10 @@ int	cd(char *pwd, char *dir)
 		if (is_dir)
 			return (is_dir);
 	}
+	chdir(tmp);
 	is_dir = is_directory(tmp);
 	if (is_dir == 1)
 		return (2);
+	set_var(env, "PWD", tmp, 1);
 	return (is_dir);
 }

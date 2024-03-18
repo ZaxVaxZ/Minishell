@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/15 17:04:30 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/18 16:01:54 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,19 @@ void	handle(int sig)
 // 	}
 // }
 
+int	count_commands(t_queue *q)
+{
+	int	count;
+
+	count = 0;
+	while (q && q->type != Op_logic && q->type != Semicolon && q->type != Op_pipe)
+	{
+		count++;
+		q = q->next;
+	}
+	return (count);
+}
+
 int	main(int ac, char **av, char **env)
 {
 	(void)ac; (void)av; (void)env;
@@ -129,14 +142,17 @@ int	main(int ac, char **av, char **env)
 
 	(void)q; (void)cmd_line;
 	signal(SIGINT, handle);
-	printf("%s> ", getenv("PWD"));
+	write(1, getenv("PWD"), ft_strlen(getenv("PWD")));
+	write(1, ">", 1);
 	cmd_line = get_next_line(0);
 	t_env *envp;
 	envp = to_env_list(env);
-	print_env(envp);
+	//print_env(envp);
 	// print_list(envp);
-	t_command cmds[1024];
-	int i = 0;
+	//t_command cmds[1024];
+	t_command *cmds;
+	//t_command *cmd = NULL;
+	//int	i;
 	while (cmd_line)
 	{
 		q = parse(cmd_line);
@@ -147,17 +163,21 @@ int	main(int ac, char **av, char **env)
 			return (1);
 		}
 		clean_whitespace(q);
-		// print_queue(q);
-		execute(q, &cmds[i++]);
+		cmds = malloc(sizeof(t_command) * count_commands(q));
+		//print_queue(q);
 		// for (int j = 0; cmds[i - 1].params[j]; j++)
 		// 	printf("%s\n", cmds[i - 1].params[j]);
-		resolve_builtin(&cmds[i - 1], &envp);
-		free_env(&envp);
+		//resolve_builtin(&cmds[i - 1], &envp);
+		//execute_command(&envp, &cmds[i - 1], &q);
+		build_command(q, cmds);
+		resolve_builtin(cmds, &envp);
+		execute_command(&envp, cmds, &q);
 		free_queue(&q);
 		free(cmd_line);
-		return (0);
-		printf("%s> ", getenv("PWD"));
+		write(1, getenv("PWD"), ft_strlen(getenv("PWD")));
+		write(1, ">", 1);
 		cmd_line = get_next_line(0);
 	}
+	free_env(&envp);
 	return (0);
 }
