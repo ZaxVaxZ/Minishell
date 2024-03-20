@@ -27,7 +27,7 @@
 /// @param value The value to be assigned to the variable. NULL to keep it as is
 /// @param exported 1/0 To set exported state to True/False. -1 to keep it as is
 /// @return False if any malloc fails. True otherwise
-t_bool	set_var(t_env **env, char *key, char *value, int exported)
+t_bool	set_var(t_env **env, char *key, char *value, int exp)
 {
 	t_env	*tmp;
 
@@ -37,7 +37,7 @@ t_bool	set_var(t_env **env, char *key, char *value, int exported)
 	{
 		if (!value)
 			return (True);
-		tmp = new_env_node(key, value, exported + (exported < 0));
+		tmp = new_env_node(key, value, exp + (exp < 0));
 		if (!tmp)
 			return (free_env(env));
 		add_env_node(env, tmp);
@@ -46,12 +46,13 @@ t_bool	set_var(t_env **env, char *key, char *value, int exported)
 	tmp = *env;
 	while (tmp && ft_strncmp(tmp->key, key, -1))
 		tmp = tmp->next;
-	free(tmp->value);
+	if (value)
+		free(tmp->value);
 	if (value)
 		tmp->value = ft_strdup(value);
 	if (!tmp->value)
 		return (free_env(env));
-	tmp->exported = exported + (exported < 0);
+	tmp->exported = tmp->exported + (exp == 1 && exp != tmp->exported);
 	return (True);
 }
 
@@ -100,7 +101,7 @@ void	delete_var(t_env **env, char *key)
 		curr = curr->next;
 	}
 }
-#include <stdio.h>
+
 /// @brief Turns an array of key=value pairs as strings into an env list
 /// @param strs The list of strings containing key=value strings
 /// @return The env list created from the strings. NULL if a malloc fails

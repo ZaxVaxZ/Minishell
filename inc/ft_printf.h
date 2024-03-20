@@ -29,17 +29,17 @@ typedef struct modifications
 	int	field_width;
 }	t_mods;
 
-int		ft_handlestr(char **c, va_list args);
-int		ft_printaddr(void *address, t_mods *mods);
-int		ft_printchar(char c, t_mods *mods);
-int		ft_printf(const char *str, ...);
-int		ft_printhex(unsigned long x, int cap, t_mods *mods);
-int		ft_printint(int x, t_mods *mods);
-int		ft_printstr(char *str, t_mods *mods);
-int		ft_printuint(unsigned int x, t_mods *mods);
-t_mods	*get_mods(char **s);
 int		min(int x, int y);
 int		max(int x, int y);
+int		ft_printf(const char *str, ...);
+int		ft_printint(int x, t_mods *mods);
+int		ft_printchar(char c, t_mods *mods);
+int		ft_handlestr(char **c, va_list args);
+int		ft_printstr(char *str, t_mods *mods);
+int		ft_printaddr(void *address, t_mods *mods);
+int		ft_printuint(unsigned int x, t_mods *mods);
 int		loop_print(int condition, int num, int end, char c);
+int		ft_printhex(unsigned long x, int cap, t_mods *mods);
+t_mods	*get_mods(char **s);
 
 #endif
