@@ -15,16 +15,12 @@
 t_bool	echo(char **s, t_bool n)
 {
 	int	i;
-	char	*str;
 
-	str = (*s);
-	if (!str)
-		return (True);
-	i = 0;
-	while (str[i])
+	i = (!n);
+	while (s[i])
 	{
 		//if (printf("%s", str[i]) == -1)
-		if (write(1, &str[i], 1) == -1)
+		if (write(1, s[i], 1) == -1)
 			return (False);
 		//if (str[i + 1] && printf(" ") == -1)
 		//if (str[i + 1] && write(1, " ", 1) == -1)
