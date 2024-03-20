@@ -40,7 +40,6 @@ int		ft_printuint(unsigned int x, t_mods *mods);
 t_mods	*get_mods(char **s);
 int		min(int x, int y);
 int		max(int x, int y);
-size_t	ft_strlen(char *s);
 int		loop_print(int condition, int num, int end, char c);
 
 #endif
