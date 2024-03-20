@@ -3,104 +3,91 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/03 10:52:28 by pipolint          #+#    #+#             */
-/*   Updated: 2024/03/18 13:46:54 by pipolint         ###   ########.fr       */
+/*   Created: 2023/11/02 13:36:54 by ehammoud          #+#    #+#             */
+/*   Updated: 2023/11/19 16:23:05 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	count_words(char const *s, char c)
+static int	word_count(char *s, char sep)
 {
-	int	words;
-	int	letters;
-	int	i;
+	size_t	i;
+	size_t	c;
+	size_t	n;
 
+	if (!s)
+		return (0);
+	n = 0;
 	i = 0;
-	words = 0;
-	letters = 0;
-	while (s[i])
+	c = 0;
+	while (s[i] != '\0')
 	{
-		if (s[i] != c)
-			letters++;
-		else if (s[i] == c && letters)
+		if (s[i] == sep && c > 0)
 		{
-			letters = 0;
-			words++;
+			n++;
+			c = 0;
 		}
-		if (s[i + 1] == '\0' && s[i] != c)
-			words++;
+		else if (s[i] != sep)
+			c++;
 		i++;
 	}
-	return (words);
+	if (c > 0)
+		n++;
+	return (n);
 }
 
-static char	**free_split(char **strs, char *s)
+static char	**ft_freeup(char **arr)
 {
-	int	i;
+	size_t	i;
 
-	i = -1;
-	while (strs[++i])
-		free(strs[i]);
-	free(strs);
-	if (s)
-		free(s);
+	if (!arr)
+		return (NULL);
+	i = 0;
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
 	return (NULL);
 }
 
-static int	get_length(const char *s, char c)
+static char	**populate(char **ret, char *str, char sep)
 {
-	int	length;
+	size_t	i;
+	size_t	j;
+	size_t	wc;
 
-	length = 0;
-	while (*s != '\0' && *s != c)
+	if (!ret || !str)
+		return (NULL);
+	wc = 0;
+	i = 0;
+	while (str[i] != '\0')
 	{
-		length++;
-		s++;
-	}
-	return (length);
-}
-
-static char	**add_words(char **words, char *s, char c)
-{
-	char	*word;
-	int		current_word;
-	int		i;
-
-	current_word = 0;
-	while (*s)
-	{
-		i = 0;
-		if (*s != c)
+		j = 0;
+		while (str[i + j] && str[i + j] != sep)
+			j++;
+		if (j > 0)
 		{
-			word = malloc(sizeof(char) * (get_length(s, c) + 1));
-			if (!word)
-				return (free_split(words, s));
-			while (*s != c && *s)
-				word[i++] = *s++;
-			word[i] = '\0';
-			words[current_word++] = ft_strdup(word);
-			free(word);
+			ret[wc++] = ft_substr(str, i, j);
+			if (ret[wc - 1] == NULL)
+				return (ft_freeup(ret));
 		}
-		else
-			s++;
+		i += j + (j == 0);
 	}
-	words[current_word] = 0;
-	return (words);
+	ret[wc] = NULL;
+	return (ret);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(char *s, char sep)
 {
-	char	**words;
-	int		word_count;
+	char	**ret;
 
 	if (!s)
 		return (NULL);
-	word_count = count_words(s, c);
-	words = malloc(sizeof(char *) * (word_count + 1));
-	if (!words)
+	ret = malloc((word_count(s, sep) + 1) * sizeof(char *));
+	if (!ret)
 		return (NULL);
-	return (add_words(words, (char *)s, c));
+	ret = populate(ret, s, sep);
+	return (ret);
 }
