@@ -37,7 +37,7 @@ static int	count_words(char const *s, char c)
 	return (words);
 }
 
-static void	free_split(char **strs, char *s)
+static char	**free_split(char **strs, char *s)
 {
 	int	i;
 
@@ -47,6 +47,7 @@ static void	free_split(char **strs, char *s)
 	free(strs);
 	if (s)
 		free(s);
+	return (NULL);
 }
 
 static int	get_length(const char *s, char c)
@@ -62,7 +63,7 @@ static int	get_length(const char *s, char c)
 	return (length);
 }
 
-static void	add_words(char **words, char *s, char c)
+static char	**add_words(char **words, char *s, char c)
 {
 	char	*word;
 	int		current_word;
@@ -74,12 +75,9 @@ static void	add_words(char **words, char *s, char c)
 		i = 0;
 		if (*s != c)
 		{
-			word = (char *)malloc(sizeof(char) * (get_length(s, c) + 1));
+			word = malloc(sizeof(char) * (get_length(s, c) + 1));
 			if (!word)
-			{
-				free_split(words, s);
-				return ;
-			}
+				return (free_split(words, s));
 			while (*s != c && *s)
 				word[i++] = *s++;
 			word[i] = '\0';
@@ -90,6 +88,7 @@ static void	add_words(char **words, char *s, char c)
 			s++;
 	}
 	words[current_word] = 0;
+	return (words);
 }
 
 char	**ft_split(char const *s, char c)
@@ -100,9 +99,8 @@ char	**ft_split(char const *s, char c)
 	if (!s)
 		return (NULL);
 	word_count = count_words(s, c);
-	words = (char **)malloc(sizeof(char *) * (word_count + 1));
+	words = malloc(sizeof(char *) * (word_count + 1));
 	if (!words)
 		return (NULL);
-	add_words(words, (char *)s, c);
-	return (words);
+	return (add_words(words, (char *)s, c));
 }
