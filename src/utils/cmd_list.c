@@ -39,6 +39,7 @@ t_cmd	*new_cmd_node(char **params)
 	node->out_fd = -1;
 	node->output = NULL;
 	node->params = params;
+	node->or_op = False;
 	node->before = Illegal;
 	node->after = Illegal;
 	node->next = NULL;
