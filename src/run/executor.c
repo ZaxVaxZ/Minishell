@@ -40,7 +40,7 @@ void	clean_whitespace(t_queue *q)
 		q = q->next;
 	}
 }
-t_bool	free_and_return(t_queue **q, t_command **cmd, char **temp)
+t_bool	free_and_return(t_queue **q, t_cmd **cmd, char **temp)
 {
 	int	i;
 
@@ -62,7 +62,7 @@ t_bool	free_and_return(t_queue **q, t_command **cmd, char **temp)
 	return (False);
 }
 
-t_bool	resolve_builtin(t_command *cmd, t_env **env)
+t_bool	resolve_builtin(t_cmd *cmd, t_env **env)
 {
 	if (!ft_strncmp(cmd->params[0], "exit", -1))
 		exiting(0);
@@ -98,13 +98,11 @@ t_bool	resolve_builtin(t_command *cmd, t_env **env)
 	return (True);
 }
 
-t_bool	build_commands(t_queue *q, t_command *cmd)
+t_bool	build_commands(t_queue *q, t_cmd *cmd)
 {
 	int		i;
 	char	*tmp;
 
-	(void)q;
-	clean_whitespace(q);
 	cmd->params = malloc(sizeof(char *) * (count_words(q) + 1));
 	cmd->input = NULL;
 	cmd->output = NULL;
@@ -150,7 +148,7 @@ t_bool	build_commands(t_queue *q, t_command *cmd)
 /// @param env the environment with the path variable
 /// @param cmd the command
 /// @return returns path if found, else NULL
-char	*search_path(t_env **env, t_command *cmd)
+char	*search_path(t_env **env, t_cmd *cmd)
 {
 	char	*path;
 	char	**paths;
@@ -178,7 +176,7 @@ char	*search_path(t_env **env, t_command *cmd)
 	return (NULL);
 }
 
-void	execute_command(t_env **env, t_command *cmd, t_queue **q)
+void	execute_command(t_env **env, t_cmd *cmd, t_queue **q)
 {
 	int		status;
 	char	*valid;
