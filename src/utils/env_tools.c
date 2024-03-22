@@ -52,7 +52,7 @@ t_bool	set_var(t_env **env, char *key, char *value, int exp)
 		tmp->value = ft_strdup(value);
 	if (!tmp->value)
 		return (free_env(env));
-	tmp->exported = tmp->exported + (exp == 1 && exp != tmp->exported);
+	tmp->exported = tmp->exported + (exp == 1 && exp != (int)tmp->exported);
 	return (True);
 }
 

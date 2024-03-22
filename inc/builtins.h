@@ -22,6 +22,7 @@
 # include "libft.h"
 # include "parser.h"
 # include "env_list.h"
+# include "ft_printf.h"
 
 int		cd(char *pwd, char *dir, t_env **env);
 void	exiting(int code);

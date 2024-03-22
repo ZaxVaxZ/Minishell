@@ -36,6 +36,7 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp)
 	t_queue	*q;
 	t_cmd	*cmds;
 
+	cmds = NULL;
 	q = parse(cmd_line);
 	if (parse_clean_up(&q))
 	{
@@ -43,10 +44,13 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp)
 		return (1);
 	}
 	clean_whitespace(q);
-	build_commands(q, cmds);
+	// V NEEDS FIXING TO TREAT CMDS AS A LIST OF COMMANDS NOT 1 V
+	build_command(q, cmds);
 	resolve_builtin(cmds, &envp);
 	execute_command(&envp, cmds, &q);
+	// ^ NEEDS FIXING TO TREAT CMDS AS A LIST OF COMMANDS NOT 1 ^
 	free_queue(&q);
+	free_cmd(&cmds);
 	free(cmd_line);
 	return (0);
 }

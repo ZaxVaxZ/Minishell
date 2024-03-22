@@ -20,8 +20,8 @@ SRCS	=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c		\
 			$(GNL)/get_next_line.c $(GNL)/get_next_line_utils.c				\
 			$(PRF)/ft_mods_utils.c $(PRF)/ft_printaddr.c $(PRF)/ft_printf.c	\
 			$(PRF)/ft_printhex.c $(PRF)/ft_printstr.c $(PRF)/ft_printchar.c	\
-			$(PRF)/ft_handlestr.c $(PRF)/ft_extra_utils.c $(PRF)/ft_printf.h\
-			$(PRF)/ft_printint.c $(PRF)/ft_printuint.c						\
+			$(PRF)/ft_handlestr.c $(PRF)/ft_extra_utils.c					\
+			$(PRF)/ft_printuint.c $(PRF)/ft_printint.c						\
 			$(BIF)/unset.c $(BIF)/pwd.c $(BIF)/echo.c $(BIF)/export.c		\
 			$(BIF)/exit.c $(BIF)/env.c $(BIF)/cd.c							\
 			$(UTL)/queues.c $(UTL)/env_list.c $(UTL)/env_tools.c			\

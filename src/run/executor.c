@@ -85,7 +85,7 @@ int	resolve_builtin(t_cmd *cmd, t_env **env)
 		else if (!cd(get_var(*env, "PWD"), cmd->params[1], env))
 			return (-1);
 	}
-	else if (!ft_strncmp(cmd->params[0], "env", -1) && print_env(*env) == -1)
+	else if (!ft_strncmp(cmd->params[0], "env", -1) && !print_env(*env))
 			return (-1);
 	else if (!ft_strncmp(cmd->params[0], "unset", -1))
 		delete_var(env, cmd->params[1]);
@@ -100,7 +100,7 @@ int	resolve_builtin(t_cmd *cmd, t_env **env)
 	return (1);
 }
 
-t_bool	build_commands(t_queue *q, t_cmd *cmd)
+t_bool	build_command(t_queue *q, t_cmd *cmd)
 {
 	int		i;
 	char	*tmp;
