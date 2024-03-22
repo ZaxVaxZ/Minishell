@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ENV_H
-# define ENV_H
+#ifndef ENV_LIST_H
+# define ENV_LIST_H
 
 # include <stdlib.h>
 # include "general.h"

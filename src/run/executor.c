@@ -98,7 +98,7 @@ t_bool	resolve_builtin(t_command *cmd, t_env **env)
 	return (True);
 }
 
-t_bool	build_command(t_queue *q, t_command *cmd)
+t_bool	build_commands(t_queue *q, t_command *cmd)
 {
 	int		i;
 	char	*tmp;

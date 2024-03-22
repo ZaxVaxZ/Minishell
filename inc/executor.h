@@ -43,7 +43,7 @@ typedef struct s_command
 
 void	clean_whitespace(t_queue *q);
 t_bool	resolve_builtin(t_command *cmd, t_env **env);
-t_bool	build_command(t_queue *q, t_command *cmd);
+t_bool	build_commands(t_queue *q, t_command *cmd);
 char	*search_path(t_env **env, t_command *cmd);
 void	execute_command(t_env **env, t_command *cmd, t_queue **q);
 
