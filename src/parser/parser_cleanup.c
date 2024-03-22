@@ -145,7 +145,7 @@ int	parse_clean_up(t_queue **h)
 	open[2] = 0;
 	q = *h;
 	if (queue_end(q)->type == Illegal)
-		return (syntax_error(h, queue_end(q)->s, False, (queue_end(q)->s == NULL)));
+		return (syntax_error(h, queue_end(q)->s, False, (!queue_end(q)->s)));
 	while (q)
 	{
 		open[0] += (q->type == Sq_open) - (q->type == Sq_closed);

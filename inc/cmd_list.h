@@ -15,29 +15,16 @@
 
 # include "queues.h"
 
-typedef enum e_cmd_type
-{
-	Cd,
-	Pwd,
-	Env,
-	Echo,
-	Exit,
-	Unset,
-	Export,
-	Not_builtin
-}	t_cmd_type;
-
 typedef struct s_cmd
 {
-	int					status;
-	int					in_fd;
-	int					out_fd;
-	char				*input;
-	char				*output;
-	char				**params;
-	t_token				before;
-	t_token				after;
-	t_cmd_type			type;
+	int				status;
+	int				in_fd;
+	int				out_fd;
+	char			*input;
+	char			*output;
+	char			**params;
+	t_token			before;
+	t_token			after;
 	struct s_cmd	*next;
 }	t_cmd;
 

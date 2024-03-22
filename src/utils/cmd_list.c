@@ -27,7 +27,7 @@
 /// @return Returns the created node. NULL if a malloc fails
 t_cmd	*new_cmd_node(char **params)
 {
-	int			i;
+	int		i;
 	t_cmd	*node;
 
 	node = malloc(sizeof(t_cmd));
@@ -41,7 +41,6 @@ t_cmd	*new_cmd_node(char **params)
 	node->params = params;
 	node->before = Illegal;
 	node->after = Illegal;
-	node->type = Not_builtin;
 	node->next = NULL;
 	return (node);
 }

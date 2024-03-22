@@ -50,7 +50,7 @@ t_env	*new_env_node(char *key, char *value, t_bool exported)
 	node->next = NULL;
 	return (node);
 }
-#include <stdio.h>
+
 /// @brief Adds an env node to an env list
 /// @param env The env list
 /// @param to_add The node to be added

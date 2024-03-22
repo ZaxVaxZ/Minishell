@@ -36,12 +36,12 @@ int	cd(char *pwd, char *dir, t_env **env)
 	char		*tmp;
 
 	tmp = NULL;
-	if (!pwd || !*pwd || !dir || !*dir)
-	{
-		if (printf("Error in getting current working directory\n") == -1)
-			return (-2);
+	if ((!pwd || !*pwd) && ft_printf("cd: PWD not set\n") == -1)
+		return (-2);
+	if ((!dir || !*dir) && ft_printf("cd: HOME not set\n") == -1)
+		return (-2);
+	if (!dir || !*dir || !pwd || !*pwd)
 		return (0);
-	}
 	if (dir[0] != '\\' && dir[0] != '/')
 	{
 		tmp = ft_strjoin_chr(pwd, '/', dir);

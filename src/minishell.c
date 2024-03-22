@@ -33,7 +33,7 @@ static void	handle(int sig)
 
 static int	handle_cmd_line(char *cmd_line, t_env *envp)
 {
-	t_queue		*q;
+	t_queue	*q;
 	t_cmd	*cmds;
 
 	q = parse(cmd_line);

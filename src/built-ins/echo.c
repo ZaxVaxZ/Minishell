@@ -17,7 +17,7 @@ t_bool	echo(char **s, t_bool n)
 	int	i;
 
 	i = (n == True);
-	while (s[i])
+	while (s && s[i])
 	{
 		if (printf("%s", s[i]) == -1 || (s[i + 1] && printf(" ") == -1))
 			return (False);

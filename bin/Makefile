@@ -27,7 +27,7 @@ SRCS	=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c		\
 			$(UTL)/queues.c $(UTL)/env_list.c $(UTL)/env_tools.c			\
 			$(PRS)/parser.c $(PRS)/parser_utils.c $(PRS)/parser_extras.c	\
 			$(PRS)/parser_checkers.c $(PRS)/parser_cleanup.c				\
-			$(EXE)/executor.c $(SFD)/minishell.c
+			$(EXE)/executor.c $(SFD)/minishell.c		./../tmp/tmp_utils.c
 
 ### []+--------={ Object files and Program name }=--------+[] ###
 OBJS	=	$(SRCS:.c=.o)

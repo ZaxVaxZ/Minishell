@@ -40,6 +40,7 @@ void	clean_whitespace(t_queue *q)
 		q = q->next;
 	}
 }
+
 t_bool	free_and_return(t_queue **q, t_cmd **cmd, char **temp)
 {
 	int	i;
@@ -62,40 +63,41 @@ t_bool	free_and_return(t_queue **q, t_cmd **cmd, char **temp)
 	return (False);
 }
 
-t_bool	resolve_builtin(t_cmd *cmd, t_env **env)
+int	resolve_builtin(t_cmd *cmd, t_env **env)
 {
+	if (!cmd || !cmd->params || !cmd->params[0])
+		return (0);
 	if (!ft_strncmp(cmd->params[0], "exit", -1))
-		exiting(0);
+		return (-1);
 	else if (!ft_strncmp(cmd->params[0], "echo", -1))
 	{
-		if (!ft_strncmp(cmd->params[1], "-n", 2) && cmd->params[2])
-			echo(cmd->params + 2, 1);
-		else if (cmd->params[1])
-			echo(cmd->params + 1, 0);
+		if (cmd->params[1] && !ft_strncmp(cmd->params[1], "-n", 2)
+			&& !echo(cmd->params + 2, True))
+				return (-1);
+		else if (!echo(cmd->params + 1, False))
+			return (-1);
 	}
-	else if (!ft_strncmp(cmd->params[0], "cd", -1) && cmd->params[1])
+	else if (!ft_strncmp(cmd->params[0], "cd", -1))
 	{
-		cd(get_var(*env, "PWD"), cmd->params[1], env);
+		if (cmd->params[1]
+			&& !cd(get_var(*env, "PWD"), get_var(*env, "HOME"), env))
+				return (-1);
+		else if (!cd(get_var(*env, "PWD"), cmd->params[1], env))
+			return (-1);
 	}
-	else if (!ft_strncmp(cmd->params[0], "env", -1))
-	{
-		print_env(*env);
-	}
+	else if (!ft_strncmp(cmd->params[0], "env", -1) && print_env(*env) == -1)
+			return (-1);
 	else if (!ft_strncmp(cmd->params[0], "unset", -1))
-	{
 		delete_var(env, cmd->params[1]);
-	}
-	else if (!ft_strncmp(cmd->params[0], "pwd", -1))
-	{
-		printf("%s\n", get_var(*env, "PWD"));
-	}
-	else if (!ft_strncmp(cmd->params[0], "export", -1))
-	{
-		//export(env, cmd->params[1],)
-	}
+	else if (!ft_strncmp(cmd->params[0], "pwd", -1)
+		&& ft_printf("%s\n", get_var(*env, "PWD")) == -1)
+			return (-1);
+	else if (!ft_strncmp(cmd->params[0], "export", -1)
+		&& !set_var(env, cmd->params[1], NULL, 1))
+		return (-1);
 	else
-		return (False);
-	return (True);
+		return (0);
+	return (1);
 }
 
 t_bool	build_commands(t_queue *q, t_cmd *cmd)

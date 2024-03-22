@@ -81,7 +81,8 @@ t_bool	is_legal_queue_end(t_queue *q, char *s)
 			q_end = q;
 		q = q->next;
 	}
-	if (q_end->type != Op_logic && q_end->type != Op_redir && q_end->type != Op_pipe)
+	if (q_end->type != Op_logic && q_end->type != Op_redir
+		&& q_end->type != Op_pipe)
 		return (True);
 	while (q_end->next)
 		delete_next(&q_end);
@@ -110,7 +111,8 @@ t_bool	is_legal_control_op(char *s, t_queue *q)
 			q_end = q;
 		q = q->next;
 	}
-	if ((!q_end && is_meta_char(s, True) && s[0] != LP) || (s[0] == RP && !opened))
+	if ((!q_end && is_meta_char(s, True) && s[0] != LP)
+		|| (s[0] == RP && !opened))
 		return (False);
 	if (is_meta_char(s, True) && s[0] != LP && (q_end->type == Op_logic
 			|| q_end->type == Op_pipe || q_end->type == Op_redir
