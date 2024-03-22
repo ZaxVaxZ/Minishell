@@ -23,6 +23,7 @@ typedef struct s_cmd
 	char			*input;
 	char			*output;
 	char			**params;
+	t_bool			or_op;
 	t_token			before;
 	t_token			after;
 	struct s_cmd	*next;
