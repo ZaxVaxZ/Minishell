@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 05:23:38 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/23 05:23:38 by marvin           ###   ########.fr       */
+/*   Updated: 2024/03/23 20:41:17 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env_list.h"
+#include <stdio.h>
 
 /* -----------------------
  * Functions in the file:
@@ -40,11 +41,11 @@ t_env	*to_env_list(char **strs)
 		eqp = ft_strchr(strs[i], '=');
 		tmp->key = ft_substr(strs[i], 0, eqp - strs[i]);
 		tmp->value = ft_substr(strs[i], eqp - strs[i] + 1, ft_strlen(eqp + 1));
+		if ((!tmp->key || !tmp->value) && !free_env(&env))
+			return (NULL);
 		tmp->exported = True;
 		tmp->next = NULL;
 		add_env_node(&env, tmp);
-		if ((!tmp->key || !tmp->value) && !free_env(&env))
-			return (NULL);
 		i++;
 	}
 	return (env);

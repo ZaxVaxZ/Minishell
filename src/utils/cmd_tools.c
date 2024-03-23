@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/23 03:34:49 by marvin           ###   ########.fr       */
+/*   Updated: 2024/03/24 01:39:17 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cmd_list.h"
+#include <stdio.h>
 
 /* -----------------------
  * Functions in the file:
@@ -124,6 +125,7 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 		tmp->params[i] = NULL;
 		q = after_cmd(q, tmp, &depth);
 		add_cmd_node(cmds, tmp);
+		printf("%s ", tmp->params[0]);
 	}
 	return (True);
 }
