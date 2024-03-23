@@ -51,7 +51,7 @@ t_env	*new_env_node(char *key, char *value, t_bool exported)
 	return (node);
 }
 
-/// @brief Adds an env node to an env list
+/// @brief Adds an env node to an env list in its correct alphabetical position
 /// @param env The env list
 /// @param to_add The node to be added
 void	add_env_node(t_env **env, t_env *to_add)
@@ -65,9 +65,17 @@ void	add_env_node(t_env **env, t_env *to_add)
 		*env = to_add;
 		return ;
 	}
+	else if (ft_strncmp(to_add->key, (*env)->key, -1) < 0)
+	{
+		to_add->next = *env;
+		*env = to_add;
+		return ;
+	}
 	trav = (*env);
-	while (trav->next)
+	while (trav->next && ft_strncmp(trav->next->key, to_add->key, -1) < 0)
 		trav = trav->next;
+	if (trav->next)
+		to_add->next = trav->next->next;
 	trav->next = to_add;
 }
 
@@ -112,6 +120,5 @@ t_bool	free_env(t_env **env)
 		*env = (*env)->next;
 		free_env_node(tmp);
 	}
-	*env = NULL;
 	return (False);
 }

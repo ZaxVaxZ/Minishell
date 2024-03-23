@@ -66,3 +66,71 @@ void	print_queue(t_queue *queue)
 	}
 	write(1, "|----------|----------|\n\n", 25);
 }
+
+int	count_params(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr && arr[i])
+		i++;
+	return (i);
+}
+
+int	get_max(t_cmd *cmds)
+{
+	int	x;
+
+	if (!cmds)
+		return (-1);
+	x = count_params(cmds->params);
+	while (cmds)
+	{
+		if (count_params(cmds->params) > x)
+			x = count_params(cmds->params);
+		cmds = cmds->next;
+	}
+	return (x);
+}
+
+void	print_commands(t_cmd *cmds)
+{
+	int	x;
+	int	i;
+
+	if (!cmds)
+	{
+		ft_printf("There are no commands!\n\n");
+		return ;
+	}
+	x = get_max(cmds);
+	if (x > 9)
+		x = 9;
+	ft_printf("|-");
+	i = 0;
+	while (i < x + 5)
+		ft_printf("|----------");
+	ft_printf("|\n|-|%10.10s|%10.10s", "  Before", " Command");
+	i = 1;
+	while (i < x)
+		ft_printf("|Parameter%d", i++);
+	ft_printf("|%10.10s|%10.10s|%10.10s|\n|-",
+		"  After", "  Input", "  Output");
+	i = 0;
+	while (i < x + 5)
+		ft_printf("|----------");
+	ft_printf("|\n|-|%10.10s|%10.10s", type_to_str(cmds->before),
+		cmds->params[0]);
+	i = 1;
+	while (i < x && cmds->params[i])
+		ft_printf("|%10.10s", cmds->params[i++]);
+	while (i++ < x)
+		ft_printf("|%10.10s", "");
+	ft_printf("|\n|-|%10.10s|%10.10s", type_to_str(cmds->before),
+		cmds->params[0]);
+	ft_printf("|%10.10s|%10.10s|%10.10s|\n|-", type_to_str(cmds->after),
+		cmds->input, cmds->output);
+	while (i < x + 5)
+		ft_printf("|----------");
+	ft_printf("|\n");
+}

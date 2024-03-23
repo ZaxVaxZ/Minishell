@@ -27,12 +27,12 @@
 /// @return Returns the created node. NULL if a malloc fails
 t_cmd	*new_cmd_node(char **params)
 {
-	int		i;
 	t_cmd	*node;
 
 	node = malloc(sizeof(t_cmd));
 	if (!node)
 		return (NULL);
+	node->depth = 0;
 	node->status = 0;
 	node->in_fd = -1;
 	node->input = NULL;
@@ -93,6 +93,10 @@ void	free_cmd_node(t_cmd *node)
 		free(node->params[i++]);
 	if (node && node->params)
 		free(node->params);
+	if (node && node->input)
+		free(node->input);
+	if (node && node->output)
+		free(node->output);
 	if (node)
 		free(node);
 }

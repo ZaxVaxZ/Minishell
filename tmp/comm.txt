@@ -28,3 +28,7 @@ For env:
 create a linked list for the env which will consist of a key value pair
 copy the queues functions for it lol
 create a function to convert the linked list into a double array for execve uwu
+
+====================================================================================================================================================================
+
+Alphabetical variables T_T

@@ -15,49 +15,60 @@
 /* -----------------------
  * Functions in the file:
  *   set_var()
+ *   add_var()
  *   get_var()
  *   delete_var()
- *   to_env_list()
- *   to_char_arr()
+ *   export_var()
  * -----------------------*/
 
-/// @brief Sets a variable's value. Creates the variable if it doesn't exist
-/// @param env The env list
-/// @param key The name of the variable
-/// @param value The value to be assigned to the variable. NULL to keep it as is
-/// @param exported 1/0 To set exported state to True/False. -1 to keep it as is
+/// @brief Sets the value of a variable in the environment
+/// @param env The environment variable list
+/// @param key The variable name
+/// @param value The value to be set for the variable. NULL to keep old value
+/// @param exported Whether or not this variable should be exported to env
 /// @return False if any malloc fails. True otherwise
-t_bool	set_var(t_env **env, char *key, char *value, int exp)
+t_bool	set_var(t_env **env, char *key, char *value, t_bool exported)
 {
 	t_env	*tmp;
 
-	if (!env || !key)
-		return (True);
-	if (!get_var(*env, key))
-	{
-		if (!value)
-			return (True);
-		tmp = new_env_node(key, value, exp + (exp < 0));
-		if (!tmp)
-			return (free_env(env));
-		add_env_node(env, tmp);
-		return (True);
-	}
 	tmp = *env;
 	while (tmp && ft_strncmp(tmp->key, key, -1))
 		tmp = tmp->next;
+	if (!tmp)
+		return (True);
 	if (value)
+	{
 		free(tmp->value);
-	if (value)
 		tmp->value = ft_strdup(value);
-	if (!tmp->value)
+		if (!tmp->value)
+			return (free_env(env));
+	}
+	tmp->exported = exported;
+	return (True);
+}
+
+/// @brief Creates a variable and adds it to the env variable list.
+/// @param env The environment variable list
+/// @param key The name of the variable
+/// @param value The value to be assigned to the variable
+/// @return False if any malloc fails. True otherwise
+t_bool	add_var(t_env **env, char *key, char *value)
+{
+	t_env	*tmp;
+
+	if (!env || !key || !*key || !value)
+		return (True);
+	if (get_var(*env, key))
+		return (set_var(env, key, value, False));
+	tmp = new_env_node(key, value, False);
+	if (!tmp)
 		return (free_env(env));
-	tmp->exported = tmp->exported + (exp == 1 && exp != (int)tmp->exported);
+	add_env_node(env, tmp);
 	return (True);
 }
 
 /// @brief Get the value of a variable in the env list
-/// @param env The env list
+/// @param env The environment variable list
 /// @param key The variable name
 /// @return The value of the variable if it exists. NULL otherwise
 char	*get_var(t_env *env, char *key)
@@ -72,7 +83,7 @@ char	*get_var(t_env *env, char *key)
 }
 
 /// @brief Deletes a variable from the env if it existed
-/// @param env The env list
+/// @param env The environment variable list
 /// @param key Name of the variable
 void	delete_var(t_env **env, char *key)
 {
@@ -102,61 +113,34 @@ void	delete_var(t_env **env, char *key)
 	}
 }
 
-/// @brief Turns an array of key=value pairs as strings into an env list
-/// @param strs The list of strings containing key=value strings
-/// @return The env list created from the strings. NULL if a malloc fails
-t_env	*to_env_list(char **strs)
+/// @brief Exports an existing variable
+/// @param e The environment variable list
+/// @param str String provided to export command. Assignment or variable name
+/// @return False if any malloc fails. True otherwise
+t_bool	export_var(t_env **e, char *str)
 {
-	int		i;
-	char	*eqp;
-	t_env	*tmp;
-	t_env	*env;
+	t_bool	issue;
+	char	*eq;
+	char	*key;
+	char	*val;
 
-	if (!strs)
-		return (NULL);
-	env = NULL;
-	i = 0;
-	while (strs[i])
+	issue = False;
+	eq = ft_strchr(str, '=');
+	if (eq)
 	{
-		tmp = malloc(sizeof(t_env));
-		if (!tmp && !free_env(&env))
-			return (NULL);
-		eqp = ft_strchr(strs[i], '=');
-		tmp->key = ft_substr(strs[i], 0, eqp - strs[i]);
-		tmp->value = ft_substr(strs[i], eqp - strs[i] + 1, ft_strlen(eqp + 1));
-		tmp->exported = True;
-		tmp->next = NULL;
-		add_env_node(&env, tmp);
-		if ((!tmp->key || !tmp->value) && !free_env(&env))
-			return (NULL);
-		i++;
+		key = ft_substr(str, 0, eq - str);
+		if (!key)
+			return (free_env(e));
+		val = ft_substr(str, eq - str + 1, ft_strlen(eq + 1));
+		issue = (!val || !add_var(e, key, val) || !set_var(e, key, NULL, True));
+		free(key);
+		if (val)
+			free(val);
+		if (issue)
+			return (free_env(e));
+		return (True);
 	}
-	return (env);
-}
-
-/// @brief Turns an env list into an array of key=value pairs as strings
-/// @param env The env list
-/// @return The string list created from the env list. NULL if a malloc fails
-char	**to_char_arr(t_env **env)
-{
-	int		i;
-	char	**strs;
-	t_env	*tmp;
-	t_bool	fail;
-
-	strs = malloc(sizeof(char *) * (env_size(*env) + 1));
-	fail = (strs == NULL);
-	tmp = *env;
-	i = 0;
-	while (tmp && !fail)
-	{
-		strs[i] = ft_strjoin_chr(tmp->key, '=', tmp->value);
-		if (!strs[i++])
-			fail = !free_env(env);
-		tmp = tmp->next;
-	}
-	if (fail)
-		return (NULL);
-	strs[i] = NULL;
-	return (strs);
+	else if (get_var(*e, str))
+		return (set_var(e, str, NULL, True));
+	return (True);
 }

@@ -15,6 +15,7 @@
 #include "queues.h"
 #include "builtins.h"
 #include "executor.h"
+#include "cmd_list.h"
 #include "env_list.h"
 #include "ft_printf.h"
 #include <signal.h>
@@ -44,11 +45,8 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp)
 		return (1);
 	}
 	clean_whitespace(q);
-	// V NEEDS FIXING TO TREAT CMDS AS A LIST OF COMMANDS NOT 1 V
-	build_command(q, cmds);
-	resolve_builtin(cmds, &envp);
-	execute_command(&envp, cmds, &q);
-	// ^ NEEDS FIXING TO TREAT CMDS AS A LIST OF COMMANDS NOT 1 ^
+	build_commands(&q, &cmds, &envp);
+	print_commands(cmds);
 	free_queue(&q);
 	free_cmd(&cmds);
 	free(cmd_line);
@@ -57,7 +55,6 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp)
 
 int	main(int ac, char **av, char **env)
 {
-	int			ret;
 	char		*cmd_line;
 	t_env		*envp;
 

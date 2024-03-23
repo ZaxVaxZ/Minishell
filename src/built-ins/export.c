@@ -12,7 +12,7 @@
 
 #include "builtins.h"
 
-t_bool	export(t_env **env, char *variable, char *value)
+t_bool	export_cmd(t_env **env, char *variable)
 {
-	return (set_var(env, variable, value, 1));
+	return (export_var(env, variable));
 }

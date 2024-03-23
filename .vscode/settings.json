@@ -7,6 +7,8 @@
 		"env.h": "c",
 		"dirent.h": "c",
 		"types.h": "c",
-		"stat.h": "c"
+		"stat.h": "c",
+		"executor.h": "c",
+		"env_list.h": "c"
 	}
 }
