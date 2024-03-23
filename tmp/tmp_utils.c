@@ -57,11 +57,11 @@ void	print_queue(t_queue *queue)
 		return ;
 	}
 	write(1, "|----------|----------|\n", 24);
-	ft_printf("|%10.10s|%10.10s|", "  String", "   Type");
+	ft_printf("|%-10.10s|%-10.10s|", "  String", "   Type");
 	write(1, "|----------|----------|\n", 24);
 	while (queue)
 	{
-		ft_printf("|%10.10s|%10.10s|", queue->s, type_to_str(queue->type));
+		ft_printf("|%-10.10s|%-10.10s|", queue->s, type_to_str(queue->type));
 		queue = queue->next;
 	}
 	write(1, "|----------|----------|\n\n", 25);
@@ -92,7 +92,7 @@ int	get_max(t_cmd *cmds)
 	}
 	return (x);
 }
-
+#include <stdio.h>
 void	print_commands(t_cmd *cmds)
 {
 	int	x;
@@ -106,31 +106,33 @@ void	print_commands(t_cmd *cmds)
 	x = get_max(cmds);
 	if (x > 9)
 		x = 9;
+
 	ft_printf("|-");
 	i = 0;
-	while (i < x + 5)
+	while (i++ < x + 4)
 		ft_printf("|----------");
-	ft_printf("|\n|-|%10.10s|%10.10s", "  Before", " Command");
+
+	ft_printf("|\n|-|%-10.10s|%-10.10s", "  Before", " Command");
 	i = 1;
 	while (i < x)
 		ft_printf("|Parameter%d", i++);
-	ft_printf("|%10.10s|%10.10s|%10.10s|\n|-",
+	ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-",
 		"  After", "  Input", "  Output");
 	i = 0;
-	while (i < x + 5)
+	while (i++ < x + 4)
 		ft_printf("|----------");
-	ft_printf("|\n|-|%10.10s|%10.10s", type_to_str(cmds->before),
+	ft_printf("|\n|%d|%-10.10s|%-10.10s", cmds->depth, type_to_str(cmds->before),
 		cmds->params[0]);
 	i = 1;
 	while (i < x && cmds->params[i])
-		ft_printf("|%10.10s", cmds->params[i++]);
+		ft_printf("|%-10.10s", cmds->params[i++]);
 	while (i++ < x)
-		ft_printf("|%10.10s", "");
-	ft_printf("|\n|-|%10.10s|%10.10s", type_to_str(cmds->before),
+		ft_printf("|%-10.10s", "");
+	ft_printf("|\n|-|%-10.10s|%-10.10s", type_to_str(cmds->before),
 		cmds->params[0]);
-	ft_printf("|%10.10s|%10.10s|%10.10s|\n|-", type_to_str(cmds->after),
+	ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-", type_to_str(cmds->after),
 		cmds->input, cmds->output);
-	while (i < x + 5)
+	while (i++ < x + 4)
 		ft_printf("|----------");
 	ft_printf("|\n");
 }

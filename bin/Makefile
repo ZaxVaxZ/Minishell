@@ -1,6 +1,6 @@
 ### []+--------={ Commands and Flags }=--------+[] ###
 CC		=	gcc
-CFLAGS	=	-Wall -Wextra -Werror #-fsanitize=address -g3
+CFLAGS	=	-Wall -Wextra -Werror -O3#-fsanitize=address -g3
 
 ### []+--------={ Directories }=--------+[] ###
 INC		=	./../inc
@@ -26,7 +26,7 @@ SRCS	=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c		\
 			$(BIF)/exit.c $(BIF)/env.c $(BIF)/cd.c							\
 			$(UTL)/queues.c $(UTL)/env_list.c $(UTL)/env_tools.c			\
 			$(UTL)/env_utils.c $(UTL)/cmd_list.c $(UTL)/cmd_tools.c			\
-			$(UTL)/cmd_utils												\
+			$(UTL)/cmd_utils.c												\
 			$(PRS)/parser.c $(PRS)/parser_utils.c $(PRS)/parser_extras.c	\
 			$(PRS)/parser_checkers.c $(PRS)/parser_cleanup.c				\
 			$(EXE)/executor.c $(SFD)/minishell.c		./../tmp/tmp_utils.c
