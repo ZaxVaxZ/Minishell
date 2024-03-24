@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd.c                                              :+:      :+:    :+:   */
+/*   cmd_list.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:13:59 by pipolint          #+#    #+#             */
-/*   Updated: 2024/03/15 17:09:01 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/24 18:24:05 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ t_cmd	*new_cmd_node(char **params)
 	node->out_fd = -1;
 	node->output = NULL;
 	node->params = params;
+	node->outfiles = 0;
 	node->or_op = False;
 	node->before = Illegal;
 	node->after = Illegal;

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/24 01:39:17 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/24 19:06:30 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,20 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, int *depth)
 	return (q);
 }
 
+//static int	count_out_redirs(t_queue *q)
+//{
+//	int	redirs;
+
+//	redirs = 0;
+//	while (q)
+//	{
+//		if (q->type == Op_redir && !ft_strncmp(q->s, ">", 1) && q->next)
+//			redirs++;
+//		q = q->next;
+//	}
+//	return (redirs);
+//}
+
 t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 {
 	int		i;
@@ -120,12 +134,19 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 		{
 			if (!queue_node_to_cmd(q, tmp, env, &i))
 				return (free_and_return(queue, env, cmds, tmp));
+			if (q->type == Op_redir && q && q->next)
+			{
+				if (!ft_strncmp(q->s, ">", 1))
+					tmp->output = q->next->s;
+				if (!ft_strncmp(q->s, "<", 1))
+					tmp->input = q->next->s;
+				q = q->next;
+			}
 			q = q->next;
 		}
 		tmp->params[i] = NULL;
 		q = after_cmd(q, tmp, &depth);
 		add_cmd_node(cmds, tmp);
-		printf("%s ", tmp->params[0]);
 	}
 	return (True);
 }
