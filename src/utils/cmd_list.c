@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_list.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:13:59 by pipolint          #+#    #+#             */
-/*   Updated: 2024/03/24 18:24:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/26 14:20:57 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,13 @@ t_cmd	*new_cmd_node(char **params)
 	node->in_fd = -1;
 	node->input = NULL;
 	node->out_fd = -1;
-	node->output = NULL;
+	node->ovrw_cnt = 0;
+	node->apnd_cnt = 0;
+	node->params_cnt = 0;
+	node->ovrw_outs = NULL;
+	node->apnd_outs = NULL;
 	node->params = params;
-	node->outfiles = 0;
+	node->heredoc = False;
 	node->or_op = False;
 	node->before = Illegal;
 	node->after = Illegal;
@@ -85,7 +89,7 @@ int	cmd_size(t_cmd *cmd)
 
 /// @brief Free a cmd node and its contents
 /// @param node The cmd node
-void	free_cmd_node(t_cmd *node)
+t_bool	free_cmd_node(t_cmd *node)
 {
 	int	i;
 
@@ -96,10 +100,19 @@ void	free_cmd_node(t_cmd *node)
 		free(node->params);
 	if (node && node->input)
 		free(node->input);
-	if (node && node->output)
-		free(node->output);
+	i = 0;
+	while (node && node->ovrw_outs && node->ovrw_outs[i])
+		free(node->ovrw_outs[i++]);
+	if (node && node->ovrw_outs)
+		free(node->ovrw_outs);
+	i = 0;
+	while (node && node->apnd_outs && node->apnd_outs[i])
+		free(node->apnd_outs[i++]);
+	if (node && node->apnd_outs)
+		free(node->apnd_outs);
 	if (node)
 		free(node);
+	return (False);
 }
 
 /// @brief Free each node of a cmd list, and their contents

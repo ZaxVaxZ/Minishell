@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/24 19:06:30 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/26 14:27:06 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,40 +20,6 @@
  *   after_cmd()
  *   build_commands()
  * -----------------------*/
-
-/// @brief Handle a parser node as either Assignment, Redirection or Parameter
-/// @param q The parser node
-/// @param cmd The cmd node for the command we are building
-/// @param env The list of environment variables
-/// @param i Index of the parameter in the parameter list of the cmd node
-/// @return False if any malloc fails. True otherwise
-static t_bool	queue_node_to_cmd(t_queue *q, t_cmd *cmd, t_env **env, int *i)
-{
-	if (q->type == Assign && q->next && q->next->type == Word)
-	{
-		if (!add_var(env, q->s, q->next->s))
-			return (False);
-	}
-	else if (q->type == Op_redir && !ft_strncmp(q->s, "<", 1) && q->next)
-	{
-		cmd->input = ft_strdup(q->next->s);
-		if (!cmd->input)
-			return (False);
-	}
-	else if (q->type == Op_redir && !ft_strncmp(q->s, ">", 1) && q->next)
-	{
-		cmd->output = ft_strdup(q->next->s);
-		if (!cmd->output)
-			return (False);
-	}
-	else if (q->type == Word)
-	{
-		cmd->params[*i] = ft_strdup(q->s);
-		if (!cmd->params[(*i)++])
-			return (False);
-	}
-	return (True);
-}
 
 /// @brief Handles the open parenthesis and operators before a command
 /// @param q The parser queue
@@ -93,30 +59,45 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, int *depth)
 	}
 	if (q && is_separator(q))
 	{
-		tmp->before = q->type;
+		tmp->after = q->type;
 		q = q->next;
 	}
 	tmp->depth = *depth;
 	return (q);
 }
 
-//static int	count_out_redirs(t_queue *q)
-//{
-//	int	redirs;
-
-//	redirs = 0;
-//	while (q)
-//	{
-//		if (q->type == Op_redir && !ft_strncmp(q->s, ">", 1) && q->next)
-//			redirs++;
-//		q = q->next;
-//	}
-//	return (redirs);
-//}
+/// @brief Handle a parser node as either Assignment, Redirection or Parameter
+/// @param q The parser node
+/// @param cmd The cmd node for the command we are building
+/// @param env The list of environment variables
+/// @param i Index of the parameter in the parameter list of the cmd node
+/// @return False if any malloc fails. True otherwise
+static t_bool	queue_node_to_cmd(t_queue *q, t_cmd *cmd, t_env **env)
+{
+	if (q->type == Assign && q->next && q->next->type == Word)
+	{
+		if (!add_var(env, q->s, q->next->s))
+			return (free_cmd_node(cmd));
+	}
+	else if (q->type == Op_redir && q->s[0] == '<' && q->next)
+	{
+		cmd->heredoc = (q->s[1] == '<');
+		cmd->input = ft_strdup(q->next->s);
+	}
+	else if (q->type == Op_redir && !ft_strncmp(q->s, ">", -1) && q->next)
+		cmd->ovrw_outs[cmd->ovrw_cnt] = ft_strdup(q->next->s);
+	else if (q->type == Op_redir && !ft_strncmp(q->s, ">>", -1) && q->next)
+		cmd->apnd_outs[cmd->apnd_cnt] = ft_strdup(q->next->s);
+	else if (q->type == Word)
+		cmd->params[cmd->params_cnt] = ft_strdup(q->s);
+	if (!cmd->input || !cmd->apnd_outs[cmd->apnd_cnt++]
+		|| !cmd->ovrw_outs[cmd->ovrw_cnt++] || !cmd->params[cmd->params_cnt++])
+		return (free_cmd_node(cmd));
+	return (True);
+}
 
 t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 {
-	int		i;
 	int		depth;
 	t_cmd	*tmp;
 	t_queue	*q;
@@ -125,26 +106,16 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 	q = *queue;
 	while (q)
 	{
-		tmp = new_cmd_node(malloc(sizeof(char *) * (count_words(q) + 1)));
-		if (!tmp || !tmp->params)
+		if (!prep_cmd(q, &tmp))
 			return (free_and_return(queue, env, cmds, tmp));
 		q = before_cmd(q, tmp, &depth);
-		i = 0;
 		while (q && !is_separator(q))
 		{
-			if (!queue_node_to_cmd(q, tmp, env, &i))
+			if (!queue_node_to_cmd(q, tmp, env))
 				return (free_and_return(queue, env, cmds, tmp));
-			if (q->type == Op_redir && q && q->next)
-			{
-				if (!ft_strncmp(q->s, ">", 1))
-					tmp->output = q->next->s;
-				if (!ft_strncmp(q->s, "<", 1))
-					tmp->input = q->next->s;
-				q = q->next;
-			}
 			q = q->next;
 		}
-		tmp->params[i] = NULL;
+		tmp->params[tmp->params_cnt] = NULL;
 		q = after_cmd(q, tmp, &depth);
 		add_cmd_node(cmds, tmp);
 	}

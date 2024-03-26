@@ -1,6 +1,6 @@
 ### []+--------={ Commands and Flags }=--------+[] ###
-CC		=	gcc
-CFLAGS	=	-Wall -Wextra -Werror -O3#-fsanitize=address -g3
+CC		=	cc
+CFLAGS	=	-Wall -Wextra -Werror -O3 -fsanitize=address -g3
 
 ### []+--------={ Directories }=--------+[] ###
 INC		=	./../inc

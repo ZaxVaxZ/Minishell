@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tmp_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 22:25:25 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/21 22:25:25 by marvin           ###   ########.fr       */
+/*   Updated: 2024/03/26 14:28:27 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,8 +130,8 @@ void	print_commands(t_cmd *cmds)
 		ft_printf("|%-10.10s", "");
 	ft_printf("|\n|-|%-10.10s|%-10.10s", type_to_str(cmds->before),
 		cmds->params[0]);
-	ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-", type_to_str(cmds->after),
-		cmds->input, cmds->output);
+	// ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-", type_to_str(cmds->after),
+	// 	cmds->input, cmds->output);
 	while (i++ < x + 4)
 		ft_printf("|----------");
 	ft_printf("|\n");

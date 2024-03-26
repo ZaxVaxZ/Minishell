@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/24 18:51:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/26 14:28:00 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,40 +124,40 @@ void	clean_whitespace(t_queue *q)
 	
 //}
 
-t_bool	redirect(t_cmd *cmd)
-{
-	if (cmd->input)
-	{
-		cmd->in_fd = open(cmd->input, O_RDONLY);
-		if (cmd->in_fd == -1)
-		{
-			ft_printf("Couldn't open infile\n");
-			return (False);
-		}
-		if (dup2(cmd->in_fd, STDIN_FILENO) == -1)
-		{
-			ft_printf("Couldn't dup with stdint\n");
-			return (False);
-		}
-		ft_printf("Opened infile and duped with stdin\n");
-	}
-	if (cmd->output)
-	{
-		cmd->out_fd = open(cmd->output, O_CREAT | O_RDWR | O_TRUNC, 0777);
-		if (cmd->out_fd == -1)
-		{
-			ft_printf("Couldn't open outfile\n");
-			return (False);
-		}
-		if (dup2(cmd->out_fd, STDOUT_FILENO) == -1)
-		{
-			ft_printf("Couldn't dup with stdout\n");
-			return (False);
-		}
-		ft_printf("Opened outfile and duped with stdout\n");
-	}
-	return (True);
-}
+// t_bool	redirect(t_cmd *cmd)
+// {
+// 	if (cmd->input)
+// 	{
+// 		cmd->in_fd = open(cmd->input, O_RDONLY);
+// 		if (cmd->in_fd == -1)
+// 		{
+// 			ft_printf("Couldn't open infile\n");
+// 			return (False);
+// 		}
+// 		if (dup2(cmd->in_fd, STDIN_FILENO) == -1)
+// 		{
+// 			ft_printf("Couldn't dup with stdint\n");
+// 			return (False);
+// 		}
+// 		ft_printf("Opened infile and duped with stdin\n");
+// 	}
+// 	if (cmd->output)
+// 	{
+// 		cmd->out_fd = open(cmd->output, O_CREAT | O_RDWR | O_TRUNC, 0777);
+// 		if (cmd->out_fd == -1)
+// 		{
+// 			ft_printf("Couldn't open outfile\n");
+// 			return (False);
+// 		}
+// 		if (dup2(cmd->out_fd, STDOUT_FILENO) == -1)
+// 		{
+// 			ft_printf("Couldn't dup with stdout\n");
+// 			return (False);
+// 		}
+// 		ft_printf("Opened outfile and duped with stdout\n");
+// 	}
+// 	return (True);
+// }
 
 void	execute_command(t_env **env, t_cmd **cmd)
 {
@@ -172,8 +172,8 @@ void	execute_command(t_env **env, t_cmd **cmd)
 			id = fork();
 			if (id == 0)
 			{
-				if (redirect(tmp) == False)
-					exit(EXIT_FAILURE);
+				// if (redirect(tmp) == False)
+				// 	exit(EXIT_FAILURE);
 				if (execve(search_path(env, tmp), tmp->params, to_char_arr(env)) == -1)
 				{
 					printf("Error occured in execution\n");
