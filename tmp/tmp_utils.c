@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tmp_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 22:25:25 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/26 14:28:27 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/26 17:05:31 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	print_queue(t_queue *queue)
 	write(1, "|----------|----------|\n", 24);
 	while (queue)
 	{
-		ft_printf("|%-10.10s|%-10.10s|", queue->s, type_to_str(queue->type));
+		ft_printf("|%-10.10s|%-10.10s|\n", queue->s, type_to_str(queue->type));
 		queue = queue->next;
 	}
 	write(1, "|----------|----------|\n\n", 25);
@@ -119,17 +119,26 @@ void	print_commands(t_cmd *cmds)
 	ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-",
 		"  After", "  Input", "  Output");
 	i = 0;
-	while (i++ < x + 4)
-		ft_printf("|----------");
-	ft_printf("|\n|%d|%-10.10s|%-10.10s", cmds->depth, type_to_str(cmds->before),
-		cmds->params[0]);
-	i = 1;
-	while (i < x && cmds->params[i])
-		ft_printf("|%-10.10s", cmds->params[i++]);
-	while (i++ < x)
-		ft_printf("|%-10.10s", "");
-	ft_printf("|\n|-|%-10.10s|%-10.10s", type_to_str(cmds->before),
-		cmds->params[0]);
+	while (cmds)
+	{
+		while (i++ < x + 4)
+			ft_printf("|----------");
+		ft_printf("|\n|%d|%-10.10s|%-10.10s", cmds->depth, type_to_str(cmds->before),
+			cmds->params[0]);
+		i = 0;
+		while (++i < x && cmds->params[i])
+			ft_printf("|%-10.10s", cmds->params[i]);
+		ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-", type_to_str(cmds->after),
+			cmds->input, "");
+		cmds = cmds->next;
+	}
+	//i = 1;
+	//while (i < x && cmds->params[i])
+	//	ft_printf("|%-10.10s", cmds->params[i++]);
+	//while (i++ < x)
+	//	ft_printf("|%-10.10s", "");
+	//ft_printf("|\n|-|%-10.10s|%-10.10s", type_to_str(cmds->before),
+	//	cmds->params[0]);
 	// ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-", type_to_str(cmds->after),
 	// 	cmds->input, cmds->output);
 	while (i++ < x + 4)

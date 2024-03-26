@@ -49,5 +49,6 @@ char	*dequeue(t_queue **q);
 t_queue	*queue_end(t_queue *q);
 t_bool	free_queue(t_queue **q);
 void	queue(t_queue **q, t_queue *node);
+void	print_queue(t_queue *queue);
 
 #endif

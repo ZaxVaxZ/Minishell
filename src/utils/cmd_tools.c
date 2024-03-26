@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/26 14:27:06 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/03/26 17:48:49 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ static t_queue	*before_cmd(t_queue *q, t_cmd *tmp, int *depth)
 /// @return The new position in the queue after skipping to the next command
 static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, int *depth)
 {
+	tmp->depth = *depth;
 	while (q && q->type == Bracket_closed)
 	{
 		*depth -= (q->type == Bracket_closed);
@@ -62,7 +63,6 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, int *depth)
 		tmp->after = q->type;
 		q = q->next;
 	}
-	tmp->depth = *depth;
 	return (q);
 }
 
@@ -83,6 +83,8 @@ static t_bool	queue_node_to_cmd(t_queue *q, t_cmd *cmd, t_env **env)
 	{
 		cmd->heredoc = (q->s[1] == '<');
 		cmd->input = ft_strdup(q->next->s);
+		if (!cmd->input)
+			return (free_cmd_node(cmd));
 	}
 	else if (q->type == Op_redir && !ft_strncmp(q->s, ">", -1) && q->next)
 		cmd->ovrw_outs[cmd->ovrw_cnt] = ft_strdup(q->next->s);
@@ -90,8 +92,9 @@ static t_bool	queue_node_to_cmd(t_queue *q, t_cmd *cmd, t_env **env)
 		cmd->apnd_outs[cmd->apnd_cnt] = ft_strdup(q->next->s);
 	else if (q->type == Word)
 		cmd->params[cmd->params_cnt] = ft_strdup(q->s);
-	if (!cmd->input || !cmd->apnd_outs[cmd->apnd_cnt++]
-		|| !cmd->ovrw_outs[cmd->ovrw_cnt++] || !cmd->params[cmd->params_cnt++])
+	if ((!ft_strncmp(q->s, ">", -1) && !cmd->apnd_outs[cmd->apnd_cnt++])
+		|| (!ft_strncmp(q->s, ">>", -1) && !cmd->ovrw_outs[cmd->ovrw_cnt++])
+		|| (q->type == Word && !cmd->params[cmd->params_cnt++]))
 		return (free_cmd_node(cmd));
 	return (True);
 }
