@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/26 17:48:49 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/27 20:37:56 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,30 +72,32 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, int *depth)
 /// @param env The list of environment variables
 /// @param i Index of the parameter in the parameter list of the cmd node
 /// @return False if any malloc fails. True otherwise
-static t_bool	queue_node_to_cmd(t_queue *q, t_cmd *cmd, t_env **env)
+static t_bool	queue_node_to_cmd(t_queue **q, t_cmd *cmd, t_env **env)
 {
-	if (q->type == Assign && q->next && q->next->type == Word)
+	if ((*q)->type == Assign && (*q)->next && (*q)->next->type == Word)
 	{
-		if (!add_var(env, q->s, q->next->s))
+		if (!add_var(env, (*q)->s, (*q)->next->s))
 			return (free_cmd_node(cmd));
 	}
-	else if (q->type == Op_redir && q->s[0] == '<' && q->next)
+	else if ((*q)->type == Op_redir && (*q)->s[0] == '<' && (*q)->next)
 	{
-		cmd->heredoc = (q->s[1] == '<');
-		cmd->input = ft_strdup(q->next->s);
+		cmd->heredoc = ((*q)->s[1] == '<');
+		cmd->input = ft_strdup((*q)->next->s);
 		if (!cmd->input)
 			return (free_cmd_node(cmd));
 	}
-	else if (q->type == Op_redir && !ft_strncmp(q->s, ">", -1) && q->next)
-		cmd->ovrw_outs[cmd->ovrw_cnt] = ft_strdup(q->next->s);
-	else if (q->type == Op_redir && !ft_strncmp(q->s, ">>", -1) && q->next)
-		cmd->apnd_outs[cmd->apnd_cnt] = ft_strdup(q->next->s);
-	else if (q->type == Word)
-		cmd->params[cmd->params_cnt] = ft_strdup(q->s);
-	if ((!ft_strncmp(q->s, ">", -1) && !cmd->apnd_outs[cmd->apnd_cnt++])
-		|| (!ft_strncmp(q->s, ">>", -1) && !cmd->ovrw_outs[cmd->ovrw_cnt++])
-		|| (q->type == Word && !cmd->params[cmd->params_cnt++]))
-		return (free_cmd_node(cmd));
+	else if ((*q)->type == Op_redir && !ft_strncmp((*q)->s, ">", -1) && (*q)->next)
+		cmd->ovrw_outs[cmd->ovrw_cnt] = ft_strdup((*q)->next->s);
+	else if ((*q)->type == Op_redir && !ft_strncmp((*q)->s, ">>", -1) && (*q)->next)
+		cmd->apnd_outs[cmd->apnd_cnt] = ft_strdup((*q)->next->s);
+	else if ((*q)->type == Word)
+		cmd->params[cmd->params_cnt] = ft_strdup((*q)->s);
+	if ((!ft_strncmp((*q)->s, ">>", -1) && !cmd->apnd_outs[cmd->apnd_cnt++])
+		|| (!ft_strncmp((*q)->s, ">", -1) && !cmd->ovrw_outs[cmd->ovrw_cnt++])
+		|| ((*q)->type == Word && !cmd->params[cmd->params_cnt++]))
+			return (free_cmd_node(cmd));
+	if ((*q)->type == Op_redir)
+		(*q) = (*q)->next;
 	return (True);
 }
 
@@ -114,11 +116,13 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 		q = before_cmd(q, tmp, &depth);
 		while (q && !is_separator(q))
 		{
-			if (!queue_node_to_cmd(q, tmp, env))
+			if (!queue_node_to_cmd(&q, tmp, env))
 				return (free_and_return(queue, env, cmds, tmp));
 			q = q->next;
 		}
 		tmp->params[tmp->params_cnt] = NULL;
+		tmp->apnd_outs[tmp->apnd_cnt] = NULL;
+		tmp->ovrw_outs[tmp->ovrw_cnt] = NULL;\
 		q = after_cmd(q, tmp, &depth);
 		add_cmd_node(cmds, tmp);
 	}

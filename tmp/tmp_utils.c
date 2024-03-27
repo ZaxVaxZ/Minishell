@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 22:25:25 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/26 17:05:31 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/27 20:44:16 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,53 +95,73 @@ int	get_max(t_cmd *cmds)
 #include <stdio.h>
 void	print_commands(t_cmd *cmds)
 {
-	int	x;
-	int	i;
-
-	if (!cmds)
-	{
-		ft_printf("There are no commands!\n\n");
-		return ;
-	}
-	x = get_max(cmds);
-	if (x > 9)
-		x = 9;
-
-	ft_printf("|-");
-	i = 0;
-	while (i++ < x + 4)
-		ft_printf("|----------");
-
-	ft_printf("|\n|-|%-10.10s|%-10.10s", "  Before", " Command");
-	i = 1;
-	while (i < x)
-		ft_printf("|Parameter%d", i++);
-	ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-",
-		"  After", "  Input", "  Output");
-	i = 0;
 	while (cmds)
 	{
-		while (i++ < x + 4)
-			ft_printf("|----------");
-		ft_printf("|\n|%d|%-10.10s|%-10.10s", cmds->depth, type_to_str(cmds->before),
-			cmds->params[0]);
-		i = 0;
-		while (++i < x && cmds->params[i])
-			ft_printf("|%-10.10s", cmds->params[i]);
-		ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-", type_to_str(cmds->after),
-			cmds->input, "");
+		printf("\n\nBefore: %s\n", type_to_str(cmds->before));
+		printf("Params: \n");
+		for (int i = 0; cmds->params[i]; i++)
+			printf("%s\n", cmds->params[i]);
+		printf("Overwrite out files: \n");
+		for (int i = 0; cmds->ovrw_outs[i]; i++)
+			printf("%s\n", cmds->ovrw_outs[i]);
+		printf("Append out files: \n");
+		for (int i = 0; cmds->apnd_outs[i]; i++)
+			printf("%s\n", cmds->apnd_outs[i]);
+		printf("Infile: %s\n", cmds->input);
+		printf("After: %s\n\n", type_to_str(cmds->after));
 		cmds = cmds->next;
 	}
+	//int	x;
+	//int	i;
+
+	//if (!cmds)
+	//{
+	//	ft_printf("There are no commands!\n\n");
+	//	return ;
+	//}
+	//x = get_max(cmds);
+	//if (x > 9)
+	//	x = 9;
+
+	//ft_printf("|-");
+	//i = 0;
+	//while (i++ < x + 4)
+	//	ft_printf("|----------");
+
+	//ft_printf("|\n|-|%-10.10s|%-10.10s", "  Before", " Command");
 	//i = 1;
-	//while (i < x && cmds->params[i])
-	//	ft_printf("|%-10.10s", cmds->params[i++]);
-	//while (i++ < x)
-	//	ft_printf("|%-10.10s", "");
-	//ft_printf("|\n|-|%-10.10s|%-10.10s", type_to_str(cmds->before),
-	//	cmds->params[0]);
-	// ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-", type_to_str(cmds->after),
-	// 	cmds->input, cmds->output);
-	while (i++ < x + 4)
-		ft_printf("|----------");
-	ft_printf("|\n");
+	//while (i < x)
+	//	ft_printf("|Parameter%d", i++);
+	//ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-",
+	//	"  After", "  Input", "  Output");
+	//i = 0;
+	//while (cmds)
+	//{
+	//	while (i++ < x + 4)
+	//		ft_printf("|----------");
+	//	ft_printf("|\n|%d|%-10.10s|%-10.10s", cmds->depth, type_to_str(cmds->before),
+	//		cmds->params[0]);
+	//	i = 0;
+	//	while (++i < x && cmds->params[i])
+	//		ft_printf("|%-10.10s", cmds->params[i]);
+	//	//ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-", type_to_str(cmds->after),
+	//	//	cmds->input, "");
+	//	 ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-", type_to_str(cmds->after),
+	//	 	cmds->input, "Empty for now");
+	//	for (int k = 0; cmds->ovrw_outs[k]; k++)
+	//		printf("%s\n", cmds->ovrw_outs[k]);
+	//	cmds = cmds->next;
+	//}
+	////i = 1;
+	////while (i < x && cmds->params[i])
+	////	ft_printf("|%-10.10s", cmds->params[i++]);
+	////while (i++ < x)
+	////	ft_printf("|%-10.10s", "");
+	////ft_printf("|\n|-|%-10.10s|%-10.10s", type_to_str(cmds->before),
+	////	cmds->params[0]);
+	//// ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-", type_to_str(cmds->after),
+	//// 	cmds->input, cmds->output);
+	//while (i++ < x + 4)
+	//	ft_printf("|----------");
+	//ft_printf("|\n");
 }
