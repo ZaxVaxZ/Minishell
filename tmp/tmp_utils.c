@@ -6,11 +6,16 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 22:25:25 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/27 20:44:16 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/27 23:12:57 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tmp_utils.h"
+
+int	write_error(char *str)
+{
+	return (write(2, str, ft_strlen(str)));
+}
 
 char	*type_to_str(t_token type)
 {

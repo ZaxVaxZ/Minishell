@@ -32,3 +32,10 @@ create a function to convert the linked list into a double array for execve uwu
 ====================================================================================================================================================================
 
 Alphabetical variables T_T
+
+Execute the command
+If the after type of the command is a pipe, execute the command into a pipe and pipe the output to the next command
+If the after type is &&, execute the command;
+	if the execution fails, don't execute the next command
+If the after type is ||, execute the command
+	if the execution fails, execute the next command
