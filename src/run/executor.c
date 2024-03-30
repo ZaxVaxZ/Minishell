@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/30 19:19:49 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/30 19:53:20 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,9 +114,10 @@ t_bool	redirect(t_cmd *cmd)
 	{
 		while (i < cmd->outfile_cnt - 1)
 		{
-			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_RDWR, 0644);
+			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_RDWR | O_TRUNC, 0644);
 			if (cmd->out_fd == -1)
 				return (write_error("Couldn't open outfile\n"));
+			close(cmd->out_fd);
 			i++;
 		}
 		if (cmd->is_append)
