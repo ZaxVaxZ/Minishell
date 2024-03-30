@@ -9,6 +9,7 @@
 		"types.h": "c",
 		"stat.h": "c",
 		"executor.h": "c",
-		"env_list.h": "c"
+		"env_list.h": "c",
+		"tmp_utils.h": "c"
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 05:47:46 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/27 20:37:47 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/30 19:19:11 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,9 @@ typedef struct s_cmd
 	int				out_fd;
 	char			*input;
 	int				params_cnt;
-	int				ovrw_cnt;
-	int				apnd_cnt;
-	char			**ovrw_outs;
-	char			**apnd_outs;
+	char			**outfiles;
+	int				is_append;
+	int				outfile_cnt;
 	char			**params;
 	t_bool			heredoc;
 	t_bool			or_op;

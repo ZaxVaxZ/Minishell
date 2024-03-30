@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/27 22:43:57 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/30 19:27:02 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,16 +86,15 @@ static t_bool	queue_node_to_cmd(t_queue **q, t_cmd *cmd, t_env **env)
 		if (!cmd->input)
 			return (free_cmd_node(cmd));
 	}
-	else if ((*q)->type == Op_redir && !ft_strncmp((*q)->s, ">", -1) && (*q)->next)
-		cmd->ovrw_outs[cmd->ovrw_cnt] = ft_strdup((*q)->next->s);
-	else if ((*q)->type == Op_redir && !ft_strncmp((*q)->s, ">>", -1) && (*q)->next)
-		cmd->apnd_outs[cmd->apnd_cnt] = ft_strdup((*q)->next->s);
+	else if ((*q)->type == Op_redir && (*q)->next)
+		cmd->outfiles[cmd->outfile_cnt] = ft_strdup((*q)->next->s);
 	else if ((*q)->type == Word)
 		cmd->params[cmd->params_cnt] = ft_strdup((*q)->s);
-	if ((!ft_strncmp((*q)->s, ">>", -1) && !cmd->apnd_outs[cmd->apnd_cnt++])
-		|| (!ft_strncmp((*q)->s, ">", -1) && !cmd->ovrw_outs[cmd->ovrw_cnt++])
+	if (((*q)->type == Op_redir && (!ft_strncmp((*q)->s, ">", -1) \
+				|| !ft_strncmp((*q)->s, ">>", -1)) \
+			&& !cmd->outfiles[cmd->outfile_cnt++]) \
 		|| ((*q)->type == Word && !cmd->params[cmd->params_cnt++]))
-			return (free_cmd_node(cmd));
+		return (free_cmd_node(cmd));
 	if ((*q)->type == Op_redir)
 		(*q) = (*q)->next;
 	return (True);
@@ -121,8 +120,7 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 			q = q->next;
 		}
 		tmp->params[tmp->params_cnt] = NULL;
-		tmp->apnd_outs[tmp->apnd_cnt] = NULL;
-		tmp->ovrw_outs[tmp->ovrw_cnt] = NULL;\
+		tmp->outfiles[tmp->outfile_cnt] = NULL;
 		q = after_cmd(q, tmp, &depth);
 		add_cmd_node(cmds, tmp);
 	}

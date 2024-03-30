@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:13:59 by pipolint          #+#    #+#             */
-/*   Updated: 2024/03/27 20:37:44 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/30 19:28:34 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,10 @@ t_cmd	*new_cmd_node(char **params)
 	node->in_fd = -1;
 	node->input = NULL;
 	node->out_fd = -1;
-	node->ovrw_cnt = 0;
-	node->apnd_cnt = 0;
+	node->outfile_cnt = 0;
+	node->is_append = 0;
+	node->outfiles = NULL;
 	node->params_cnt = 0;
-	node->ovrw_outs = NULL;
-	node->apnd_outs = NULL;
 	node->params = params;
 	node->heredoc = False;
 	node->or_op = False;
@@ -102,15 +101,8 @@ t_bool	free_cmd_node(t_cmd *node)
 	if (node && node->input)
 		free(node->input);
 	i = 0;
-	while (node && node->ovrw_outs && node->ovrw_outs[i])
-		free(node->ovrw_outs[i++]);
-	if (node && node->ovrw_outs)
-		free(node->ovrw_outs);
-	i = 0;
-	while (node && node->apnd_outs && node->apnd_outs[i])
-		free(node->apnd_outs[i++]);
-	if (node && node->apnd_outs)
-		free(node->apnd_outs);
+	while (node && node->outfiles && node->outfiles[i])
+		free(node->outfiles[i++]);
 	if (node)
 		free(node);
 	return (False);

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 05:23:45 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/27 18:54:58 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/30 19:21:22 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,31 @@ static int	count_words(t_queue *q)
 	return (count);
 }
 
-int	count_out_redirs(t_queue *q, t_bool appends)
+int	count_out_redirs(t_queue *q, t_cmd **cmd)
 {
-	int	redirs;
+	int		redirs;
+	char	*redir_type;
 
 	redirs = 0;
+	redir_type = NULL;
 	while (q && !is_separator(q))
 	{
-		if (q->type == Op_redir && !ft_strncmp(q->s, ">", -1) && q->next && !appends)
+		if (q->type == Op_redir && q->next)
+		{
+			if (redir_type)
+				free(redir_type);
+			if (!ft_strncmp(q->s, ">", -1))
+				redir_type = ft_strdup(">");
+			else if (!ft_strncmp(q->s, ">>", -1))
+				redir_type = ft_strdup(">>");
 			redirs++;
-		if (q->type == Op_redir && !ft_strncmp(q->s, ">>", -1) && q->next && appends)
-			redirs++;
+		}
 		q = q->next;
 	}
+	if (!ft_strncmp(redir_type, ">>", -1))
+		(*cmd)->is_append = 1;
+	if (redir_type)
+		free(redir_type);
 	return (redirs);
 }
 
@@ -82,14 +94,10 @@ t_bool	prep_cmd(t_queue *q, t_cmd **node)
 	}
 	else
 		params[0] = NULL;
-	(*node)->ovrw_outs = malloc(sizeof(char *) * (count_out_redirs(q, False) + 1));
-	if ((*node)->ovrw_outs)
-		(*node)->ovrw_outs[0] = NULL;
-	(*node)->apnd_outs = malloc(sizeof(char *) * (count_out_redirs(q, True) + 1));
-	if ((*node)->apnd_outs)
-		(*node)->apnd_outs[0] = NULL;
-	if (!(*node)->ovrw_outs || !(*node)->apnd_outs)
+	(*node)->outfiles = malloc(sizeof(char *) * (count_out_redirs(q, node) + 1));
+	if (!(*node)->outfiles)
 		return (free_cmd_node(*node));
+	(*node)->outfiles[0] = NULL;
 	return (True);
 }
 

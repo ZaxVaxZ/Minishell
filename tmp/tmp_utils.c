@@ -6,15 +6,16 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 22:25:25 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/27 23:12:57 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/30 19:19:21 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tmp_utils.h"
 
-int	write_error(char *str)
+t_bool	write_error(char *str)
 {
-	return (write(2, str, ft_strlen(str)));
+	write(2, str, ft_strlen(str));
+	return (False);
 }
 
 char	*type_to_str(t_token type)
@@ -106,12 +107,13 @@ void	print_commands(t_cmd *cmds)
 		printf("Params: \n");
 		for (int i = 0; cmds->params[i]; i++)
 			printf("%s\n", cmds->params[i]);
-		printf("Overwrite out files: \n");
-		for (int i = 0; cmds->ovrw_outs[i]; i++)
-			printf("%s\n", cmds->ovrw_outs[i]);
-		printf("Append out files: \n");
-		for (int i = 0; cmds->apnd_outs[i]; i++)
-			printf("%s\n", cmds->apnd_outs[i]);
+		printf("Outfiles\n");
+		if (cmds->outfiles)
+		{
+			for (int i = 0; cmds->outfiles[i]; i++)
+				printf("%s\n", cmds->outfiles[i]);
+		}
+		printf("Need to append: %d\n", cmds->is_append);
 		printf("Infile: %s\n", cmds->input);
 		printf("After: %s\n\n", type_to_str(cmds->after));
 		cmds = cmds->next;
