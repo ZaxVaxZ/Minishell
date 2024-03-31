@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 05:47:46 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/30 19:19:11 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/31 12:56:38 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,12 @@ typedef struct s_cmd
 	int				out_fd;
 	char			*input;
 	int				params_cnt;
-	char			**outfiles;
-	int				is_append;
 	int				outfile_cnt;
+	int				*out_flags;
+	char			**outfiles;
 	char			**params;
 	t_bool			heredoc;
 	t_bool			or_op;
-	t_token			before;
 	t_token			after;
 	struct s_cmd	*next;
 }	t_cmd;

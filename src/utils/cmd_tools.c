@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/30 19:27:02 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/31 16:50:03 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 /* -----------------------
  * Functions in the file:
- *   queue_node_to_cmd()
  *   before_cmd()
  *   after_cmd()
+ *   queue_node_to_cmd()
  *   build_commands()
  * -----------------------*/
 
@@ -30,13 +30,6 @@ static t_queue	*before_cmd(t_queue *q, t_cmd *tmp, int *depth)
 {
 	if (!q || !tmp)
 		return (NULL);
-	if (is_separator(q) && q->type != Bracket_open)
-	{
-		tmp->before = q->type;
-		if (q->type == Op_logic && !ft_strncmp(q->s, "||", -1))
-			tmp->or_op = True;
-		q = q->next;
-	}
 	while (q && q->type == Bracket_open)
 	{
 		*depth += (q->type == Bracket_open);
@@ -52,6 +45,10 @@ static t_queue	*before_cmd(t_queue *q, t_cmd *tmp, int *depth)
 /// @return The new position in the queue after skipping to the next command
 static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, int *depth)
 {
+	if (tmp->params_cnt)
+		tmp->params[tmp->params_cnt] = NULL;
+	if (tmp->outfile_cnt)
+		tmp->outfiles[tmp->outfile_cnt] = NULL;
 	tmp->depth = *depth;
 	while (q && q->type == Bracket_closed)
 	{
@@ -61,9 +58,36 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, int *depth)
 	if (q && is_separator(q))
 	{
 		tmp->after = q->type;
+		if (q->type == Op_logic && !ft_strncmp(q->s, "||", -1))
+			tmp->or_op = True;
 		q = q->next;
 	}
 	return (q);
+}
+
+/// @brief 
+/// @param q 
+/// @param cmd 
+/// @return 
+static t_bool	queue_redir_to_cmd(t_queue **q, t_cmd *cmd)
+{
+	if ((*q)->type == Op_redir && (*q)->next && (*q)->s[0] == '>')
+	{
+		cmd->out_flags[cmd->outfile_cnt] = ((*q)->s[1] == '>');
+		cmd->outfiles[cmd->outfile_cnt] = ft_strdup((*q)->next->s);
+		if (!cmd->outfiles[cmd->outfile_cnt++])
+			return (False);
+	}
+	if ((*q)->type == Op_redir && (*q)->next && (*q)->s[0] == '<')
+	{
+		cmd->heredoc = ((*q)->s[1] == '<');
+		cmd->input = ft_strdup((*q)->next->s);
+		if (!cmd->input)
+			return (False);
+	}
+	if ((*q)->type == Op_redir)
+		(*q) = (*q)->next;
+	return (True);
 }
 
 /// @brief Handle a parser node as either Assignment, Redirection or Parameter
@@ -74,32 +98,29 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, int *depth)
 /// @return False if any malloc fails. True otherwise
 static t_bool	queue_node_to_cmd(t_queue **q, t_cmd *cmd, t_env **env)
 {
-	if ((*q)->type == Assign && (*q)->next && (*q)->next->type == Word)
+	if ((*q)->type == Assign && (*q)->next)
 	{
-		if (!add_var(env, (*q)->s, (*q)->next->s))
+		if ((*q)->next->type == Name && !add_var(env, (*q)->s, (*q)->next->s))
+			return (free_cmd_node(cmd));
+		else if (!add_var(env, (*q)->s, ""))
 			return (free_cmd_node(cmd));
 	}
-	else if ((*q)->type == Op_redir && (*q)->s[0] == '<' && (*q)->next)
-	{
-		cmd->heredoc = ((*q)->s[1] == '<');
-		cmd->input = ft_strdup((*q)->next->s);
-		if (!cmd->input)
-			return (free_cmd_node(cmd));
-	}
-	else if ((*q)->type == Op_redir && (*q)->next)
-		cmd->outfiles[cmd->outfile_cnt] = ft_strdup((*q)->next->s);
 	else if ((*q)->type == Word)
+	{
 		cmd->params[cmd->params_cnt] = ft_strdup((*q)->s);
-	if (((*q)->type == Op_redir && (!ft_strncmp((*q)->s, ">", -1) \
-				|| !ft_strncmp((*q)->s, ">>", -1)) \
-			&& !cmd->outfiles[cmd->outfile_cnt++]) \
-		|| ((*q)->type == Word && !cmd->params[cmd->params_cnt++]))
+		if (!cmd->params[cmd->params_cnt++])
+			return (free_cmd_node(cmd));
+	}
+	if (!queue_redir_to_cmd(q, cmd))
 		return (free_cmd_node(cmd));
-	if ((*q)->type == Op_redir)
-		(*q) = (*q)->next;
 	return (True);
 }
 
+/// @brief 
+/// @param queue 
+/// @param cmds 
+/// @param env 
+/// @return 
 t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 {
 	int		depth;
@@ -119,8 +140,6 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 				return (free_and_return(queue, env, cmds, tmp));
 			q = q->next;
 		}
-		tmp->params[tmp->params_cnt] = NULL;
-		tmp->outfiles[tmp->outfile_cnt] = NULL;
 		q = after_cmd(q, tmp, &depth);
 		add_cmd_node(cmds, tmp);
 	}

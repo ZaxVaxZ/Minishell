@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 22:25:25 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/30 19:19:21 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/31 17:00:35 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	print_queue(t_queue *queue)
 		return ;
 	}
 	write(1, "|----------|----------|\n", 24);
-	ft_printf("|%-10.10s|%-10.10s|", "  String", "   Type");
+	ft_printf("|%-10.10s|%-10.10s|\n", "  String", "   Type");
 	write(1, "|----------|----------|\n", 24);
 	while (queue)
 	{
@@ -101,26 +101,35 @@ int	get_max(t_cmd *cmds)
 #include <stdio.h>
 void	print_commands(t_cmd *cmds)
 {
+	printf("|-|%-10.10s", " Command");
+	for (int i=1;i<get_max(cmds);i++)
+		printf("|%-8.8s %d", " Params", i);
+	printf("|%-10.10s|%-10.10s|%-10.10s|%-10.10s|\n", "  After", "  Input", " Output 1", " Output 2");
 	while (cmds)
 	{
-		printf("\n\nBefore: %s\n", type_to_str(cmds->before));
-		printf("Params: \n");
-		for (int i = 0; cmds->params[i]; i++)
-			printf("%s\n", cmds->params[i]);
-		printf("Outfiles\n");
-		if (cmds->outfiles)
+		printf("|%d", cmds->depth);
+		for (int i = 0; i<get_max(cmds); i++)
 		{
-			for (int i = 0; cmds->outfiles[i]; i++)
-				printf("%s\n", cmds->outfiles[i]);
+			if (cmds->params[i])
+				printf("|%-10.10s", cmds->params[i]);
+			else
+				printf("|%-10.10s", "");
 		}
-		printf("Need to append: %d\n", cmds->is_append);
-		printf("Infile: %s\n", cmds->input);
-		printf("After: %s\n\n", type_to_str(cmds->after));
+		if (cmds->heredoc)
+			printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), "heredoc");
+		else if (cmds->input)
+			printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), cmds->input);
+		else
+			printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), "   NULL");
+		if (cmds->outfiles)
+			printf("|%-10.10s|%-10.10s|\n", cmds->outfiles[0], cmds->outfiles[cmds->outfile_cnt - 1]);
+		else
+			printf("|%-10.10s|%-10.10s|\n", "   NULL", "   NULL");
 		cmds = cmds->next;
 	}
 	//int	x;
 	//int	i;
-
+	// ls >out >>out2 >> out3 -a ; ((a && echo -a || ((ls >b<a))<q>a)<a<a<a>s>s>e);
 	//if (!cmds)
 	//{
 	//	ft_printf("There are no commands!\n\n");

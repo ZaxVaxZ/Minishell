@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 05:23:45 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/30 19:21:22 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/31 16:45:02 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ static int	count_words(t_queue *q)
 	while (q && q->type != Op_logic && q->type != Semicolon
 		&& q->type != Op_pipe)
 	{
-		if (q->type == Word && (!prev
-				|| (prev->type != Op_redir && prev->type != Assign)))
+		if (q->type == Word)
 			count++;
 		prev = q;
 		q = q->next;
@@ -42,31 +41,17 @@ static int	count_words(t_queue *q)
 	return (count);
 }
 
-int	count_out_redirs(t_queue *q, t_cmd **cmd)
+int	count_out_redirs(t_queue *q)
 {
 	int		redirs;
-	char	*redir_type;
 
 	redirs = 0;
-	redir_type = NULL;
 	while (q && !is_separator(q))
 	{
-		if (q->type == Op_redir && q->next)
-		{
-			if (redir_type)
-				free(redir_type);
-			if (!ft_strncmp(q->s, ">", -1))
-				redir_type = ft_strdup(">");
-			else if (!ft_strncmp(q->s, ">>", -1))
-				redir_type = ft_strdup(">>");
+		if (q->type == Op_redir && q->next && q->next->type == Name)
 			redirs++;
-		}
 		q = q->next;
 	}
-	if (!ft_strncmp(redir_type, ">>", -1))
-		(*cmd)->is_append = 1;
-	if (redir_type)
-		free(redir_type);
 	return (redirs);
 }
 
@@ -94,8 +79,11 @@ t_bool	prep_cmd(t_queue *q, t_cmd **node)
 	}
 	else
 		params[0] = NULL;
-	(*node)->outfiles = malloc(sizeof(char *) * (count_out_redirs(q, node) + 1));
-	if (!(*node)->outfiles)
+	if (!count_out_redirs(q))
+		return (True);
+	(*node)->outfiles = malloc(sizeof(char *) * (count_out_redirs(q) + 1));
+	(*node)->out_flags = malloc(sizeof(int) * count_out_redirs(q));
+	if (!(*node)->outfiles || !(*node)->out_flags)
 		return (free_cmd_node(*node));
 	(*node)->outfiles[0] = NULL;
 	return (True);

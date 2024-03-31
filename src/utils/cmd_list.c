@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:13:59 by pipolint          #+#    #+#             */
-/*   Updated: 2024/03/30 19:28:34 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/03/31 16:49:10 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,12 @@ t_cmd	*new_cmd_node(char **params)
 	node->input = NULL;
 	node->out_fd = -1;
 	node->outfile_cnt = 0;
-	node->is_append = 0;
+	node->out_flags = NULL;
 	node->outfiles = NULL;
 	node->params_cnt = 0;
 	node->params = params;
 	node->heredoc = False;
 	node->or_op = False;
-	node->before = Illegal;
 	node->after = Illegal;
 	node->next = NULL;
 	return (node);
@@ -85,7 +84,6 @@ int	cmd_size(t_cmd *cmd)
 	}
 	return (size);
 }
-#include <stdio.h>
 
 /// @brief Free a cmd node and its contents
 /// @param node The cmd node
@@ -103,6 +101,10 @@ t_bool	free_cmd_node(t_cmd *node)
 	i = 0;
 	while (node && node->outfiles && node->outfiles[i])
 		free(node->outfiles[i++]);
+	if (node && node->outfiles)
+		free(node->outfiles);
+	if (node && node->out_flags)
+		free(node->out_flags);
 	if (node)
 		free(node);
 	return (False);
