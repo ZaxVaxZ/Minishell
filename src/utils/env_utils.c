@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 05:23:38 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/23 20:41:17 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/01 16:57:07 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,15 @@ char	**to_char_arr(t_env **env)
 		return (NULL);
 	strs[i] = NULL;
 	return (strs);
+}
+
+t_env	*search_env(t_env *env, char *key)
+{
+	while (env)
+	{
+		if (!ft_strncmp(env->key, key, -1))
+			return (env);
+		env = env->next;
+	}
+	return (NULL);
 }

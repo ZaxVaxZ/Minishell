@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 22:25:25 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/31 17:00:35 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/01 14:07:29 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ int	get_max(t_cmd *cmds)
 #include <stdio.h>
 void	print_commands(t_cmd *cmds)
 {
+	printf("\n");
 	printf("|-|%-10.10s", " Command");
 	for (int i=1;i<get_max(cmds);i++)
 		printf("|%-8.8s %d", " Params", i);

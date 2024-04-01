@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 05:23:45 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/31 16:45:02 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/01 16:48:03 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,16 @@
 static int	count_words(t_queue *q)
 {
 	int		count;
-	t_queue	*prev;
+	//t_queue	*prev;
 
 	count = 0;
-	prev = NULL;
+	//prev = NULL;
 	while (q && q->type != Op_logic && q->type != Semicolon
 		&& q->type != Op_pipe)
 	{
 		if (q->type == Word)
 			count++;
-		prev = q;
+		//prev = q;
 		q = q->next;
 	}
 	return (count);
@@ -48,7 +48,8 @@ int	count_out_redirs(t_queue *q)
 	redirs = 0;
 	while (q && !is_separator(q))
 	{
-		if (q->type == Op_redir && q->next && q->next->type == Name)
+		//if (q->type == Op_redir && q->next && !(q->next->type == Name))
+		if (q->type == Op_redir && q->next)
 			redirs++;
 		q = q->next;
 	}

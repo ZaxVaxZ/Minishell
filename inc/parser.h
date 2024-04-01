@@ -36,6 +36,7 @@
 # include "general.h"
 # include "libft.h"
 # include "queues.h"
+# include "env_list.h"
 
 t_queue	*parse(char *s);
 t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs);
@@ -46,7 +47,7 @@ int		op_occur(char c, char *s);
 t_bool	found_in(char c, char *s);
 t_bool	add_str_to_queue(t_queue **q, char *str);
 t_bool	parse_word(t_queue **q, char **s, t_bool var_name);
-int		parse_clean_up(t_queue **h);
+int		parse_clean_up(t_queue **h, t_env *env);
 int		syntax_error(t_queue **q, char *token, t_bool missing, t_bool at_end);
 void	delete_next(t_queue **q);
 

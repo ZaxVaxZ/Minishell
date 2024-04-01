@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/31 16:50:03 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/01 14:20:39 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,27 +65,28 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, int *depth)
 	return (q);
 }
 
-/// @brief 
-/// @param q 
-/// @param cmd 
-/// @return 
+/// @brief set the redirection parameters of the cmd node
+/// @param q the queue node to go through
+/// @param cmd the cmd node to modify
+/// @return false if any malloc fails, true otherwise
 static t_bool	queue_redir_to_cmd(t_queue **q, t_cmd *cmd)
 {
-	if ((*q)->type == Op_redir && (*q)->next && (*q)->s[0] == '>')
+	if ((*q) && (*q)->type == Op_redir && (*q)->next && (*q)->s[0] == '>')
 	{
 		cmd->out_flags[cmd->outfile_cnt] = ((*q)->s[1] == '>');
 		cmd->outfiles[cmd->outfile_cnt] = ft_strdup((*q)->next->s);
-		if (!cmd->outfiles[cmd->outfile_cnt++])
+		if (!cmd->outfiles[cmd->outfile_cnt])
 			return (False);
+		cmd->outfile_cnt++;
 	}
-	if ((*q)->type == Op_redir && (*q)->next && (*q)->s[0] == '<')
+	if ((*q) && (*q)->type == Op_redir && (*q)->next && (*q)->s[0] == '<')
 	{
 		cmd->heredoc = ((*q)->s[1] == '<');
 		cmd->input = ft_strdup((*q)->next->s);
 		if (!cmd->input)
 			return (False);
 	}
-	if ((*q)->type == Op_redir)
+	if ((*q) && (*q)->type == Op_redir)
 		(*q) = (*q)->next;
 	return (True);
 }
@@ -98,14 +99,14 @@ static t_bool	queue_redir_to_cmd(t_queue **q, t_cmd *cmd)
 /// @return False if any malloc fails. True otherwise
 static t_bool	queue_node_to_cmd(t_queue **q, t_cmd *cmd, t_env **env)
 {
-	if ((*q)->type == Assign && (*q)->next)
+	if ((*q) && (*q)->type == Assign && (*q)->next)
 	{
 		if ((*q)->next->type == Name && !add_var(env, (*q)->s, (*q)->next->s))
 			return (free_cmd_node(cmd));
 		else if (!add_var(env, (*q)->s, ""))
 			return (free_cmd_node(cmd));
 	}
-	else if ((*q)->type == Word)
+	else if ((*q) && (*q)->type == Word)
 	{
 		cmd->params[cmd->params_cnt] = ft_strdup((*q)->s);
 		if (!cmd->params[cmd->params_cnt++])
@@ -116,11 +117,11 @@ static t_bool	queue_node_to_cmd(t_queue **q, t_cmd *cmd, t_env **env)
 	return (True);
 }
 
-/// @brief 
-/// @param queue 
-/// @param cmds 
-/// @param env 
-/// @return 
+/// @brief build the command node and add it to the cmd list
+/// @param queue the queue to traverse through
+/// @param cmds the cmd list
+/// @param env the shell env
+/// @return false if any malloc fails, true otherwise
 t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 {
 	int		depth;

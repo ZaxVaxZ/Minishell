@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/31 18:43:44 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/01 18:58:42 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,35 @@ void	clean_whitespace(t_queue *q)
 			return ;
 		q = q->next;
 	}
+}
+
+t_bool	redirect(t_cmd *cmd)
+{
+	int	i;
+
+	i = -1;
+	if (cmd->input)
+	{
+		cmd->in_fd = open(cmd->input, O_RDONLY);
+		if (cmd->in_fd == -1)
+			return (write_error("Couldn't open infile\n"));
+		if (dup2(cmd->in_fd, STDIN_FILENO) == -1)
+			return (write_error("Couldn't dup STDIN with infile\n"));
+		close(cmd->in_fd);
+	}
+	while (++i < cmd->outfile_cnt)
+	{
+		if (cmd->out_flags[i] == 1)
+			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_APPEND | O_RDWR, 0644);
+		else if (!cmd->out_flags[i])
+			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_TRUNC | O_RDWR, 0644);
+		if (cmd->out_fd == -1)
+			return (write_error("Couldn't open outfile\n"));
+		if (dup2(cmd->out_fd, STDOUT_FILENO) == -1)
+			return (write_error("Couldn't dup outfiles\n"));
+		close(cmd->out_fd);
+	}
+	return (True);
 }
 
 int	resolve_builtin(t_cmd *cmd, t_env **env)
@@ -100,32 +129,16 @@ char	*search_path(t_env **env, t_cmd *cmd)
  	return (NULL);
 }
 
-t_bool	redirect(t_cmd *cmd)
+t_bool	pipe_cmd(t_cmd *cmd, t_env **env)
 {
-	int	i;
-
-	i = -1;
-	if (cmd->input)
-	{
-		cmd->in_fd = open(cmd->input, O_RDONLY);
-		if (cmd->in_fd == -1)
-			return (write_error("Couldn't open infile\n"));
-		if (dup2(cmd->in_fd, STDIN_FILENO) == -1)
-			return (write_error("Couldn't dup STDIN with infile\n"));
-	}
-	while (++i < cmd->outfile_cnt)
-	{
-		if (cmd->out_flags[i] == 1)
-			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_APPEND | O_RDWR, 0644);
-		else if (!cmd->out_flags[i])
-			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_TRUNC | O_RDWR, 0644);
-		if (cmd->out_fd == -1)
-			return (write_error("Couldn't open outfile\n"));
-		if (dup2(cmd->out_fd, STDOUT_FILENO) == -1)
-			return (write_error("Couldn't dup outfiles\n"));
-		close(cmd->out_fd);
-	}
-	return (True);
+	int		pipes[2];
+	pid_t	s;
+	
+	if (cmd->after != Op_pipe)
+		return (True);
+	if (pipe(pipes) < 0)
+		return (write_error("Couldn't open pipes\n"));
+	
 }
 
 t_bool	execute(t_env **env, t_cmd *cmd)
@@ -143,29 +156,7 @@ t_bool	execute(t_env **env, t_cmd *cmd)
 	return (True);
 }
 
-//t_bool	pipe_cmd(t_env **env, t_cmd **cmd)
-//{
-//	int		pipes[2];
-//	pid_t	id;
-
-//	if ((*cmd)->after != Op_pipe)
-//		return (True);
-//	if (pipe(pipes) < 0)
-//		return (write_error("Couldn't initialize pipes\n"));
-//	id = fork();
-//	if (id < 0)
-//	{
-//		close(pipes[0]);
-//		close(pipes[1]);
-//		return (write_error("Couldn't fork\n"));
-//	}
-//	if (id == 0)
-//	{
-		
-//	}
-//}
-
-void	execute_command(t_env **env, t_cmd **cmd)
+t_bool	execute_command(t_env **env, t_cmd **cmd)
 {
 	pid_t	id;
 	t_cmd	*tmp;
@@ -189,4 +180,5 @@ void	execute_command(t_env **env, t_cmd **cmd)
 		}
 		tmp = tmp->next;
 	}
+	return (True);
 }

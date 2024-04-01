@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 04:46:55 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/15 13:08:14 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:52:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ static t_bool	join_words(t_queue **h)
 /// @param q The top node passed by value to loop through the queue
 /// @param open Array with the number of quotes or brackets left open
 /// @return False if any malloc fails, True otherwise
-static int	unpack_vars(t_queue **h, t_queue *q, int *open)
+static int	unpack_vars(t_queue **h, t_queue *q, int *open, t_env *env)
 {
 	if (open[0])
 		return (syntax_error(h, "'", True, False));
@@ -116,8 +116,10 @@ static int	unpack_vars(t_queue **h, t_queue *q, int *open)
 		{
 			q->type = Word;
 			free(q->s);
-			if (getenv(q->next->s))
-				q->s = ft_strdup(getenv(q->next->s));
+			if (search_env(env, q->next->s))
+				q->s = ft_strdup(search_env(env, q->next->s)->value);
+			//if (getenv(q->next->s))
+			//	q->s = ft_strdup(getenv(q->next->s));
 			else
 				q->s = ft_strdup("");
 			if (!q->s)
@@ -132,7 +134,7 @@ static int	unpack_vars(t_queue **h, t_queue *q, int *open)
 /// @brief Cleans up the queue post-parsing for an easier execution run
 /// @param h The top node of the queue
 /// @return 1 if there's a parsing issue, -1 if a malloc fails, 0 otherwise
-int	parse_clean_up(t_queue **h)
+int	parse_clean_up(t_queue **h, t_env *envp)
 {
 	int		open[3];
 	int		ret;
@@ -153,7 +155,7 @@ int	parse_clean_up(t_queue **h)
 		open[2] += (q->type == Bracket_open) - (q->type == Bracket_closed);
 		q = q->next;
 	}
-	ret = unpack_vars(h, *h, open);
+	ret = unpack_vars(h, *h, open, envp);
 	if (!join_words(h))
 		return (-1);
 	return (ret);

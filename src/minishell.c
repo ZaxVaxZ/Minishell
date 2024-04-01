@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/31 16:18:46 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:01:54 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp)
 
 	cmds = NULL;
 	q = parse(cmd_line);
-	if (parse_clean_up(&q))
+	if (parse_clean_up(&q, envp))
 	{
 		free(cmd_line);
 		return (1);
@@ -47,7 +47,7 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp)
 	print_queue(q);
 	clean_whitespace(q);
 	build_commands(&q, &cmds, &envp);
-	//execute_command(&envp, &cmds);
+	execute_command(&envp, &cmds);
 	print_queue(q);
 	print_commands(cmds);
 	free_queue(&q);
