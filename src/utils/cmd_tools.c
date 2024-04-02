@@ -6,12 +6,13 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/01 14:20:39 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/02 16:57:57 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cmd_list.h"
 #include <stdio.h>
+#include "general.h"
 
 /* -----------------------
  * Functions in the file:
@@ -26,13 +27,19 @@
 /// @param tmp The cmd node being built
 /// @param depth How deeply nested a command is in parenthesis
 /// @return The new position in the queue after skipping to the command
-static t_queue	*before_cmd(t_queue *q, int *depth)
+static t_queue	*before_cmd(t_queue *q, t_cmd **cmds)
 {
-	if (!q)
+	t_cmd	*p;
+
+	if (!q || !cmds)
 		return (NULL);
 	while (q && q->type == Bracket_open)
 	{
-		(*depth)++;
+		p = new_cmd_node(NULL);
+		if (!p)
+			return (NULL);
+		p->rep = LP;
+		add_cmd_node(cmds, p);
 		q = q->next;
 	}
 	return (q);
@@ -43,21 +50,32 @@ static t_queue	*before_cmd(t_queue *q, int *depth)
 /// @param tmp The cmd node being built
 /// @param depth How deeply nested a command is in parenthesis
 /// @return The new position in the queue after skipping to the next command
-static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, int *depth)
+static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, t_cmd **cmds)
 {
-	while (q && q->type == Bracket_closed)
+	t_cmd	*p;
+	t_cmd	*t;
+
+	t = tmp;
+	add_cmd_node(cmds, tmp);
+	while (q && (q->type == Bracket_closed || q->type == Semicolon))
 	{
-		(*depth)--;
+		if (q->type == Bracket_closed)
+		{
+			p = new_cmd_node(NULL);
+			if (!p)
+				return (NULL);
+			p->rep = RP;
+			add_cmd_node(cmds, p);
+		}
 		q = q->next;
 	}
-	if (q && is_separator(q) && q->type != Bracket_open && tmp->after == Illegal)
+	if (q && is_separator(q))
 	{
-		tmp->after = q->type;
+		t->after = q->type;
 		if (q->type == Op_logic && !ft_strncmp(q->s, "||", -1))
 			tmp->or_op = True;
-	}
-	if (q && is_separator(q) && q->type != Bracket_open)
 		q = q->next;
+	}
 	return (q);
 }
 
@@ -97,8 +115,11 @@ static t_bool	queue_node_to_cmd(t_queue **q, t_cmd *cmd, t_env **env)
 {
 	if ((*q) && (*q)->type == Assign && (*q)->next)
 	{
-		if ((*q)->next->type == Name && !add_var(env, (*q)->s, (*q)->next->s))
-			return (free_cmd_node(cmd));
+		if ((*q)->next->type == Name)
+		{
+			if (!add_var(env, (*q)->s, (*q)->next->s))
+				return (free_cmd_node(cmd));
+		}
 		else if (!add_var(env, (*q)->s, ""))
 			return (free_cmd_node(cmd));
 	}
@@ -121,15 +142,13 @@ static t_bool	queue_node_to_cmd(t_queue **q, t_cmd *cmd, t_env **env)
 /// @return false if any malloc fails, true otherwise
 t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 {
-	int		depth;
 	t_cmd	*tmp;
 	t_queue	*q;
 
-	depth = 0;
 	q = *queue;
 	while (q)
 	{
-		q = before_cmd(q, &depth);
+		q = before_cmd(q, cmds);
 		if (!prep_cmd(q, &tmp))
 			return (free_and_return(queue, env, cmds, tmp));
 		while (q && !is_separator(q))
@@ -138,10 +157,7 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 				return (free_and_return(queue, env, cmds, tmp));
 			q = q->next;
 		}
-		tmp->depth = depth;
-		q = after_cmd(q, tmp, &depth);
-		q = after_cmd(q, tmp, &depth);
-		add_cmd_node(cmds, tmp);
+		q = after_cmd(q, tmp, cmds);
 	}
 	return (True);
 }

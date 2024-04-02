@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:13:59 by pipolint          #+#    #+#             */
-/*   Updated: 2024/03/23 20:28:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/02 14:12:16 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,28 +57,6 @@ t_env	*new_env_node(char *key, char *value, t_bool exported)
 /// @param to_add The node to be added
 void	add_env_node(t_env **env, t_env *to_add)
 {
-	//t_env	*trav;
-
-	//if (!env || !to_add)
-	//	return ;
-	//if (!*env)
-	//{
-	//	*env = to_add;
-	//	return ;
-	//}
-	//else if (ft_strncmp(to_add->key, (*env)->key, -1) < 0)
-	//{
-	//	to_add->next = *env;
-	//	*env = to_add;
-	//	return ;
-	//}
-	//trav = (*env);
-	//while (trav->next && ft_strncmp(trav->next->key, to_add->key, -1) < 0)
-	//	trav = trav->next;
-	//if (trav->next)
-	//	to_add->next = trav->next->next;
-	//trav->next = to_add;
-	
 	t_env	*trav;
 
 	if (!env || !to_add)

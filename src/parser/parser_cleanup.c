@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 04:46:55 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/01 17:52:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/02 17:14:00 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ int	parse_clean_up(t_queue **h, t_env *envp)
 	t_queue	*q;
 
 	if (!h || !*h)
-		return (-1);
+		return (-2);
 	open[0] = 0;
 	open[1] = 0;
 	open[2] = 0;

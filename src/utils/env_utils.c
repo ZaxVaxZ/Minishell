@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 05:23:38 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/01 16:57:07 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/02 16:57:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,62 @@ char	**to_char_arr(t_env **env)
 		return (NULL);
 	strs[i] = NULL;
 	return (strs);
+}
+
+static void	add_sorted(t_env **env, t_env *node)
+{
+	t_env	*travel;
+
+	if (!*env)
+		*env = node;
+	else if (ft_strncmp((*env)->key, node->key, -1) > 0)
+	{
+		node->next = *env;
+		*env = node;
+	}
+	else
+	{
+		travel = *env;
+		while (travel && travel->next
+			&& ft_strncmp(travel->next->key, node->key, -1) < 0)
+			travel = travel->next;
+		node->next = travel->next;
+		travel->next = node;
+	}
+}
+
+static t_env	*clone_env(t_env *env)
+{
+	t_env	*tmp;
+	t_env	*newenv;
+
+	newenv = NULL;
+	while (env)
+	{
+		tmp = new_env_node(env->key, env->value, env->exported);
+		if (!tmp)
+		{
+			free_env(&newenv);
+			return (NULL);
+		}
+		add_sorted(&newenv, tmp);
+		env = env->next;
+	}
+	return (newenv);
+}
+
+void	print_sorted_env(t_env *env)
+{
+	t_env	*head;
+	t_env	*clone;
+
+	clone = clone_env(env);
+	head = clone;
+	while (clone)
+	{
+		if (clone->exported)
+			ft_printf("%s=%s\n", clone->key, clone->value);
+		clone = clone->next;
+	}
+	free_env(&head);
 }

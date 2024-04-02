@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 22:25:25 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/01 14:07:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/02 14:05:12 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,13 @@ void	print_commands(t_cmd *cmds)
 	ft_printf("|%-10.10s|%-10.10s|%-10.10s|%-10.10s|\n", "  After", "  Input", " Output 1", " Output 2");
 	while (cmds)
 	{
-		cmds->params_cnt;
-		ft_printf("|%d", cmds->depth);
+		if (cmds->rep)
+			ft_printf("|%c", cmds->rep);
+		else
+			ft_printf("|-");
 		for (int i = 0; i<mx; i++)
 		{
-			if (cmds->params[i])
+			if (cmds->params && cmds->params[i])
 				ft_printf("|%-10.10s", cmds->params[i]);
 			else
 				ft_printf("|%-10.10s", "");

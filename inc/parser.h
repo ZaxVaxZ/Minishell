@@ -13,26 +13,6 @@
 #ifndef PARSER_H
 # define PARSER_H
 
-# define UNDERSCORE '_'
-# define LOWERCASE "abcdefghijklmnopqrstuvwxyz"
-# define UPPERCASE "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-# define DIGIT "0123456789"
-# define EQUAL '='
-# define SPACE ' '
-# define PIPE '|'
-# define DASH '-'
-# define TAB '\t'
-# define AND '&'
-# define INF '<'
-# define OUF '>'
-# define NL '\n'
-# define SQ '\''
-# define DQ '\"'
-# define LP '('
-# define RP ')'
-# define SC ';'
-# define DS '$'
-
 # include "general.h"
 # include "libft.h"
 # include "queues.h"

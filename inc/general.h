@@ -50,6 +50,26 @@
 # define WHITE_BACKGROUND  "\e[47m"   // White
 # define TEXT_RESET        "\e[0m"    // Text Reset
 
+# define UNDERSCORE '_'
+# define LOWERCASE "abcdefghijklmnopqrstuvwxyz"
+# define UPPERCASE "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+# define DIGIT "0123456789"
+# define EQUAL '='
+# define SPACE ' '
+# define PIPE '|'
+# define DASH '-'
+# define TAB '\t'
+# define AND '&'
+# define INF '<'
+# define OUF '>'
+# define NL '\n'
+# define SQ '\''
+# define DQ '\"'
+# define LP '('
+# define RP ')'
+# define SC ';'
+# define DS '$'
+
 typedef enum e_bool
 {
 	False,

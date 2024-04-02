@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/01 18:58:42 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/02 16:25:32 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,30 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 
-void	clean_whitespace(t_queue *q)
+t_bool	clean_whitespace(t_queue *q)
 {
-	while (q->next)
+	char	*tmp;
+	t_queue	*head;
+
+	head = q;
+	while (q && q->next)
 	{
-		if (q->type == Assign && (q->type == Assign || q->type == Op_redir)
+		if ((q->type == Assign || q->type == Op_redir)
 			&& q->next && q->next->type == Word)
 			q->next->type = Name;
+		if (q->type == Assign)
+		{
+			tmp = q->s;
+			q->s = ft_substr(q->s, 0, ft_strlen(q->s) - 1);
+			free(tmp);
+			if (!q->s)
+				return (free_queue(&head));
+		}
 		if (q->next->type == Whitespace)
 			delete_next(&q);
-		if (!q->next)
-			return ;
 		q = q->next;
 	}
+	return (True);
 }
 
 t_bool	redirect(t_cmd *cmd)
@@ -129,18 +140,6 @@ char	*search_path(t_env **env, t_cmd *cmd)
  	return (NULL);
 }
 
-t_bool	pipe_cmd(t_cmd *cmd, t_env **env)
-{
-	int		pipes[2];
-	pid_t	s;
-	
-	if (cmd->after != Op_pipe)
-		return (True);
-	if (pipe(pipes) < 0)
-		return (write_error("Couldn't open pipes\n"));
-	
-}
-
 t_bool	execute(t_env **env, t_cmd *cmd)
 {
 	if (cmd->input || (cmd->outfile_cnt && cmd->outfiles && cmd->outfiles[0]))
@@ -162,6 +161,7 @@ t_bool	execute_command(t_env **env, t_cmd **cmd)
 	t_cmd	*tmp;
 
 	tmp = *cmd;
+	export_cmd(env, NULL);
 	while (tmp)
 	{
 		if (resolve_builtin(tmp, env) != 1)

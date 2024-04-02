@@ -10,6 +10,8 @@
 		"stat.h": "c",
 		"executor.h": "c",
 		"env_list.h": "c",
-		"tmp_utils.h": "c"
+		"tmp_utils.h": "c",
+		"algorithm": "c",
+		"signal.h": "c"
 	}
 }

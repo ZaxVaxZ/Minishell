@@ -1,0 +1,13 @@
+(a) && (b || c) || (d)
+
+((a && b) || (c && d))
+
+(a && (b || c) || d)
+
+(a) && (b) || (c)
+
+
+
+V1: Opens			= 0
+V2: Last_Closed		= 0
+V3: Current_Level	= 0

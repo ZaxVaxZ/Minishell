@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:14:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/01 16:57:21 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/02 15:45:19 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@ void	delete_var(t_env **env, char *key);
 t_bool	export_var(t_env **e, char *str);
 t_env	*to_env_list(char **strs);
 char	**to_char_arr(t_env **env);
+void	print_sorted_env(t_env *env);
 
 #endif

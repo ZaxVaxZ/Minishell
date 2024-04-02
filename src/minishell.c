@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/01 17:01:54 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/02 17:21:47 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,28 @@
 #include <string.h>
 #include "./../tmp/tmp_utils.h"
 
+static int	free_up(char *cmd_line, t_queue **q, t_cmd **cmds)
+{
+	if (cmd_line)
+		free(cmd_line);
+	if (q)
+		free_queue(q);
+	if (cmds)
+		free_cmd(cmds);
+	return (0);
+}
+
 static int	handle_cmd_line(char *cmd_line, t_env *envp)
 {
 	t_queue	*q;
 	t_cmd	*cmds;
 
-	if (!cmd_line || !*cmd_line)
-	{
-		if (cmd_line)
-			free(cmd_line);
-		return (0);
-	}
+	if (!cmd_line || !*cmd_line || cmd_line[0] == NL)
+		return (free_up(cmd_line, NULL, NULL));
 	cmds = NULL;
 	q = parse(cmd_line);
+	if (parse_clean_up(&q, envp) == -2)
+		return (0);
 	if (parse_clean_up(&q, envp))
 	{
 		free_env(&envp);
@@ -47,13 +56,8 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp)
 	clean_whitespace(q);
 	if (!build_commands(&q, &cmds, &envp))
 		return (1);
-	// execute_command(&envp, &cmds);
 	print_commands(cmds);
-	ft_printf("\n");
-	free_queue(&q);
-	free_cmd(&cmds);
-	free(cmd_line);
-	return (0);
+	return (free_up(cmd_line, &q, &cmds));
 }
 
 int	main(int ac, char **av, char **env)
