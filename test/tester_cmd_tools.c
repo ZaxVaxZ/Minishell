@@ -12,6 +12,7 @@
 
 #include "cmd_list.h"
 #include <stdio.h>
+#include "ft_printf.h"
 
 /* -----------------------
  * Functions in the file:
@@ -20,6 +21,8 @@
  *   queue_node_to_cmd()
  *   build_commands()
  * -----------------------*/
+
+ t_bool	printed_var_top = False;
 
 /// @brief Handles the open parenthesis and operators before a command
 /// @param q The parser queue
@@ -101,6 +104,12 @@ static t_bool	queue_node_to_cmd(t_queue **q, t_cmd *cmd, t_env **env)
 			return (free_cmd_node(cmd));
 		else if (!add_var(env, (*q)->s, ""))
 			return (free_cmd_node(cmd));
+		if (!printed_var_top)
+		{
+			ft_printf("\n|-|%-10.10s|%-10.10s|\n", " Var_Name", "  Value");
+			printed_var_top = True;
+		}
+		ft_printf("|-|%-10.10s|%-10.10s|\n", (*q)->s, (*q)->next->s);
 	}
 	else if ((*q) && (*q)->type == Word)
 	{

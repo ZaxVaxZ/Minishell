@@ -26,16 +26,12 @@
 static int	count_words(t_queue *q)
 {
 	int		count;
-	//t_queue	*prev;
 
 	count = 0;
-	//prev = NULL;
-	while (q && q->type != Op_logic && q->type != Semicolon
-		&& q->type != Op_pipe)
+	while (q && !is_separator(q))
 	{
 		if (q->type == Word)
 			count++;
-		//prev = q;
 		q = q->next;
 	}
 	return (count);
@@ -48,8 +44,7 @@ int	count_out_redirs(t_queue *q)
 	redirs = 0;
 	while (q && !is_separator(q))
 	{
-		//if (q->type == Op_redir && q->next && !(q->next->type == Name))
-		if (q->type == Op_redir && q->next)
+		if (q->type == Op_redir && q->s[0] == '>' && q->next)
 			redirs++;
 		q = q->next;
 	}
@@ -78,15 +73,15 @@ t_bool	prep_cmd(t_queue *q, t_cmd **node)
 		free(params);
 		return (False);
 	}
-	else
-		params[0] = NULL;
+	params[0] = NULL;
 	if (!count_out_redirs(q))
 		return (True);
-	(*node)->outfiles = malloc(sizeof(char *) * (count_out_redirs(q) + 1));
 	(*node)->out_flags = malloc(sizeof(int) * count_out_redirs(q));
-	if (!(*node)->outfiles || !(*node)->out_flags)
+	if (!(*node)->out_flags)
 		return (free_cmd_node(*node));
-	(*node)->outfiles[0] = NULL;
+	(*node)->outfiles = malloc(sizeof(char *) * (count_out_redirs(q) + 1));
+	if (!(*node)->outfiles)
+		return (free_cmd_node(*node));
 	return (True);
 }
 

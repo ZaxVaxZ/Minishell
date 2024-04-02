@@ -19,7 +19,7 @@ t_bool	echo(char **s, t_bool n)
 	i = (n == True);
 	while (s && s[i])
 	{
-		if (printf("%s", s[i]) == -1 || (s[i + 1] && ft_printf(" ") == -1))
+		if (ft_printf("%s", s[i]) == -1 || (s[i + 1] && ft_printf(" ") == -1))
 			return (False);
 		i++;
 	}

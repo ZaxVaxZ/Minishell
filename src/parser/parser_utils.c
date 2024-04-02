@@ -122,8 +122,12 @@ t_bool	add_str_to_queue(t_queue **q, char *str)
 
 	if (!q)
 		return (False);
-	if (!str)
+	if (!str || !*str)
+	{
+		if (str)
+			free(str);
 		return (True);
+	}
 	illegal = !is_legal_control_op(str, *q);
 	tmp = new_node(str);
 	if (!tmp)
@@ -136,7 +140,5 @@ t_bool	add_str_to_queue(t_queue **q, char *str)
 		queue(q, tmp);
 	}
 	free(str);
-	if (!*q)
-		return (False);
-	return (True);
+	return (*q != NULL);
 }

@@ -116,10 +116,8 @@ static int	unpack_vars(t_queue **h, t_queue *q, int *open, t_env *env)
 		{
 			q->type = Word;
 			free(q->s);
-			if (search_env(env, q->next->s))
-				q->s = ft_strdup(search_env(env, q->next->s)->value);
-			//if (getenv(q->next->s))
-			//	q->s = ft_strdup(getenv(q->next->s));
+			if (get_var(env, q->next->s))
+				q->s = ft_strdup(get_var(env, q->next->s));
 			else
 				q->s = ft_strdup("");
 			if (!q->s)

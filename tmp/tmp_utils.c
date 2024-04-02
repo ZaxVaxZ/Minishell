@@ -73,112 +73,51 @@ void	print_queue(t_queue *queue)
 	write(1, "|----------|----------|\n\n", 25);
 }
 
-int	count_params(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr && arr[i])
-		i++;
-	return (i);
-}
-
 int	get_max(t_cmd *cmds)
 {
 	int	x;
 
 	if (!cmds)
 		return (-1);
-	x = count_params(cmds->params);
+	x = cmds->params_cnt;
 	while (cmds)
 	{
-		if (count_params(cmds->params) > x)
-			x = count_params(cmds->params);
+		if (cmds->params_cnt > x)
+			x = cmds->params_cnt;
 		cmds = cmds->next;
 	}
 	return (x);
 }
-#include <stdio.h>
+
 void	print_commands(t_cmd *cmds)
 {
-	printf("\n");
-	printf("|-|%-10.10s", " Command");
-	for (int i=1;i<get_max(cmds);i++)
-		printf("|%-8.8s %d", " Params", i);
-	printf("|%-10.10s|%-10.10s|%-10.10s|%-10.10s|\n", "  After", "  Input", " Output 1", " Output 2");
+	ft_printf("\n");
+	ft_printf("|-|%-10.10s", " Command");
+	int	mx = get_max(cmds);
+	for (int i=1;i<mx;i++)
+		ft_printf("|%-7.7s %2d", " Param", i);
+	ft_printf("|%-10.10s|%-10.10s|%-10.10s|%-10.10s|\n", "  After", "  Input", " Output 1", " Output 2");
 	while (cmds)
 	{
-		printf("|%d", cmds->depth);
-		for (int i = 0; i<get_max(cmds); i++)
+		cmds->params_cnt;
+		ft_printf("|%d", cmds->depth);
+		for (int i = 0; i<mx; i++)
 		{
 			if (cmds->params[i])
-				printf("|%-10.10s", cmds->params[i]);
+				ft_printf("|%-10.10s", cmds->params[i]);
 			else
-				printf("|%-10.10s", "");
+				ft_printf("|%-10.10s", "");
 		}
 		if (cmds->heredoc)
-			printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), "heredoc");
+			ft_printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), "heredoc");
 		else if (cmds->input)
-			printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), cmds->input);
+			ft_printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), cmds->input);
 		else
-			printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), "   NULL");
+			ft_printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), "   NULL");
 		if (cmds->outfiles)
-			printf("|%-10.10s|%-10.10s|\n", cmds->outfiles[0], cmds->outfiles[cmds->outfile_cnt - 1]);
+			ft_printf("|%-10.10s|%-10.10s|\n", cmds->outfiles[0], cmds->outfiles[cmds->outfile_cnt - 1]);
 		else
-			printf("|%-10.10s|%-10.10s|\n", "   NULL", "   NULL");
+			ft_printf("|%-10.10s|%-10.10s|\n", "   NULL", "   NULL");
 		cmds = cmds->next;
 	}
-	//int	x;
-	//int	i;
-	// ls >out >>out2 >> out3 -a ; ((a && echo -a || ((ls >b<a))<q>a)<a<a<a>s>s>e);
-	//if (!cmds)
-	//{
-	//	ft_printf("There are no commands!\n\n");
-	//	return ;
-	//}
-	//x = get_max(cmds);
-	//if (x > 9)
-	//	x = 9;
-
-	//ft_printf("|-");
-	//i = 0;
-	//while (i++ < x + 4)
-	//	ft_printf("|----------");
-
-	//ft_printf("|\n|-|%-10.10s|%-10.10s", "  Before", " Command");
-	//i = 1;
-	//while (i < x)
-	//	ft_printf("|Parameter%d", i++);
-	//ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-",
-	//	"  After", "  Input", "  Output");
-	//i = 0;
-	//while (cmds)
-	//{
-	//	while (i++ < x + 4)
-	//		ft_printf("|----------");
-	//	ft_printf("|\n|%d|%-10.10s|%-10.10s", cmds->depth, type_to_str(cmds->before),
-	//		cmds->params[0]);
-	//	i = 0;
-	//	while (++i < x && cmds->params[i])
-	//		ft_printf("|%-10.10s", cmds->params[i]);
-	//	//ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-", type_to_str(cmds->after),
-	//	//	cmds->input, "");
-	//	 ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-", type_to_str(cmds->after),
-	//	 	cmds->input, "Empty for now");
-	//	for (int k = 0; cmds->ovrw_outs[k]; k++)
-	//		printf("%s\n", cmds->ovrw_outs[k]);
-	//	cmds = cmds->next;
-	//}
-	////i = 1;
-	////while (i < x && cmds->params[i])
-	////	ft_printf("|%-10.10s", cmds->params[i++]);
-	////while (i++ < x)
-	////	ft_printf("|%-10.10s", "");
-	////ft_printf("|\n|-|%-10.10s|%-10.10s", type_to_str(cmds->before),
-	////	cmds->params[0]);
-	//// ft_printf("|%-10.10s|%-10.10s|%-10.10s|\n|-", type_to_str(cmds->after),
-	//// 	cmds->input, cmds->output);
-	//while (i++ < x + 4)
-	//	ft_printf("|----------");
-	//ft_printf("|\n");
 }

@@ -25,6 +25,13 @@
 #include <string.h>
 #include "./../tmp/tmp_utils.h"
 
+static void	handle(int sig)
+{
+	write(1, "\n", 1);
+	if (sig == SIGINT)
+		exit (0);
+}
+
 static int	handle_cmd_line(char *cmd_line, t_env *envp)
 {
 	t_queue	*q;
@@ -40,14 +47,16 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp)
 	q = parse(cmd_line);
 	if (parse_clean_up(&q, envp))
 	{
-		free_env(&envp);
 		free(cmd_line);
 		return (1);
 	}
+	// print_queue(q);
 	clean_whitespace(q);
+	ft_printf("\n%s", cmd_line);
 	if (!build_commands(&q, &cmds, &envp))
 		return (1);
 	// execute_command(&envp, &cmds);
+	// print_queue(q);
 	print_commands(cmds);
 	ft_printf("\n");
 	free_queue(&q);
@@ -58,27 +67,25 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp)
 
 int	main(int ac, char **av, char **env)
 {
-	char		*tmp;
 	char		*cmd_line;
 	t_env		*envp;
 
 	(void)ac;
 	(void)av;
-	tmp = getcwd(NULL, 0);
+	signal(SIGINT, handle);
 	if (isatty(0))
-		ft_printf("%s> ", tmp);
+		ft_printf("%s> ", getenv("PWD"));
 	cmd_line = get_next_line(0);
 	envp = to_env_list(env);
-	add_var(&envp, "PWD", tmp);
-	free(tmp);
 	while (cmd_line)
 	{
-		if (handle_cmd_line(cmd_line, envp))
+		ft_printf("%s", cmd_line);
+		if (cmd_line[0] != '#' && handle_cmd_line(cmd_line, envp))
 			exit(1);
-		tmp = getcwd(NULL, 0);
+		else if (cmd_line[0] == '#')
+			free(cmd_line);
 		if (isatty(0))
-			ft_printf("%s> ", tmp);
-		free(tmp);
+			ft_printf("%s> ", getenv("PWD"));
 		cmd_line = get_next_line(0);
 	}
 	free_env(&envp);

@@ -12,6 +12,7 @@
 
 #include "env_list.h"
 #include <stdio.h>
+#include "ft_printf.h"
 
 /* -----------------------
  * Functions in the file:
@@ -76,15 +77,4 @@ char	**to_char_arr(t_env **env)
 		return (NULL);
 	strs[i] = NULL;
 	return (strs);
-}
-
-t_env	*search_env(t_env *env, char *key)
-{
-	while (env)
-	{
-		if (!ft_strncmp(env->key, key, -1))
-			return (env);
-		env = env->next;
-	}
-	return (NULL);
 }

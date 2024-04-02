@@ -114,6 +114,8 @@ t_bool	is_legal_control_op(char *s, t_queue *q)
 	if ((!q_end && is_meta_char(s, True) && s[0] != LP)
 		|| (s[0] == RP && !opened))
 		return (False);
+	if (s[0] == RP && q_end->type == Semicolon)
+		return (True);
 	if (is_meta_char(s, True) && s[0] != LP && (q_end->type == Op_logic
 			|| q_end->type == Op_pipe || q_end->type == Op_redir
 			|| q_end->type == Bracket_open || q_end->type == Semicolon))

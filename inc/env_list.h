@@ -38,7 +38,4 @@ t_bool	export_var(t_env **e, char *str);
 t_env	*to_env_list(char **strs);
 char	**to_char_arr(t_env **env);
 
-// temp
-t_env	*search_env(t_env *env, char *key);
-
 #endif

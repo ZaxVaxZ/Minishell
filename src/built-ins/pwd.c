@@ -14,5 +14,5 @@
 
 t_bool	pwd(t_env *env)
 {
-	return (printf("%s\n", get_var(env, "PWD")) != -1);
+	return (ft_printf("%s\n", get_var(env, "PWD")) != -1);
 }
