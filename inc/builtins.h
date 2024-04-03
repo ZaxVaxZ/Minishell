@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 13:07:12 by pipolint          #+#    #+#             */
-/*   Updated: 2024/03/31 16:07:08 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/03 16:06:10 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,11 @@
 
 int		cd(char *pwd, char *dir, t_env **env);
 void	exiting(int code);
-void	unset(char *var_name, t_env **env);
+t_bool	unset(t_env **env, char **params);
 t_bool	pwd(t_env *env);
 t_bool	print_env(t_env *env);
 t_bool	echo(char **str, t_bool n);
 t_bool	export_cmd(t_env **env, char **variable);
+t_bool	valid_identifier(char *id);
 
 #endif

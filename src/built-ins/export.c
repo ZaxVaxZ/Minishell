@@ -6,28 +6,36 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 21:57:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/02 15:51:55 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/03 16:00:34 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-t_bool	export_cmd(t_env **env, char **variable)
+t_bool	export_cmd(t_env **env, char **params)
 {
 	int		i;
-	t_env	*clone;
+	t_bool	ret;
 
-	i = 0;
-	if (!*variable)
+	if (!params)
+		return (True);
+	if (!*params)
 	{
 		print_sorted_env(*env);
 		return (True);
 	}
-	while (variable[i])
+	ret = True;
+	i = 0;
+	while (params[i])
 	{
-		if (!export_var(env, variable[i]))
-			return (free_env(env));
+		if (!valid_identifier(params[i]))
+		{
+			ret = False;
+			ft_printf("export: `%s`: not a valid identifier\n", params[i]);
+		}
+		else
+			export_var(env, params[i]);
 		i++;
 	}
-	return (True);
+	return (ret);
 }

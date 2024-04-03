@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 13:31:22 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/02 16:58:44 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/03 17:00:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,10 @@
 
 int	cd(char *pwd, char *dir, t_env **env)
 {
+	if (dir[0] == '/')
+	{
+		set_var(env, "PATH", dir, 1);
+	}
+	chdir(dir);
 	return (0);
 }

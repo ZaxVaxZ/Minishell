@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 03:55:54 by marvin            #+#    #+#             */
-/*   Updated: 2024/03/17 03:55:54 by marvin           ###   ########.fr       */
+/*   Updated: 2024/04/03 15:42:21 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,12 @@
 
 t_bool	pwd(t_env *env)
 {
-	return (ft_printf("%s\n", get_var(env, "PWD")) != -1);
+	int		ret;
+	char	*tmp;
+
+	tmp = getcwd(NULL, 0);
+	ret = ft_printf("%s\n", tmp);
+	if (tmp)
+		free(tmp);
+	return (ret != -1);
 }

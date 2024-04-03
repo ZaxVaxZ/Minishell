@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/02 16:25:32 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/03 16:55:18 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,24 +79,25 @@ int	resolve_builtin(t_cmd *cmd, t_env **env)
 		return (-1);
 	else if (!ft_strncmp(cmd->params[0], "echo", -1))
 	{
-		if (cmd->params[1] && !ft_strncmp(cmd->params[1], "-n", 2)
-			&& !echo(cmd->params + 2, True))
-			return (-1);
-		else if (!echo(cmd->params + 1, False))
+		if (!echo(cmd->params + 1, (cmd->params[1] 
+				&& !ft_strncmp(cmd->params[1], "-n", 2))))
 			return (-1);
 	}
 	else if (!ft_strncmp(cmd->params[0], "cd", -1))
 	{
+		char	*cwd;
+		cwd = getcwd(NULL, 0);
 		if (cmd->params[1]
-			&& !cd(get_var(*env, "PWD"), get_var(*env, "HOME"), env))
+			&& !cd(cwd, get_var(*env, "HOME"), env))
 			return (-1);
-		else if (!cd(get_var(*env, "PWD"), cmd->params[1], env))
+		else if (!cd(cwd, cmd->params[1], env))
 			return (-1);
 	}
 	else if (!ft_strncmp(cmd->params[0], "env", -1) && !print_env(*env))
 		return (-1);
 	else if (!ft_strncmp(cmd->params[0], "unset", -1))
-		delete_var(env, cmd->params[1]);
+		unset(env, cmd->params + 1);
+		//delete_var(env, cmd->params[1]);
 	else if (!ft_strncmp(cmd->params[0], "pwd", -1)
 		&& ft_printf("%s\n", get_var(*env, "PWD")) == -1)
 		return (-1);
@@ -119,6 +120,8 @@ char	*search_path(t_env **env, t_cmd *cmd)
  	char	*com;
  	int		i;
 
+	if (!cmd->params)
+		return (NULL);
  	path = get_var(*env, "PATH");
  	if (!path)
  		return (NULL);
@@ -142,6 +145,8 @@ char	*search_path(t_env **env, t_cmd *cmd)
 
 t_bool	execute(t_env **env, t_cmd *cmd)
 {
+	if (!cmd->params)
+		return (True);
 	if (cmd->input || (cmd->outfile_cnt && cmd->outfiles && cmd->outfiles[0]))
 	{
 		if (redirect(cmd) == False)
@@ -149,7 +154,8 @@ t_bool	execute(t_env **env, t_cmd *cmd)
 	}
 	if (execve(search_path(env, cmd), cmd->params, to_char_arr(env)) == -1)
 	{
-		write_error("Execution error\n");
+		write_error(cmd->params[0]);
+		write_error(": Command not found\n");
 		return (False);
 	}
 	return (True);
@@ -161,23 +167,40 @@ t_bool	execute_command(t_env **env, t_cmd **cmd)
 	t_cmd	*tmp;
 
 	tmp = *cmd;
-	export_cmd(env, NULL);
 	while (tmp)
 	{
 		if (resolve_builtin(tmp, env) != 1)
 		{
-			id = fork();
-			if (id == 0)
-			{
-				if (execute(env, tmp) == False)
-				{
-					write_error("Couldn't execute command\n");
-					exit(EXIT_FAILURE);
-				}
-			}
-			else
-				wait(&tmp->status);
+			//id = fork();
+			//if (id == 0)
+			//{
+			//	if (execute(env, tmp) == False)
+			//		exit(EXIT_FAILURE);
+			//}
+			//else
+			//	wait(&tmp->status);
 		}
+		//if (tmp->after == Op_logic && !tmp->or_op)
+		//{
+		//	if (WEXITSTATUS(tmp->status))
+		//	{
+		//		if (tmp->next)
+		//			tmp = tmp->next;
+		//	}
+		//}
+		//else if (tmp->after == Op_logic && tmp->or_op)
+		//{
+		//	if (WEXITSTATUS(tmp->status) == 0)
+		//	{
+		//		if (tmp->next->rep == RP)
+		//		{
+		//			if (tmp->next)
+		//				tmp = tmp->next;
+		//		}
+		//		if (tmp->next)
+		//			tmp = tmp->next;
+		//	}
+		//}
 		tmp = tmp->next;
 	}
 	return (True);

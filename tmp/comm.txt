@@ -31,8 +31,6 @@ create a function to convert the linked list into a double array for execve uwu
 
 ====================================================================================================================================================================
 
-Alphabetical variables T_T
-
 Execute the command
 If the after type of the command is a pipe, execute the command into a pipe and pipe the output to the next command
 	store an array of fds
@@ -40,3 +38,10 @@ If the after type is &&, execute the command;
 	if the execution fails, don't execute the next command
 If the after type is ||, execute the command
 	if the execution fails, execute the next command
+
+export and unset need to work on each parameter
+they need to print a msg for each invalid identifier
+exit needs to work
+echo retested
+pwd retested
+DO CD

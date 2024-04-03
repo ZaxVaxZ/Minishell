@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/02 17:21:47 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/03 15:37:37 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp)
 	clean_whitespace(q);
 	if (!build_commands(&q, &cmds, &envp))
 		return (1);
+	execute_command(&envp, &cmds);
 	print_commands(cmds);
 	return (free_up(cmd_line, &q, &cmds));
 }
