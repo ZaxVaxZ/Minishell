@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/03 16:55:18 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/03 22:31:30 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,12 @@ t_bool	redirect(t_cmd *cmd)
 
 int	resolve_builtin(t_cmd *cmd, t_env **env)
 {
+	char	*cwd;
+
 	if (!cmd || !cmd->params || !cmd->params[0])
 		return (0);
 	if (!ft_strncmp(cmd->params[0], "exit", -1))
-		return (-1);
+		return (-5);
 	else if (!ft_strncmp(cmd->params[0], "echo", -1))
 	{
 		if (!echo(cmd->params + 1, (cmd->params[1] 
@@ -85,13 +87,13 @@ int	resolve_builtin(t_cmd *cmd, t_env **env)
 	}
 	else if (!ft_strncmp(cmd->params[0], "cd", -1))
 	{
-		char	*cwd;
 		cwd = getcwd(NULL, 0);
-		if (cmd->params[1]
-			&& !cd(cwd, get_var(*env, "HOME"), env))
+		if (!cd(env, cwd, cmd->params[1]))
+		{
+			free(cwd);
 			return (-1);
-		else if (!cd(cwd, cmd->params[1], env))
-			return (-1);
+		}
+		free(cwd);
 	}
 	else if (!ft_strncmp(cmd->params[0], "env", -1) && !print_env(*env))
 		return (-1);
@@ -163,7 +165,7 @@ t_bool	execute(t_env **env, t_cmd *cmd)
 
 t_bool	execute_command(t_env **env, t_cmd **cmd)
 {
-	pid_t	id;
+	//pid_t	id;
 	t_cmd	*tmp;
 
 	tmp = *cmd;

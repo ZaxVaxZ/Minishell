@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 18:25:51 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/02 16:57:39 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/03 21:54:28 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,14 @@ t_bool	set_var(t_env **env, char *key, char *value, t_bool exported)
 {
 	t_env	*tmp;
 
+	if (!get_var(*env, key))
+	{
+		if (!add_var(env, key, value))
+			return (False);
+		else if (!exported)
+			return (True);
+		return (export_var(env, key));
+	}
 	tmp = *env;
 	while (tmp && ft_strncmp(tmp->key, key, -1))
 		tmp = tmp->next;

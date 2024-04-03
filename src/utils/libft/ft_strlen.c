@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:10:20 by ehammoud          #+#    #+#             */
-/*   Updated: 2023/11/19 00:51:40 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/04/03 21:32:34 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ size_t	ft_strlen(const char *s)
 	size_t	n;
 
 	n = 0;
-	while (s[n] != '\0')
+	while (s && s[n] != '\0')
 		n++;
 	return (n);
 }

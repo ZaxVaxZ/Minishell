@@ -12,6 +12,7 @@
 		"env_list.h": "c",
 		"tmp_utils.h": "c",
 		"algorithm": "c",
-		"signal.h": "c"
+		"signal.h": "c",
+		"__node_handle": "c"
 	}
 }
