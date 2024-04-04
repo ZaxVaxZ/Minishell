@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/03 22:31:30 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/04 05:18:56 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,46 +71,6 @@ t_bool	redirect(t_cmd *cmd)
 	return (True);
 }
 
-int	resolve_builtin(t_cmd *cmd, t_env **env)
-{
-	char	*cwd;
-
-	if (!cmd || !cmd->params || !cmd->params[0])
-		return (0);
-	if (!ft_strncmp(cmd->params[0], "exit", -1))
-		return (-5);
-	else if (!ft_strncmp(cmd->params[0], "echo", -1))
-	{
-		if (!echo(cmd->params + 1, (cmd->params[1] 
-				&& !ft_strncmp(cmd->params[1], "-n", 2))))
-			return (-1);
-	}
-	else if (!ft_strncmp(cmd->params[0], "cd", -1))
-	{
-		cwd = getcwd(NULL, 0);
-		if (!cd(env, cwd, cmd->params[1]))
-		{
-			free(cwd);
-			return (-1);
-		}
-		free(cwd);
-	}
-	else if (!ft_strncmp(cmd->params[0], "env", -1) && !print_env(*env))
-		return (-1);
-	else if (!ft_strncmp(cmd->params[0], "unset", -1))
-		unset(env, cmd->params + 1);
-		//delete_var(env, cmd->params[1]);
-	else if (!ft_strncmp(cmd->params[0], "pwd", -1)
-		&& ft_printf("%s\n", get_var(*env, "PWD")) == -1)
-		return (-1);
-	else if (!ft_strncmp(cmd->params[0], "export", -1)
-		&& !export_cmd(env, cmd->params + 1))
-		return (-1);
-	else
-		return (0);
-	return (1);
-}
-
 // /// @brief searches for command in the env path variable
 // /// @param env the environment with the path variable
 // /// @param cmd the command
@@ -163,47 +123,71 @@ t_bool	execute(t_env **env, t_cmd *cmd)
 	return (True);
 }
 
-t_bool	execute_command(t_env **env, t_cmd **cmd)
+t_bool	handle_cmd(t_env **env, t_cmd *cmd, t_exec *exec, int *status)
 {
-	//pid_t	id;
-	t_cmd	*tmp;
+	int	ret;
 
+	if (cmd->rep == LP || cmd->rep == RP)
+		return (True);
+	ret = resolve_builtin(env, cmd);
+	if (ret < 0)
+		return (False);
+	else if (ret == 1)
+		exec->last_status = 0;
+	else
+	{
+		//id = fork();
+		//if (id == 0)
+		//{
+		//	if (execute(env, cmd) == False)
+		//		exit(EXIT_FAILURE);
+		//}
+		//else
+		//	wait(&cmd->status);
+	}
+	//if (cmd->after == Op_logic && !cmd->or_op)
+	//{
+	//	if (WEXITSTATUS(cmd->status))
+	//	{
+	//		if (cmd->next)
+	//			cmd = cmd->next;
+	//	}
+	//}
+	//else if (cmd->after == Op_logic && cmd->or_op)
+	//{
+	//	if (WEXITSTATUS(cmd->status) == 0)
+	//	{
+	//		if (cmd->next->rep == RP)
+	//		{
+	//			if (cmd->next)
+	//				cmd = cmd->next;
+	//		}
+	//		if (cmd->next)
+	//			cmd = cmd->next;
+	//	}
+	//}
+	return (True);
+}
+
+int	execute_command(t_env **env, t_cmd **cmd, int *status)
+{
+	t_cmd	*tmp;
+	t_exec	exec;
+
+	exec.curr_depth = 0;
+	exec.status_depth = 0;
+	exec.overall_status = 0;
 	tmp = *cmd;
 	while (tmp)
 	{
-		if (resolve_builtin(tmp, env) != 1)
-		{
-			//id = fork();
-			//if (id == 0)
-			//{
-			//	if (execute(env, tmp) == False)
-			//		exit(EXIT_FAILURE);
-			//}
-			//else
-			//	wait(&tmp->status);
-		}
-		//if (tmp->after == Op_logic && !tmp->or_op)
-		//{
-		//	if (WEXITSTATUS(tmp->status))
-		//	{
-		//		if (tmp->next)
-		//			tmp = tmp->next;
-		//	}
-		//}
-		//else if (tmp->after == Op_logic && tmp->or_op)
-		//{
-		//	if (WEXITSTATUS(tmp->status) == 0)
-		//	{
-		//		if (tmp->next->rep == RP)
-		//		{
-		//			if (tmp->next)
-		//				tmp = tmp->next;
-		//		}
-		//		if (tmp->next)
-		//			tmp = tmp->next;
-		//	}
-		//}
+		exec.curr_depth += (tmp->rep == LP);
+		exec.curr_depth -= (tmp->rep == RP);
+		exec.status_depth -= (exec.curr_depth < exec.status_depth);
+		if (!handle_cmd(env, tmp, &exec, status))
+			break ;
 		tmp = tmp->next;
 	}
-	return (True);
+	free_cmd(cmd);
+	*status = exec.overall_status;
+	return (ret);
 }
