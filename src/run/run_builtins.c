@@ -3,14 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   run_builtins.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/04/04 03:04:05 by codespace        ###   ########.fr       */
+/*   Updated: 2024/04/04 09:55:48 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+
+t_bool	clean_whitespace(t_queue *q)
+{
+	char	*tmp;
+	t_queue	*head;
+
+	head = q;
+	while (q && q->next)
+	{
+		if ((q->type == Assign || q->type == Op_redir)
+			&& q->next && q->next->type == Word)
+			q->next->type = Name;
+		if (q->type == Assign)
+		{
+			tmp = q->s;
+			q->s = ft_substr(q->s, 0, ft_strlen(q->s) - 1);
+			free(tmp);
+			if (!q->s)
+				return (free_queue(&head));
+		}
+		if (q->next->type == Whitespace)
+			delete_next(&q);
+		q = q->next;
+	}
+	return (True);
+}
 
 static int	resolve_builtin_helper(t_env **env, t_cmd *cmd)
 {
@@ -28,8 +54,8 @@ static int	resolve_builtin_helper(t_env **env, t_cmd *cmd)
 	}
 	else if (!ft_strncmp(cmd->params[0], "echo", -1))
 	{
-		if (!echo(cmd->params + 1, (cmd->params[1] 
-				&& !ft_strncmp(cmd->params[1], "-n", 2))))
+		if (!echo(cmd->params + 1, (cmd->params[1]
+					&& !ft_strncmp(cmd->params[1], "-n", 2))))
 			return (-1);
 	}
 	else if (!ft_strncmp(cmd->params[0], "exit", -1))
