@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/04 09:57:30 by marvin           ###   ########.fr       */
+/*   Updated: 2024/04/04 21:29:51 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,15 +95,16 @@ t_bool	execute(t_env **env, t_cmd *cmd)
 
 t_bool	handle_cmd(t_env **env, t_cmd *cmd, t_exec *exec, int *status)
 {
-	int	ret;
+ 	int		ret;
+	pid_t	id;
 
-	if (cmd->rep == LP || cmd->rep == RP)
-		return (True);
-	ret = resolve_builtin(env, cmd);
-	if (ret < 0)
-		return (False);
-	else if (ret == 1)
-		exec->last_status = 0;
+ 	if (cmd->rep == LP || cmd->rep == RP)
+ 		return (True);
+ 	ret = resolve_builtin(env, cmd);
+ 	if (ret < 0)
+ 		return (False);
+ 	else if (ret == 1)
+ 		exec->last_status = 0;
 	else
 	{
 		id = fork();
@@ -114,75 +115,74 @@ t_bool	handle_cmd(t_env **env, t_cmd *cmd, t_exec *exec, int *status)
 		}
 		else
 			wait(&cmd->status);
+		exec->last_status = WEXITSTATUS(cmd->status);
+		exec->status_depth = exec->curr_depth;
 	}
-	return (True);
+	ft_printf("status: %d\n", exec->last_status);
+ 	return (True);
 }
 
 int	execute_command(t_env **env, t_cmd **cmd, int *status)
 {
 	t_cmd	*tmp;
 	t_exec	exec;
+	t_cmd	*last;
 
 	exec.curr_depth = 0;
 	exec.status_depth = 0;
 	exec.overall_status = 0;
 	tmp = *cmd;
+	last = NULL;
 	while (tmp)
 	{
+		if (tmp->rep == '\0')
+			last = tmp;
 		exec.curr_depth += (tmp->rep == LP);
 		exec.curr_depth -= (tmp->rep == RP);
-		exec.status_depth -= (exec.curr_depth < exec.status_depth);
 		if (!handle_cmd(env, tmp, &exec, status))
 			break ;
+		exec.status_depth -= (exec.curr_depth < exec.status_depth);
+		if (last && last->after == Op_logic && last->or_op)
+		{
+			while (tmp->or_op)
+				tmp = tmp->next;
+		}
 		tmp = tmp->next;
 	}
 	free_cmd(cmd);
 	*status = exec.overall_status;
-	return (ret);
+	return (*status);
 }
 
-// t_bool	handle_cmd(t_env **env, t_cmd *cmd, t_exec *exec, int *status)
-// {
-// 	int	ret;
-
-// 	if (cmd->rep == LP || cmd->rep == RP)
-// 		return (True);
-// 	ret = resolve_builtin(env, cmd);
-// 	if (ret < 0)
-// 		return (False);
-// 	else if (ret == 1)
-// 		exec->last_status = 0;
-// 	else
-// 	{
-// 		//id = fork();
-// 		//if (id == 0)
-// 		//{
-// 		//	if (execute(env, cmd) == False)
-// 		//		exit(EXIT_FAILURE);
-// 		//}
-// 		//else
-// 		//	wait(&cmd->status);
-// 	}
-// 	//if (cmd->after == Op_logic && !cmd->or_op)
-// 	//{
-// 	//	if (WEXITSTATUS(cmd->status))
-// 	//	{
-// 	//		if (cmd->next)
-// 	//			cmd = cmd->next;
-// 	//	}
-// 	//}
-// 	//else if (cmd->after == Op_logic && cmd->or_op)
-// 	//{
-// 	//	if (WEXITSTATUS(cmd->status) == 0)
-// 	//	{
-// 	//		if (cmd->next->rep == RP)
-// 	//		{
-// 	//			if (cmd->next)
-// 	//				cmd = cmd->next;
-// 	//		}
-// 	//		if (cmd->next)
-// 	//			cmd = cmd->next;
-// 	//	}
-// 	//}
-// 	return (True);
-// }
+//else
+//{
+//	//id = fork();
+//	//if (id == 0)
+//	//{
+//	//	if (execute(env, cmd) == False)
+//	//		exit(EXIT_FAILURE);
+//	//}
+//	//else
+//	//	wait(&cmd->status);
+//}
+////if (cmd->after == Op_logic && !cmd->or_op)
+////{
+////	if (WEXITSTATUS(cmd->status))
+////	{
+////		if (cmd->next)
+////			cmd = cmd->next;
+////	}
+////}
+////else if (cmd->after == Op_logic && cmd->or_op)
+////{
+////	if (WEXITSTATUS(cmd->status) == 0)
+////	{
+////		if (cmd->next->rep == RP)
+////		{
+////			if (cmd->next)
+////				cmd = cmd->next;
+////		}
+////		if (cmd->next)
+////			cmd = cmd->next;
+////	}
+////}

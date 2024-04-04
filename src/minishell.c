@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/03 15:37:37 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/04 17:09:11 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	free_up(char *cmd_line, t_queue **q, t_cmd **cmds)
 	return (0);
 }
 
-static int	handle_cmd_line(char *cmd_line, t_env *envp)
+static int	handle_cmd_line(char *cmd_line, t_env *envp, int *status)
 {
 	t_queue	*q;
 	t_cmd	*cmds;
@@ -56,7 +56,7 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp)
 	clean_whitespace(q);
 	if (!build_commands(&q, &cmds, &envp))
 		return (1);
-	execute_command(&envp, &cmds);
+	execute_command(&envp, &cmds, status);
 	print_commands(cmds);
 	return (free_up(cmd_line, &q, &cmds));
 }
@@ -66,6 +66,7 @@ int	main(int ac, char **av, char **env)
 	char		*tmp;
 	char		*cmd_line;
 	t_env		*envp;
+	int			status;
 
 	(void)ac;
 	(void)av;
@@ -78,7 +79,7 @@ int	main(int ac, char **av, char **env)
 	free(tmp);
 	while (cmd_line)
 	{
-		if (handle_cmd_line(cmd_line, envp))
+		if (handle_cmd_line(cmd_line, envp, &status))
 			exit(1);
 		tmp = getcwd(NULL, 0);
 		if (isatty(0))

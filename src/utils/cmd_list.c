@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:13:59 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/02 13:19:52 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/04 21:27:16 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_cmd	*new_cmd_node(char **params)
 	node = malloc(sizeof(t_cmd));
 	if (!node)
 		return (NULL);
-	node->rep = 0;
+	node->rep = '\0';
 	node->status = 0;
 	node->in_fd = -1;
 	node->input = NULL;

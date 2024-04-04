@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/04 04:46:32 by codespace        ###   ########.fr       */
+/*   Updated: 2024/04/04 17:10:28 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,8 @@ typedef struct s_exec
 t_bool	clean_whitespace(t_queue *q);
 int		resolve_builtin(t_env **env, t_cmd *cmd);
 int		execute_command(t_env **env, t_cmd **cmd, int *status);
+
+t_bool	clean_whitespace(t_queue *q);
+int	resolve_builtin(t_env **env, t_cmd *cmd);
 
 #endif
