@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_list.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:13:59 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/04 21:27:16 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/04 20:15:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
  * Functions in the file:
  *   new_cmd_node()
  *   add_cmd_node()
- *   cmd_size()
+ *   delete_next_cmd()
  *   free_cmd_node()
  *   free_cmd()
  * -----------------------*/
@@ -69,20 +69,17 @@ void	add_cmd_node(t_cmd **cmd, t_cmd *to_add)
 	trav->next = to_add;
 }
 
-/// @brief Calculates and returns the size of the cmd list
-/// @param cmd The cmd list
-/// @return The number of nodes in the list. 0 If empty
-int	cmd_size(t_cmd *cmd)
+/// @brief Deletes the command node following the current one
+/// @param cmd The current command node
+void	delete_next_cmd(t_cmd **cmd)
 {
-	int	size;
+	t_cmd	*tmp;
 
-	size = 0;
-	while (cmd)
-	{
-		size++;
-		cmd = cmd->next;
-	}
-	return (size);
+	if (!cmd || !*cmd || !(*cmd)->next);
+		return ;
+	tmp = (*cmd)->next;
+	(*cmd)->next = (*cmd)->next->next;
+	free_cmd_node(tmp);
 }
 
 /// @brief Free a cmd node and its contents

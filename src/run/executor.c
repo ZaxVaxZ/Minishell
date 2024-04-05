@@ -3,77 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/04 21:29:51 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/05 07:42:19 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "../tmp/tmp_utils.h"
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/wait.h>
-
-t_bool	redirect(t_cmd *cmd)
-{
-	int	i;
-
-	i = -1;
-	if (cmd->input)
-	{
-		cmd->in_fd = open(cmd->input, O_RDONLY);
-		if (cmd->in_fd == -1)
-			return (write_error("Couldn't open infile\n"));
-		if (dup2(cmd->in_fd, STDIN_FILENO) == -1)
-			return (write_error("Couldn't dup STDIN with infile\n"));
-		close(cmd->in_fd);
-	}
-	while (++i < cmd->outfile_cnt)
-	{
-		if (cmd->out_flags[i] == 1)
-			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_APPEND, 0644);
-		else if (!cmd->out_flags[i])
-			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_TRUNC, 0644);
-		if (cmd->out_fd == -1)
-			return (write_error("Couldn't open outfile\n"));
-		if (dup2(cmd->out_fd, STDOUT_FILENO) == -1)
-			return (write_error("Couldn't dup outfiles\n"));
-		close(cmd->out_fd);
-	}
-	return (True);
-}
-
-/// @brief searches for command in the env path variable
-/// @param env the environment with the path variable
-/// @param cmd the command
-/// @return returns path if found, else NULL
-char	*search_path(t_env **env, t_cmd *cmd)
-{
-	char	**paths;
-	char	*com;
-	int		i;
-
-	if (!cmd->params)
-		return (NULL);
-	paths = ft_split(get_var(*env, "PATH"), ':');
-	if (!paths)
-	{
-		write_error("Couldn't find path\n");
-		return (NULL);
-	}
-	i = -1;
-	while (paths[++i])
-	{
-		com = ft_strjoin_chr(paths[i], '/', cmd->params[0]);
-		if (!com)
-			return (NULL);
-		if (!access(com, X_OK | F_OK))
-			return (com);
-	}
-	return (NULL);
-}
 
 t_bool	execute(t_env **env, t_cmd *cmd)
 {
@@ -93,18 +30,25 @@ t_bool	execute(t_env **env, t_cmd *cmd)
 	return (True);
 }
 
-t_bool	handle_cmd(t_env **env, t_cmd *cmd, t_exec *exec, int *status)
+t_bool	handle_cmd(t_env **env, t_cmd **cmd, t_exec *exec)
 {
+	int		handle;
  	int		ret;
 	pid_t	id;
 
- 	if (cmd->rep == LP || cmd->rep == RP)
+	handle = exec_type(exec, cmd);
+ 	if (handle == DO_NOT_EXECUTE)
  		return (True);
- 	ret = resolve_builtin(env, cmd);
- 	if (ret < 0)
+	else if (handle == WAIT_THEN_EXEC)
+		wait_for_children(t_exec *exec);
+ 	exec->ret = resolve_builtin(env, *cmd);
+ 	if (exec->ret < 0)
  		return (False);
- 	else if (ret == 1)
- 		exec->last_status = 0;
+ 	else if (exec->ret == 1)
+	{
+		exec->last_status = 0;
+		exec->last_op = (*cmd)->after;
+	}
 	else
 	{
 		id = fork();
@@ -124,34 +68,26 @@ t_bool	handle_cmd(t_env **env, t_cmd *cmd, t_exec *exec, int *status)
 
 int	execute_command(t_env **env, t_cmd **cmd, int *status)
 {
-	t_cmd	*tmp;
 	t_exec	exec;
-	t_cmd	*last;
+	t_cmd	*tmp;
 
-	exec.curr_depth = 0;
-	exec.status_depth = 0;
 	exec.overall_status = 0;
+	exec.status_depth = 0;
+	exec.curr_depth = 0;
+	exec.last_op = NON;
+	exec.ret = 0;
 	tmp = *cmd;
-	last = NULL;
 	while (tmp)
 	{
-		if (tmp->rep == '\0')
-			last = tmp;
-		exec.curr_depth += (tmp->rep == LP);
 		exec.curr_depth -= (tmp->rep == RP);
-		if (!handle_cmd(env, tmp, &exec, status))
-			break ;
 		exec.status_depth -= (exec.curr_depth < exec.status_depth);
-		if (last && last->after == Op_logic && last->or_op)
-		{
-			while (tmp->or_op)
-				tmp = tmp->next;
-		}
+		if (!handle_cmd(env, &tmp, &exec))
+			break ;
 		tmp = tmp->next;
 	}
 	free_cmd(cmd);
 	*status = exec.overall_status;
-	return (*status);
+	return (exec.ret);
 }
 
 //else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_list.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 05:47:46 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/02 13:19:19 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/04 20:15:12 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_cmd	*new_cmd_node(char **params);
 void	add_cmd_node(t_cmd **cmd, t_cmd *to_add);
 t_bool	free_cmd_node(t_cmd *node);
 t_bool	free_cmd(t_cmd **cmd);
-int		cmd_size(t_cmd *cmd);
+void	delete_next_cmd(t_cmd **cmd);
 t_bool	is_separator(t_queue *node);
 t_bool	free_and_return(t_queue **q, t_env **env, t_cmd **cmds, t_cmd *cmd);
 t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env);
