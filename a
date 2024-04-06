@@ -1,0 +1,28 @@
+total 48
+drwxrwxrwx+ 9 codespace codespace 4096 Apr  6 06:46 .
+drwxrwxrwx+ 3 codespace root      4096 Apr  5 20:23 ..
+drwxrwxrwx+ 9 codespace codespace 4096 Apr  5 20:26 .git
+drwxrwxrwx+ 2 codespace codespace 4096 Apr  5 20:23 .vscode
+-rw-r--r--  1 codespace codespace    0 Apr  6 06:49 a
+drwxrwxrwx+ 2 codespace codespace 4096 Apr  6 06:49 bin
+-rw-rw-rw-  1 codespace codespace   76 Apr  5 20:23 delete.sh
+drwxrwxrwx+ 2 codespace codespace 4096 Apr  5 20:23 inc
+-rw-rw-rw-  1 codespace codespace  159 Apr  5 20:23 setup.sh
+drwxrwxrwx+ 6 codespace codespace 4096 Apr  6 06:49 src
+drwxrwxrwx+ 2 codespace codespace 4096 Apr  5 20:23 test
+-rw-rw-rw-  1 codespace codespace  158 Apr  5 20:23 tester.sh
+drwxrwxrwx+ 2 codespace codespace 4096 Apr  6 06:49 tmp
+total 52
+drwxrwxrwx+ 9 codespace codespace 4096 Apr  6 06:46 .
+drwxrwxrwx+ 3 codespace root      4096 Apr  5 20:23 ..
+drwxrwxrwx+ 9 codespace codespace 4096 Apr  5 20:26 .git
+drwxrwxrwx+ 2 codespace codespace 4096 Apr  5 20:23 .vscode
+-rw-r--r--  1 codespace codespace  755 Apr  6 06:49 a
+drwxrwxrwx+ 2 codespace codespace 4096 Apr  6 06:49 bin
+-rw-rw-rw-  1 codespace codespace   76 Apr  5 20:23 delete.sh
+drwxrwxrwx+ 2 codespace codespace 4096 Apr  5 20:23 inc
+-rw-rw-rw-  1 codespace codespace  159 Apr  5 20:23 setup.sh
+drwxrwxrwx+ 6 codespace codespace 4096 Apr  6 06:49 src
+drwxrwxrwx+ 2 codespace codespace 4096 Apr  5 20:23 test
+-rw-rw-rw-  1 codespace codespace  158 Apr  5 20:23 tester.sh
+drwxrwxrwx+ 2 codespace codespace 4096 Apr  6 06:49 tmp

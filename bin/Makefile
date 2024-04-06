@@ -1,7 +1,7 @@
 ### []+--------={ Commands and Flags }=--------+[] ###
 CC		=	cc
 CFLAGS	=	#-Wall -Wextra -Werror -O3
-CFLAGS	+=	#-fsanitize=address -g3
+CFLAGS	+=	-fsanitize=address -g3
 
 ### []+--------={ Directories }=--------+[] ###
 INC		=	./../inc
@@ -17,7 +17,7 @@ EXE		=	$(SFD)/run
 ### []+--------={ Source Files }=--------+[] ###
 SRCS	=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c		\
 			$(LFT)/ft_substr.c $(LFT)/ft_strchr.c $(LFT)/ft_strjoin.c		\
-			$(LFT)/ft_strjoin_chr.c $(LFT)/ft_split.c						\
+			$(LFT)/ft_strjoin_chr.c $(LFT)/ft_split.c $(LFT)/ft_itoa.c		\
 			$(GNL)/get_next_line.c $(GNL)/get_next_line_utils.c				\
 			$(PRF)/ft_mods_utils.c $(PRF)/ft_printaddr.c $(PRF)/ft_printf.c	\
 			$(PRF)/ft_printhex.c $(PRF)/ft_printstr.c $(PRF)/ft_printchar.c	\
@@ -27,10 +27,10 @@ SRCS	=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c		\
 			$(BIF)/exit.c $(BIF)/env.c $(BIF)/cd.c							\
 			$(UTL)/queues.c $(UTL)/env_list.c $(UTL)/env_tools.c			\
 			$(UTL)/env_utils.c $(UTL)/cmd_list.c $(UTL)/cmd_tools.c			\
-			$(UTL)/cmd_utils.c $(EXE)/run_builtins.c						\
+			$(UTL)/cmd_utils.c												\
 			$(PRS)/parser.c $(PRS)/parser_utils.c $(PRS)/parser_extras.c	\
 			$(PRS)/parser_checkers.c $(PRS)/parser_cleanup.c 				\
-			$(EXE)/executor.c $(SFD)/minishell.c		./../tmp/tmp_utils.c
+			$(EXE)/executor.c $(EXE)/run_builtins.c $(EXE)/run_utils.c $(SFD)/minishell.c		./../tmp/tmp_utils.c
 
 ### []+--------={ Object files and Program name }=--------+[] ###
 OBJS	=	$(SRCS:.c=.o)

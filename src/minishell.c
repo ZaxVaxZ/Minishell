@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/04 17:09:11 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/06 05:58:40 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,19 @@
 #include <string.h>
 #include "./../tmp/tmp_utils.h"
 
+static void	stop_kill(int signal)
+{
+	char	*tmp;
+
+	if (signal == SIGINT)
+	{
+		tmp = getcwd(NULL, 0);
+		if (isatty(0))
+			ft_printf("\n%s> ", tmp);
+		free(tmp);
+	}
+}
+
 static int	free_up(char *cmd_line, t_queue **q, t_cmd **cmds)
 {
 	if (cmd_line)
@@ -38,6 +51,8 @@ static int	free_up(char *cmd_line, t_queue **q, t_cmd **cmds)
 
 static int	handle_cmd_line(char *cmd_line, t_env *envp, int *status)
 {
+	int		ret;
+	char	*tmp;
 	t_queue	*q;
 	t_cmd	*cmds;
 
@@ -56,31 +71,43 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, int *status)
 	clean_whitespace(q);
 	if (!build_commands(&q, &cmds, &envp))
 		return (1);
-	execute_command(&envp, &cmds, status);
-	print_commands(cmds);
-	return (free_up(cmd_line, &q, &cmds));
+	ret = execute_commands(&envp, &cmds, status);
+	tmp = ft_itoa(*status);
+	if (tmp)
+	{
+		set_var(&envp, "?", tmp, False);
+		free(tmp);
+	}
+	else
+		ret = -1;
+	free_up(cmd_line, &q, &cmds);
+	// print_commands(cmds);
+	return (ret);
 }
 
 int	main(int ac, char **av, char **env)
 {
-	char		*tmp;
-	char		*cmd_line;
-	t_env		*envp;
-	int			status;
+	char	*tmp;
+	char	*cmd_line;
+	t_env	*envp;
+	int		status;
+	int		ret;
 
 	(void)ac;
 	(void)av;
 	tmp = getcwd(NULL, 0);
 	if (isatty(0))
 		ft_printf("%s> ", tmp);
+	signal(SIGINT, stop_kill);
+	signal(SIGQUIT, stop_kill);
 	cmd_line = get_next_line(0);
 	envp = to_env_list(env);
 	add_var(&envp, "PWD", tmp);
 	free(tmp);
 	while (cmd_line)
 	{
-		if (handle_cmd_line(cmd_line, envp, &status))
-			exit(1);
+		if (handle_cmd_line(cmd_line, envp, &status) < 0)
+			break ;
 		tmp = getcwd(NULL, 0);
 		if (isatty(0))
 			ft_printf("%s> ", tmp);
@@ -88,5 +115,6 @@ int	main(int ac, char **av, char **env)
 		cmd_line = get_next_line(0);
 	}
 	free_env(&envp);
-	return (0);
+	ft_printf("\n");
+	exit(status);
 }
