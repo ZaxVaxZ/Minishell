@@ -13,6 +13,8 @@
 		"tmp_utils.h": "c",
 		"algorithm": "c",
 		"signal.h": "c",
-		"__node_handle": "c"
+		"__node_handle": "c",
+		"cstdlib": "c",
+		"get_next_line.h": "c"
 	}
 }

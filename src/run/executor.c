@@ -3,14 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: uwubuntu <uwubuntu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/06 05:59:15 by codespace        ###   ########.fr       */
+/*   Updated: 2024/04/07 01:54:16 by uwubuntu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "get_next_line.h"
+
+t_bool	here_doc(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
+{
+	char	*line;
+
+	while (1)
+	{
+		ft_printf("> ");
+		line = get_next_line(STDIN_FILENO);
+		if (!ft_strncmp(line, cmd->input, ft_strlen(line) - 1)
+			&& ft_strlen(line) - 1 == ft_strlen(cmd->input))
+			break ;
+		free(line);
+	}
+	if (line)
+		free(line);
+}
 
 t_bool	execute(t_env **env, t_cmd *cmd)
 {
@@ -43,57 +61,106 @@ t_bool	execute(t_env **env, t_cmd *cmd)
 
 void	exec_parent(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 {
-	if (fds[1] != -1)
-		close(fds[1]);
-	if (exec->last_op == PIPE_OP && fds[0] != -1 && !cmd->input
-		&& dup2(fds[0], STDIN_FILENO) < 0)
-		cmd->status = EXIT_FAILURE * (!cmd->status);
-	if (fds[0] != -1)
-		close(fds[0]);
-	if (!cmd->status && cmd->input)
-		cmd->in_fd = open(cmd->input, O_RDONLY);
-	if (!cmd->status && cmd->input
-		&& (cmd->in_fd < 0 || dup2(cmd->in_fd, STDIN_FILENO) < 0))
+	if (cmd->after == Op_pipe || exec->last_op == Op_pipe)
 	{
-		perror(cmd->input);
-		cmd->status = 127 * (!cmd->status);
+		close(fds[1]);
+		dup2(fds[0], STDIN_FILENO);
+		close(fds[0]);
 	}
+	// if (fds[1] != -1)
+	// 	close(fds[1]);
+	// if (exec->last_op == PIPE_OP && fds[0] != -1 && !cmd->input
+	// 	&& dup2(fds[0], STDIN_FILENO) < 0)
+	// 	cmd->status = EXIT_FAILURE * (!cmd->status);
+	// if (fds[0] != -1)
+	// 	close(fds[0]);
+	// if (!cmd->status && cmd->input)
+	// 	cmd->in_fd = open(cmd->input, O_RDONLY);
+	// if (!cmd->status && cmd->input
+	// 	&& (cmd->in_fd < 0 || dup2(cmd->in_fd, STDIN_FILENO) < 0))
+	// {
+	// 	perror(cmd->input);
+	// 	cmd->status = 127 * (!cmd->status);
+	// }
 }
 
 void	exec_child(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 {
-	int	i;
-	int	exit_code;
-
-	exit_code = 0;
-	if (fds[0] != -1)
+	if (cmd->input && !cmd->heredoc)
+	{
+		ft_printf("Opening infile\n");
+		cmd->in_fd = open(cmd->input, O_RDONLY, 0644);
+		if (cmd->in_fd == -1)
+		{
+			write_error("Cant open infile\n");
+			exit(EXIT_FAILURE);
+		}
+		if (dup2(cmd->in_fd, STDIN_FILENO) == -1)
+		{
+			write_error("Infile Dup error\n");
+			exit(EXIT_FAILURE);
+		}
+	}
+	else if (cmd->heredoc)
+	{
+		here_doc(env, cmd, exec, fds);
+	}
+	if (cmd->outfile_cnt)
+	{
+		int i = 0;
+		while (i < cmd->outfile_cnt)
+		{
+			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_APPEND, 0644);
+			close(fds[0]);
+			close(fds[1]);
+			if (dup2(cmd->out_fd, STDOUT_FILENO) == -1)
+			{
+				write_error("Couldn't dup outfile\n");
+				exit(EXIT_FAILURE);
+			}
+			i++;
+		}
+	}
+	if (exec->last_op == Op_pipe || cmd->after == Op_pipe)
+	{
 		close(fds[0]);
-	if (cmd->after == Op_pipe && fds[1] != -1 && !cmd->outfile_cnt
-		&& dup2(fds[1], STDOUT_FILENO) < 0 && !cmd->status)
-		exit_code = EXIT_FAILURE * (!exit_code);
-	if (fds[1] != -1)
+		dup2(fds[1], STDOUT_FILENO);
 		close(fds[1]);
-	i = -1;
-	while (++i < cmd->outfile_cnt)
-	{
-		if (!cmd->out_flags[i])
-			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_WRONLY, 0644);
-		else
-			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_TRUNC, 0644);
-		exit_code += EXIT_FAILURE * (!exit_code && cmd->out_fd < 0);
-		if (cmd->out_fd < 0)
-			perror(cmd->outfiles[i]);
 	}
-	if (cmd->outfile_cnt && dup2(cmd->out_fd, STDOUT_FILENO) < 0)
-	{
-		perror(cmd->outfiles[cmd->outfile_cnt - 1]);
-		exit_code += EXIT_FAILURE * (!exit_code);
-	}
-	if (!exit_code && !execute(env, cmd))
-		exit_code = EXIT_FAILURE;
-	if (!exit_code)
-		exit(cmd->status);
-	exit(exit_code);
+	if (execute(env, cmd) == False)
+		exit(EXIT_FAILURE);
+	// int	i;
+	// int	exit_code;
+
+	// exit_code = 0;
+	// if (fds[0] != -1)
+	// 	close(fds[0]);
+	// if (cmd->after == Op_pipe && fds[1] != -1 && !cmd->outfile_cnt
+	// 	&& dup2(fds[1], STDOUT_FILENO) < 0 && !cmd->status)
+	// 	exit_code = EXIT_FAILURE * (!exit_code);
+	// if (fds[1] != -1)
+	// 	close(fds[1]);
+	// i = -1;
+	// while (++i < cmd->outfile_cnt)
+	// {
+	// 	if (!cmd->out_flags[i])
+	// 		cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_WRONLY, 0644);
+	// 	else
+	// 		cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_TRUNC, 0644);
+	// 	exit_code += EXIT_FAILURE * (!exit_code && cmd->out_fd < 0);
+	// 	if (cmd->out_fd < 0)
+	// 		perror(cmd->outfiles[i]);
+	// }
+	// if (cmd->outfile_cnt && dup2(cmd->out_fd, STDOUT_FILENO) < 0)
+	// {
+	// 	perror(cmd->outfiles[cmd->outfile_cnt - 1]);
+	// 	exit_code += EXIT_FAILURE * (!exit_code);
+	// }
+	// if (!exit_code && !execute(env, cmd))
+	// 	exit_code = EXIT_FAILURE;
+	// if (!exit_code)
+	// 	exit(cmd->status);
+	// exit(exit_code);
 }
 
 int	after_to_op(t_cmd *cmd)
@@ -167,6 +234,7 @@ int	execute_commands(t_env **env, t_cmd **cmd, int *status)
 {
 	t_exec	exec;
 	t_cmd	*tmp;
+	int temp_stdin;
 
 	exec.cmd_head = *cmd;
 	exec.overall_status = 0;
@@ -177,6 +245,7 @@ int	execute_commands(t_env **env, t_cmd **cmd, int *status)
 	exec.last_op = NON;
 	exec.ret = 0;
 	tmp = *cmd;
+	temp_stdin = dup(STDIN_FILENO);
 	while (tmp)
 	{
 		exec.curr_depth -= (tmp->rep == RP);
@@ -192,6 +261,7 @@ int	execute_commands(t_env **env, t_cmd **cmd, int *status)
 			tmp = tmp->next;
 	}
 	wait_for_children(&exec);
+	dup2(temp_stdin, STDIN_FILENO);
 	if (exec.ret != -5)
 		*status = exec.last_status;
 	return (exec.ret);
