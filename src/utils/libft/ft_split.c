@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 13:36:54 by ehammoud          #+#    #+#             */
-/*   Updated: 2023/11/19 16:23:05 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/04/06 02:41:18 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	word_count(char *s, char sep)
 	return (n);
 }
 
-static char	**ft_freeup(char **arr)
+char	**ft_freeup(char **arr)
 {
 	size_t	i;
 

@@ -7,5 +7,6 @@ a;b;
 (a;)
 (a;);
 a;(b;);
+ls || (echo hi && echo no || echo yes) && echo this will print
 
 #LEAVE THIS COMMENT HERE ALWAYS

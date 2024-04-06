@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   tester_minishell.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/01 17:01:54 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/05 20:28:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp)
 	ft_printf("\n%s", cmd_line);
 	if (!build_commands(&q, &cmds, &envp))
 		return (1);
-	// execute_command(&envp, &cmds);
+	// execute_commands(&envp, &cmds);
 	// print_queue(q);
 	print_commands(cmds);
 	ft_printf("\n");

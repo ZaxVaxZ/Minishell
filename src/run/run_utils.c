@@ -6,11 +6,28 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/04/05 07:09:27 by codespace        ###   ########.fr       */
+/*   Updated: 2024/04/06 05:25:10 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+
+void	wait_for_children(t_exec *exec)
+{
+	int		status;
+	pid_t	child;
+
+	child = 0;
+	while (child != -1)
+	{
+		child = wait(&status);
+		if (exec->last_pid != -1 && (int)child == exec->last_pid)
+		{
+			exec->last_status = WEXITSTATUS(status);
+			exec->status_depth = exec->curr_depth;
+		}
+	}
+}
 
 t_bool	redirect(t_cmd *cmd)
 {
@@ -51,30 +68,31 @@ char	*search_path(t_env **env, t_cmd *cmd)
 	char	*com;
 	int		i;
 
-	if (!cmd->params)
+	if (!cmd->params || !get_var(*env, "PATH"))
 		return (NULL);
 	paths = ft_split(get_var(*env, "PATH"), ':');
-	if (!paths)
-	{
-		write_error("Couldn't find path\n");
-		return (NULL);
-	}
 	i = -1;
-	while (paths[++i])
+	while (paths && paths[++i])
 	{
 		com = ft_strjoin_chr(paths[i], '/', cmd->params[0]);
 		if (!com)
-			return (NULL);
+			return ((char *)ft_freeup(paths));
 		if (!access(com, X_OK | F_OK))
+		{
+			ft_freeup(paths);
 			return (com);
+		}
+		free(com);
 	}
-	return (NULL);
+	return ((char *)ft_freeup(paths));
 }
 
 t_bool	should_exec(t_exec *exec, t_cmd *cmd)
 {
 	t_bool	ret;
 
+	if (cmd->rep == RP)
+		return (True);
 	ret = True;
 	if (exec->curr_depth != exec->status_depth)
 	{
@@ -90,27 +108,37 @@ t_bool	should_exec(t_exec *exec, t_cmd *cmd)
 			ret = False;
 		if (exec->last_status != SUCCESS && exec->last_op == AND_OP)
 			ret = False;
-		exec->last_op = cmd->after;
+		exec->last_op = after_to_op(cmd);
 		return (ret);
 	}
 }
 
 int	exec_type(t_exec *exec, t_cmd **cmd)
 {
+	t_bool	ret;
+
 	if ((*cmd)->rep == RP)
 		return (DO_NOT_EXECUTE);
+	if (exec->last_op == OR_OP || exec->last_op == AND_OP || exec->last_op == SEMICOLON)
+		wait_for_children(exec);
 	while (*cmd)
 	{
 		exec->curr_depth += ((*cmd)->rep == LP);
-		if ((*cmd)->rep == LP || !should_exec(exec, *cmd))
+		ret = should_exec(exec, *cmd);
+		if (!(*cmd)->rep && (*cmd)->next && (*cmd)->next->rep == RP)
+			exec->last_op = after_to_op(*cmd);
+		if ((*cmd)->rep == LP || !ret)
 			(*cmd) = (*cmd)->next;
 		else
 			break ;
 	}
-	if (exec->last_op == NON || exec->last_op == PIPE_OP)
-		return (IMMEDIATE_EXEC);
-	if (exec->last_op == SEMICOLON)
-		return (WAIT_THEN_EXEC);
-	if (exec->last_op != OR_OP && exec->last_op != AND_OP)
-		return (True);
+	if (!*cmd || (*cmd)->rep == RP)
+		return (DO_NOT_EXECUTE);
+	return (IMMEDIATE_EXEC);
+	// if (exec->last_op == NON || exec->last_op == PIPE_OP)
+	// 	return (IMMEDIATE_EXEC);
+	// if (exec->last_op == SEMICOLON)
+	// 	return (WAIT_THEN_EXEC);
+	// if (exec->last_op == OR_OP || exec->last_op == AND_OP)
+	// 	return (WAIT_THEN_EXEC);
 }

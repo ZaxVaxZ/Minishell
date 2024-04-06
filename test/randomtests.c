@@ -1,9 +1,20 @@
 #include <unistd.h>
 #include <stdio.h>
-#include "libft.h"
+#include <sys/wait.h>
+
+
+int	print_child()
+{
+	pid_t pid;
+	pid = fork();
+	printf("Hi %d\n", (int)pid);
+	printf("Woah %d\n", (int)pid);
+	return ((int)pid);
+}
+
 int main()
 {
-	printf("%s\n", getcwd(NULL, 0));
-	chdir(ft_strjoin_chr(getcwd(NULL, 0), '/', ".."));
-	printf("%s\n", getcwd(NULL, 0));
+	printf("ONCE %d\n", (int)getpid());
+	printf("TWICE %d\n", print_child());
+	printf("HUH?\n");
 }

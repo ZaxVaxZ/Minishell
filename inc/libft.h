@@ -16,6 +16,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+char	**ft_freeup(char **arr);
+char	*ft_itoa(int n);
 char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strjoin_chr(char *s1, char c, char *s2);
