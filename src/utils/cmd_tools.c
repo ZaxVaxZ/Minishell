@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/02 16:57:57 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/15 11:04:53 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,7 @@ static t_queue	*before_cmd(t_queue *q, t_cmd **cmds)
 static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, t_cmd **cmds)
 {
 	t_cmd	*p;
-	t_cmd	*t;
 
-	t = tmp;
 	add_cmd_node(cmds, tmp);
 	while (q && (q->type == Bracket_closed || q->type == Semicolon))
 	{
@@ -67,11 +65,13 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, t_cmd **cmds)
 			p->rep = RP;
 			add_cmd_node(cmds, p);
 		}
+		else
+			tmp->after = Semicolon;
 		q = q->next;
 	}
-	if (q && is_separator(q))
+	if (q && is_separator(q) && tmp->after == Illegal)
 	{
-		t->after = q->type;
+		tmp->after = q->type;
 		if (q->type == Op_logic && !ft_strncmp(q->s, "||", -1))
 			tmp->or_op = True;
 		q = q->next;

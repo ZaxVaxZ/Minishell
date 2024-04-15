@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/01 15:24:05 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/04/15 12:07:21 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@
 # define RP ')'
 # define SC ';'
 # define DS '$'
+
+# include <sys/wait.h>
 
 typedef enum e_bool
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/04/15 08:30:22 by marvin           ###   ########.fr       */
+/*   Updated: 2024/04/15 11:07:44 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ int	exec_type(t_exec *exec, t_cmd **cmd)
 	{
 		exec->curr_depth += ((*cmd)->rep == LP);
 		ret = should_exec(exec, *cmd);
+		//POSSIBLY NEEDS FIXING
 		if (!(*cmd)->rep && (*cmd)->next && (*cmd)->next->rep == RP)
 			exec->last_op = after_to_op(*cmd);
 		if ((*cmd)->rep == LP || !ret)

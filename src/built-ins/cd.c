@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 13:31:22 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/03 22:22:14 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/15 15:20:49 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_bool	cd(t_env **env, char *pwd, char *dir)
 	if (ret)
 		perror(dir);
 	if (ret)
-		return (False);
+		return (True);
 	if (set_var(env, "OLDPWD", pwd, True) == False)
 		return (False);
 	tmp = getcwd(NULL, 0);

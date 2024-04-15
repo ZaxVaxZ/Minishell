@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_list.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:13:59 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/04 20:15:08 by codespace        ###   ########.fr       */
+/*   Updated: 2024/04/15 10:51:49 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	delete_next_cmd(t_cmd **cmd)
 {
 	t_cmd	*tmp;
 
-	if (!cmd || !*cmd || !(*cmd)->next);
+	if (!cmd || !*cmd || !(*cmd)->next)
 		return ;
 	tmp = (*cmd)->next;
 	(*cmd)->next = (*cmd)->next->next;

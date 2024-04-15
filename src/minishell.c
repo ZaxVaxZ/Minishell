@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/06 05:58:40 by codespace        ###   ########.fr       */
+/*   Updated: 2024/04/15 13:35:14 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,13 @@
 #include <string.h>
 #include "./../tmp/tmp_utils.h"
 
+int	g_signum;
+
 static void	stop_kill(int signal)
 {
 	char	*tmp;
 
+	g_signum = signal;
 	if (signal == SIGINT)
 	{
 		tmp = getcwd(NULL, 0);
@@ -95,6 +98,7 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
+	g_signum = -1;
 	tmp = getcwd(NULL, 0);
 	if (isatty(0))
 		ft_printf("%s> ", tmp);
@@ -108,11 +112,41 @@ int	main(int ac, char **av, char **env)
 	{
 		if (handle_cmd_line(cmd_line, envp, &status) < 0)
 			break ;
+		if (g_signum == SIGQUIT)
+		{
+			tmp = ft_itoa(131);
+			if (!tmp)
+				break ;
+			if (!set_var(&envp, "?", tmp, False))
+				break ;
+			free(tmp);
+		g_signum = -1;
+		}
 		tmp = getcwd(NULL, 0);
-		if (isatty(0))
+		if (isatty(0) && g_signum == -1)
 			ft_printf("%s> ", tmp);
 		free(tmp);
+		if (g_signum == SIGINT)
+		{
+			tmp = ft_itoa(1);
+			if (!tmp)
+				break ;
+			if (!set_var(&envp, "?", tmp, False))
+				break ;
+			free(tmp);
+			g_signum = -1;
+		}
 		cmd_line = get_next_line(0);
+		if (g_signum == SIGINT)
+		{
+			tmp = ft_itoa(130);
+			if (!tmp)
+				break ;
+			if (!set_var(&envp, "?", tmp, False))
+				break ;
+			free(tmp);
+		}
+		g_signum = -1;
 	}
 	free_env(&envp);
 	ft_printf("\n");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/15 08:30:29 by marvin           ###   ########.fr       */
+/*   Updated: 2024/04/15 15:56:52 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_bool	here_doc(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 	}
 	if (line)
 		free(line);
+	return (True);
 }
 
 t_bool	execute(t_env **env, t_cmd *cmd)
@@ -85,9 +86,10 @@ void	exec_parent(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 
 void	exec_child(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 {
+	int	ret;
+
 	if (cmd->input && !cmd->heredoc)
 	{
-		ft_printf("Opening infile\n");
 		cmd->in_fd = open(cmd->input, O_RDONLY, 0644);
 		if (cmd->in_fd == -1)
 		{
@@ -106,28 +108,42 @@ void	exec_child(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 	}
 	if (cmd->outfile_cnt)
 	{
+		close(fds[0]);
+		close(fds[1]);
 		int i = 0;
 		while (i < cmd->outfile_cnt)
 		{
-			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_APPEND, 0644);
-			close(fds[0]);
-			close(fds[1]);
-			if (dup2(cmd->out_fd, STDOUT_FILENO) == -1)
+			if (cmd->out_flags[i])
+				cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_APPEND | O_WRONLY, 0644);
+			else
+				cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_TRUNC | O_WRONLY, 0644);
+			if (cmd->out_fd < 0)
+				perror(cmd->outfiles[cmd->outfile_cnt - 1]);
+			printf("%s, %d\n", cmd->outfiles[i], cmd->out_fd);
+			if (i < cmd->outfile_cnt - 1)
+				close(cmd->out_fd);
+			else if (dup2(cmd->out_fd, STDOUT_FILENO) == -1)
 			{
-				write_error("Couldn't dup outfile\n");
+				perror(cmd->outfiles[cmd->outfile_cnt - 1]);
 				exit(EXIT_FAILURE);
 			}
 			i++;
 		}
 	}
-	if (exec->last_op == Op_pipe || cmd->after == Op_pipe)
+	if (exec->last_op == PIPE_OP || cmd->after == Op_pipe)
 	{
 		close(fds[0]);
 		dup2(fds[1], STDOUT_FILENO);
 		close(fds[1]);
 	}
-	if (execute(env, cmd) == False)
+	ret = resolve_builtin(env, cmd, exec, True);
+	if (ret == 1)
+		exit (0);
+	else if (ret == -1)
+		exit (1);
+	else if (execute(env, cmd) == False)
 		exit(EXIT_FAILURE);
+	exit(cmd->status);
 	// int	i;
 	// int	exit_code;
 
@@ -180,6 +196,7 @@ t_bool	execute_cmd(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 	int		i;
 	pid_t	pid;
 
+	exec->last_op = after_to_op(cmd);
 	pid = fork();
 	if (pid == -1)
 		return (False);
@@ -187,8 +204,8 @@ t_bool	execute_cmd(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 		exec_child(env, cmd, exec, fds);
 	exec_parent(env, cmd, exec, fds);
 	exec->last_pid = pid;
-	exec->last_op = after_to_op(cmd);
 	exec->last_status += cmd->status * (!exec->last_status);
+	return (True);
 }
 
 t_bool	close_fds(int *fds)
@@ -214,7 +231,7 @@ t_bool	handle_cmd(t_env **env, t_cmd **cmd, t_exec *exec)
 	fds[1] = -1;
 	if (exec->last_op == PIPE_OP || (*cmd)->after == Op_pipe)
 		pipe(fds);
- 	exec->ret = resolve_builtin(env, *cmd);
+ 	exec->ret = resolve_builtin(env, *cmd, exec, False);
  	if (exec->ret < 0)
  		return (close_fds(fds));
  	else if (exec->ret == 1)

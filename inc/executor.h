@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/15 08:30:40 by marvin           ###   ########.fr       */
+/*   Updated: 2024/04/15 15:02:10 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,9 @@ typedef struct s_exec
 }	t_exec;
 
 t_bool	clean_whitespace(t_queue *q);
-int		resolve_builtin(t_env **env, t_cmd *cmd);
+int		resolve_builtin(t_env **env, t_cmd *cmd, t_exec *exec, t_bool child);
 int		execute_commands(t_env **env, t_cmd **cmd, int *status);
 t_bool	clean_whitespace(t_queue *q);
-int		resolve_builtin(t_env **env, t_cmd *cmd);
 t_bool	redirect(t_cmd *cmd);
 int		exec_type(t_exec *exec, t_cmd **cmd);
 char	*search_path(t_env **env, t_cmd *cmd);
