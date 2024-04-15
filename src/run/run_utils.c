@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/04/06 05:25:10 by codespace        ###   ########.fr       */
+/*   Updated: 2024/04/15 08:30:22 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,6 @@ t_bool	should_exec(t_exec *exec, t_cmd *cmd)
 			ret = False;
 		if (exec->last_status != SUCCESS && exec->last_op == AND_OP)
 			ret = False;
-		exec->last_op = after_to_op(cmd);
 		return (ret);
 	}
 }

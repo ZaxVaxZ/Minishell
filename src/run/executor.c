@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uwubuntu <uwubuntu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/07 01:54:16 by uwubuntu         ###   ########.fr       */
+/*   Updated: 2024/04/15 08:30:29 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "get_next_line.h"
 
 t_bool	here_doc(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 {

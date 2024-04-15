@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/06 05:21:35 by codespace        ###   ########.fr       */
+/*   Updated: 2024/04/15 08:30:40 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,11 @@
 # include "builtins.h"
 # include "cmd_list.h"
 # include "queues.h"
-#include "../tmp/tmp_utils.h"
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/wait.h>
+# include "../tmp/tmp_utils.h"
+# include <unistd.h>
+# include <fcntl.h>
+# include <sys/wait.h>
+# include "get_next_line.h"
 
 # define NON 0
 # define OR_OP 1
