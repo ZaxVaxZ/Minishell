@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_list.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:13:59 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/15 10:51:49 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:34:35 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ t_cmd	*new_cmd_node(char **params)
 	node->params = params;
 	node->heredoc = False;
 	node->or_op = False;
+	node->before = 0;
 	node->after = Illegal;
 	node->next = NULL;
 	return (node);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/15 15:56:52 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/04/15 19:04:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,24 @@ t_bool	here_doc(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 		if (!ft_strncmp(line, cmd->input, ft_strlen(line) - 1)
 			&& ft_strlen(line) - 1 == ft_strlen(cmd->input))
 			break ;
+		write(fds[1], line, ft_strlen(line));
 		free(line);
 	}
+	close(fds[1]);
 	if (line)
 		free(line);
+	return (True);
+}
+
+t_bool	here_doc_parent(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
+{
+	close(fds[1]);
+	if (dup2(fds[0], STDIN_FILENO) == -1)
+	{
+		perror(NULL);
+		return (False);
+	}
+	close(fds[0]);
 	return (True);
 }
 
@@ -38,11 +52,6 @@ t_bool	execute(t_env **env, t_cmd *cmd)
 
 	if (!cmd->params || !cmd->params[0])
 		return (True);
-	// if (cmd->input || (cmd->outfile_cnt && cmd->outfiles && cmd->outfiles[0]))
-	// {
-	// 	if (redirect(cmd) == False)
-	// 		return (False);
-	// }
 	tmp = to_char_arr(env);
 	if (!tmp)
 		return (False);
@@ -104,7 +113,9 @@ void	exec_child(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 	}
 	else if (cmd->heredoc)
 	{
+		pipe(fds);
 		here_doc(env, cmd, exec, fds);
+		here_doc_parent(env, cmd, exec, fds);
 	}
 	if (cmd->outfile_cnt)
 	{
@@ -191,11 +202,19 @@ int	after_to_op(t_cmd *cmd)
 	return (NON);
 }
 
+int	get_last_op(t_cmd *cmd)
+{
+	while (cmd && cmd->next && cmd->next->next)
+		cmd = cmd->next;
+	return (after_to_op(cmd));
+}
+
 t_bool	execute_cmd(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 {
 	int		i;
 	pid_t	pid;
 
+	cmd->before = get_last_op(cmd);
 	exec->last_op = after_to_op(cmd);
 	pid = fork();
 	if (pid == -1)
@@ -238,6 +257,7 @@ t_bool	handle_cmd(t_env **env, t_cmd **cmd, t_exec *exec)
 	{
 		exec->last_status = 0;
 		exec->last_pid = -1;
+		(*cmd)->before = get_last_op(*cmd);
 		exec->last_op = after_to_op(*cmd);
 	}
 	else if (!execute_cmd(env, *cmd, exec, fds))
