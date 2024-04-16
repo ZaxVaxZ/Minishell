@@ -75,6 +75,7 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, int *status)
 	if (!build_commands(&q, &cmds, &envp))
 		return (1);
 	ret = execute_commands(&envp, &cmds, status);
+	// ret = execute_cmds(&envp, &cmds, status);
 	tmp = ft_itoa(*status);
 	if (tmp)
 	{

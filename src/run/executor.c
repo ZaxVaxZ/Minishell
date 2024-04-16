@@ -192,29 +192,40 @@ void	exec_child(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 int	after_to_op(t_cmd *cmd)
 {
 	if (cmd->after == Op_logic && cmd->or_op)
+	{
+		write_error("Or");
 		return (OR_OP);
+	}
 	if (cmd->after == Op_logic)
+	{
+		write_error("And");
 		return (AND_OP);
+	}
 	if (cmd->after == Op_pipe)
+	{
+		write_error("Pipe");
 		return (PIPE_OP);
+	}
 	if (cmd->after == Semicolon)
+	{
+		write_error("Semicolon");
 		return (SEMICOLON);
+	}
 	return (NON);
 }
 
-int	get_last_op(t_cmd *cmd)
-{
-	while (cmd && cmd->next && cmd->next->next)
-		cmd = cmd->next;
-	return (after_to_op(cmd));
-}
+// int	get_last_op(t_cmd *cmd)
+// {
+// 	while (cmd && cmd->next && cmd->next->next)
+// 		cmd = cmd->next;
+// 	return (after_to_op(cmd));
+// }
 
 t_bool	execute_cmd(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 {
 	int		i;
 	pid_t	pid;
 
-	cmd->before = get_last_op(cmd);
 	exec->last_op = after_to_op(cmd);
 	pid = fork();
 	if (pid == -1)
@@ -257,7 +268,6 @@ t_bool	handle_cmd(t_env **env, t_cmd **cmd, t_exec *exec)
 	{
 		exec->last_status = 0;
 		exec->last_pid = -1;
-		(*cmd)->before = get_last_op(*cmd);
 		exec->last_op = after_to_op(*cmd);
 	}
 	else if (!execute_cmd(env, *cmd, exec, fds))
@@ -278,7 +288,6 @@ int	execute_commands(t_env **env, t_cmd **cmd, int *status)
 	exec.last_status = 0;
 	exec.curr_depth = 0;
 	exec.last_pid = -1;
-	exec.last_op = NON;
 	exec.ret = 0;
 	tmp = *cmd;
 	temp_stdin = dup(STDIN_FILENO);
@@ -288,7 +297,8 @@ int	execute_commands(t_env **env, t_cmd **cmd, int *status)
 		exec.status_depth -= (exec.curr_depth < exec.status_depth);
 		if (tmp->rep != RP)
 		{
-			if (!handle_cmd(env, &tmp, &exec))
+			// if (!handle_cmd(env, &tmp, &exec))
+			if (!handle_cmds(env, &tmp, &exec))
 				break ;
 			if (tmp && tmp->rep == RP)
 				continue ;
@@ -302,36 +312,3 @@ int	execute_commands(t_env **env, t_cmd **cmd, int *status)
 		*status = exec.last_status;
 	return (exec.ret);
 }
-
-//else
-//{
-//	//id = fork();
-//	//if (id == 0)
-//	//{
-//	//	if (execute(env, cmd) == False)
-//	//		exit(EXIT_FAILURE);
-//	//}
-//	//else
-//	//	wait(&cmd->status);
-//}
-////if (cmd->after == Op_logic && !cmd->or_op)
-////{
-////	if (WEXITSTATUS(cmd->status))
-////	{
-////		if (cmd->next)
-////			cmd = cmd->next;
-////	}
-////}
-////else if (cmd->after == Op_logic && cmd->or_op)
-////{
-////	if (WEXITSTATUS(cmd->status) == 0)
-////	{
-////		if (cmd->next->rep == RP)
-////		{
-////			if (cmd->next)
-////				cmd = cmd->next;
-////		}
-////		if (cmd->next)
-////			cmd = cmd->next;
-////	}
-////}

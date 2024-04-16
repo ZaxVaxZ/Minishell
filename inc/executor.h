@@ -60,4 +60,20 @@ t_bool	should_exec(t_exec *exec, t_cmd *cmd);
 void	wait_for_children(t_exec *exec);
 int		after_to_op(t_cmd *cmd);
 
+int		dup_and_check(int fd1, int fd2);
+int		pipe_and_check(int *fds);
+int		open_infiles(t_env **env, t_cmd *cmd, t_exec *exec, int *fds);
+int		open_outfiles(t_cmd *cmd);
+void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds);
+void	parent_process(t_cmd *cmd, int *fds);
+t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec);
+
+t_bool	heredoc_parent(int *fds);
+t_bool	heredoc_child(t_env **env, t_cmd *cmd, t_exec *exec, int *fds);
+t_bool	execute(t_env **env, t_cmd *cmd);
+t_bool	heredoc(t_env **env, t_cmd *cmd, t_exec *exec, int *fds);
+int		get_last_op(t_cmd *cmd);
+int		set_before(t_cmd **cmds, t_cmd *cmd);
+int		execute_cmds(t_env **env, t_cmd **cmds, int *status);
+
 #endif

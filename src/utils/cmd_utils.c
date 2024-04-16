@@ -18,6 +18,8 @@
  *   count_words()
  *   free_and_return()
  *   is_separator()
+ * 	 count_out_redirs()
+ *   prep_cmd()
  * -----------------------*/
 
 /// @brief Count all parameters that are part of one command

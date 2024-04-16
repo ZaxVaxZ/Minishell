@@ -15,6 +15,7 @@
 		"signal.h": "c",
 		"__node_handle": "c",
 		"cstdlib": "c",
-		"get_next_line.h": "c"
+		"get_next_line.h": "c",
+		"typeinfo": "c"
 	}
 }

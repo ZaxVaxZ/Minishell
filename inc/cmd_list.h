@@ -31,7 +31,7 @@ typedef struct s_cmd
 	t_bool			heredoc;
 	t_bool			or_op;
 	int				before;
-	t_token			after;
+	int				after;
 	struct s_cmd	*next;
 }	t_cmd;
 

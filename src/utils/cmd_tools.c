@@ -11,8 +11,9 @@
 /* ************************************************************************** */
 
 #include "cmd_list.h"
-#include <stdio.h>
 #include "general.h"
+#include "executor.h"
+#include <stdio.h>
 
 /* -----------------------
  * Functions in the file:
@@ -53,7 +54,11 @@ static t_queue	*before_cmd(t_queue *q, t_cmd **cmds)
 static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, t_cmd **cmds)
 {
 	t_cmd	*p;
+	t_cmd	*last;
 
+	last = (*cmds);
+	while (last && last->next)
+		last = last->next;
 	add_cmd_node(cmds, tmp);
 	while (q && (q->type == Bracket_closed || q->type == Semicolon))
 	{
@@ -66,14 +71,19 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, t_cmd **cmds)
 			add_cmd_node(cmds, p);
 		}
 		else
-			tmp->after = Semicolon;
+			tmp->after = SEMICOLON;
 		q = q->next;
 	}
-	if (q && is_separator(q) && tmp->after == Illegal)
+	if (last && last->after)
+		tmp->before = last->after;
+	if (q && is_separator(q) && tmp->after == 0)
 	{
-		tmp->after = q->type;
-		if (q->type == Op_logic && !ft_strncmp(q->s, "||", -1))
-			tmp->or_op = True;
+		if (q->type == Op_logic && !ft_strncmp(q->s, "&&", -1))
+			tmp->after = AND_OP;
+		else if (q->type == Op_logic && !ft_strncmp(q->s, "||", -1))
+			tmp->after = OR_OP;
+		else if (q->type == Op_pipe)
+			tmp->after = PIPE_OP;
 		q = q->next;
 	}
 	return (q);
@@ -148,7 +158,6 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 	q = *queue;
 	while (q)
 	{
-		q = before_cmd(q, cmds);
 		if (!prep_cmd(q, &tmp))
 			return (free_and_return(queue, env, cmds, tmp));
 		while (q && !is_separator(q))
@@ -157,6 +166,7 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 				return (free_and_return(queue, env, cmds, tmp));
 			q = q->next;
 		}
+		q = before_cmd(q, cmds);
 		q = after_cmd(q, tmp, cmds);
 	}
 	return (True);

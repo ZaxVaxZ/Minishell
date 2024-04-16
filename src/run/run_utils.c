@@ -96,17 +96,17 @@ t_bool	should_exec(t_exec *exec, t_cmd *cmd)
 	ret = True;
 	if (exec->curr_depth != exec->status_depth)
 	{
-		if (exec->last_status == SUCCESS && exec->last_op == OR_OP)
+		if (exec->last_status == SUCCESS && cmd->before == OR_OP)
 			return (False);
-		if (exec->last_status != SUCCESS && exec->last_op == AND_OP)
+		if (exec->last_status != SUCCESS && cmd->before == AND_OP)
 			return (False);
 		return (True);
 	}
 	else
 	{
-		if (exec->last_status == SUCCESS && exec->last_op == OR_OP)
+		if (exec->last_status == SUCCESS && cmd->before == OR_OP)
 			ret = False;
-		if (exec->last_status != SUCCESS && exec->last_op == AND_OP)
+		if (exec->last_status != SUCCESS && cmd->before == AND_OP)
 			ret = False;
 		return (ret);
 	}
@@ -118,15 +118,12 @@ int	exec_type(t_exec *exec, t_cmd **cmd)
 
 	if ((*cmd)->rep == RP)
 		return (DO_NOT_EXECUTE);
-	if (exec->last_op == OR_OP || exec->last_op == AND_OP || exec->last_op == SEMICOLON)
+	if ((*cmd)->before == OR_OP || (*cmd)->before == AND_OP || (*cmd)->before == SEMICOLON)
 		wait_for_children(exec);
 	while (*cmd)
 	{
 		exec->curr_depth += ((*cmd)->rep == LP);
 		ret = should_exec(exec, *cmd);
-		//POSSIBLY NEEDS FIXING
-		if (!(*cmd)->rep && (*cmd)->next && (*cmd)->next->rep == RP)
-			exec->last_op = after_to_op(*cmd);
 		if ((*cmd)->rep == LP || !ret)
 			(*cmd) = (*cmd)->next;
 		else

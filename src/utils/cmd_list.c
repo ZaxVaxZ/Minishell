@@ -45,7 +45,7 @@ t_cmd	*new_cmd_node(char **params)
 	node->heredoc = False;
 	node->or_op = False;
 	node->before = 0;
-	node->after = Illegal;
+	node->after = 0;
 	node->next = NULL;
 	return (node);
 }
