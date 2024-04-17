@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 18:48:58 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/15 18:49:08 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/17 19:30:42 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,11 @@ int	open_infiles(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 	{
 		if (!cmd->heredoc)
 		{
-			cmd->in_fd = open(cmd->input, O_RDONLY);
-			if (cmd->in_fd < 0)
-			{
-				perror(cmd->input);
+			if (open_and_check(&cmd->in_fd, cmd->input, 0, exec) == -1)
 				return (-1);
-			}
-			if (dup_and_check(cmd->in_fd, STDIN_FILENO) == False)
+			if (dup_and_check(cmd->in_fd, STDIN_FILENO, exec) == False)
 				return (False);
-			close(cmd->in_fd);
-			return (1);
+			return (close_and_check(cmd->in_fd, exec));
 		}
 		else
 		{
@@ -38,7 +33,7 @@ int	open_infiles(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 	return (0);
 }
 
-int	open_outfiles(t_cmd *cmd)
+int	open_outfiles(t_cmd *cmd, t_exec *exec)
 {
 	int	i;
 
@@ -47,22 +42,14 @@ int	open_outfiles(t_cmd *cmd)
 	{
 		while (++i < cmd->outfile_cnt)
 		{
-			if (cmd->out_flags[i])
-				cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_APPEND | O_WRONLY, 0644);
-			else
-				cmd->out_fd = open(cmd->outfiles[i], O_CREAT| O_TRUNC | O_WRONLY, 0644);
-			if (cmd->out_fd < 0)
-			{
-				perror(cmd->outfiles[i]);
+			if (open_and_check(&cmd->out_fd, cmd->outfiles[i], cmd->out_flags[i] + 1, exec) == -1)
 				return (-1);
-			}
 			if (i < cmd->outfile_cnt - 1)
-				close(cmd->out_fd);
+				close_and_check(cmd->out_fd, exec);
 		}
-		if (dup_and_check(cmd->out_fd, STDOUT_FILENO) == False)
-			return (False);
-		close(cmd->out_fd);
-		return (1);
+		if (dup_and_check(cmd->out_fd, STDOUT_FILENO, exec) == False)
+			return (-1);
+		return (close_and_check(cmd->out_fd, exec));
 	}
 	return (0);
 }
@@ -77,11 +64,10 @@ t_bool	exec_cmd(t_env **env, t_cmd **cmd, t_exec *exec, int *fds)
 		perror(NULL);
 		return (False);
 	}
-	if (proc_id == 0)
+	if (proc_id == CHILD_PROCESS)
 		child_process(env, *cmd, exec, fds);
-	parent_process(*cmd, fds);
+	parent_process(*cmd, exec, fds);
 	exec->last_pid = proc_id;
-	exec->last_status += (*cmd)->status * (!exec->last_status);
 	return (True);
 }
 
@@ -94,19 +80,20 @@ t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec)
 	if (!*cmd || handle == DO_NOT_EXECUTE)
 		return (True);
 	if ((*cmd)->before == PIPE_OP || (*cmd)->after == PIPE_OP)
-		if (pipe_and_check(fds) == -1)
+		if (pipe_and_check(fds, exec) == -1)
 			return (False);
-	if (open_infiles(env, *cmd, exec, fds) == -1)
-		return (False);
-	if (open_outfiles(*cmd) == -1)
+	if (open_outs_and_in(*cmd, exec) == -1)
 		return (False);
 	exec->ret = resolve_builtin(env, *cmd, exec, False);
 	if (exec->ret < 0)
 		return (False);
 	else if (exec->ret == 1)
-		exec->last_status = 0;
-	else if (exec_cmd(env, cmd, exec, fds) == False)
-		return (False);
+		exec->last_status = SUCCESS;
+	else
+	{
+		if (exec_cmd(env, cmd, exec, fds) == False)
+			return (False);
+	}
 	return (True);
 }
 
@@ -119,6 +106,7 @@ int	execute_cmds(t_env **env, t_cmd **cmds, int *status)
 	e.curr_depth = 0;
 	e.last_status = 0;
 	e.status_depth = 0;
+	e.last_pid = -1;
 	curr_cmd = (*cmds);
 	stdin = dup(STDIN_FILENO);
 	while (curr_cmd)
@@ -128,15 +116,11 @@ int	execute_cmds(t_env **env, t_cmd **cmds, int *status)
 		e.status_depth -= (e.curr_depth < e.status_depth);
 		if (handle_cmds(env, &curr_cmd, &e) == False)
 			break ;
-		if (curr_cmd && curr_cmd->rep == RP)
-			continue ;
-		if (curr_cmd)
-			curr_cmd = curr_cmd->next;
 	}
 	wait_for_children(&e);
 	if (e.ret != -5)
 		*status = e.last_status;
-	if (dup_and_check(stdin, STDIN_FILENO) == False)
+	if (dup_and_check(stdin, STDIN_FILENO, &e) == False)
 		return (EXIT_FAILURE);
 	return (e.ret);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/15 11:04:53 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/04/17 13:34:37 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, t_cmd **cmds)
 	last = (*cmds);
 	while (last && last->next)
 		last = last->next;
+	if (last)
+		tmp->before = last->after;
 	add_cmd_node(cmds, tmp);
 	while (q && (q->type == Bracket_closed || q->type == Semicolon))
 	{
@@ -74,8 +76,6 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, t_cmd **cmds)
 			tmp->after = SEMICOLON;
 		q = q->next;
 	}
-	if (last && last->after)
-		tmp->before = last->after;
 	if (q && is_separator(q) && tmp->after == 0)
 	{
 		if (q->type == Op_logic && !ft_strncmp(q->s, "&&", -1))

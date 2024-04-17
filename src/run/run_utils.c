@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/04/15 19:04:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/17 18:59:07 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,35 +29,6 @@ void	wait_for_children(t_exec *exec)
 	}
 }
 
-t_bool	redirect(t_cmd *cmd)
-{
-	int	i;
-
-	i = -1;
-	if (cmd->input)
-	{
-		cmd->in_fd = open(cmd->input, O_RDONLY);
-		if (cmd->in_fd == -1)
-			return (write_error("Couldn't open infile\n"));
-		if (dup2(cmd->in_fd, STDIN_FILENO) == -1)
-			return (write_error("Couldn't dup STDIN with infile\n"));
-		close(cmd->in_fd);
-	}
-	while (++i < cmd->outfile_cnt)
-	{
-		if (cmd->out_flags[i] == 1)
-			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_APPEND, 0644);
-		else if (!cmd->out_flags[i])
-			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_TRUNC, 0644);
-		if (cmd->out_fd == -1)
-			return (write_error("Couldn't open outfile\n"));
-		if (dup2(cmd->out_fd, STDOUT_FILENO) == -1)
-			return (write_error("Couldn't dup outfiles\n"));
-		close(cmd->out_fd);
-	}
-	return (True);
-}
-
 /// @brief searches for command in the env path variable
 /// @param env the environment with the path variable
 /// @param cmd the command
@@ -68,9 +39,13 @@ char	*search_path(t_env **env, t_cmd *cmd)
 	char	*com;
 	int		i;
 
-	if (!cmd->params || !get_var(*env, "PATH"))
+	if (!cmd->params || !cmd->params[0])
 		return (NULL);
+	if (!get_var(*env, "PATH"))
+		return (cmd->params[0]);
 	paths = ft_split(get_var(*env, "PATH"), ':');
+	if (!paths)
+		return (NULL);
 	i = -1;
 	while (paths && paths[++i])
 	{

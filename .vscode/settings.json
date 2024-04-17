@@ -16,6 +16,7 @@
 		"__node_handle": "c",
 		"cstdlib": "c",
 		"get_next_line.h": "c",
-		"typeinfo": "c"
+		"typeinfo": "c",
+		"pipes.h": "c"
 	}
 }
