@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 18:48:58 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/17 19:30:42 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/18 11:37:55 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	open_infiles(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 		}
 		else
 		{
-			if (heredoc(env, cmd, exec, fds) == False)
+			if (heredoc(cmd, exec, fds) == False)
 				return (-1);
 		}
 	}

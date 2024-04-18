@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/17 19:37:18 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/18 11:35:44 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int		open_infiles(t_env **env, t_cmd *cmd, t_exec *exec, int *fds);
 int		open_outfiles(t_cmd *cmd, t_exec *exec);
 void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds);
 int		parent_process(t_cmd *cmd, t_exec *exec, int *fds);
-t_bool	heredoc(t_env **env, t_cmd *cmd, t_exec *exec, int *fds);
+t_bool	heredoc(t_cmd *cmd, t_exec *exec, int *fds);
 t_bool	heredoc_parent(int *fds, t_exec *exec);
 t_bool	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds);
 int		open_outs_and_in(t_cmd *cmd, t_exec *exec);

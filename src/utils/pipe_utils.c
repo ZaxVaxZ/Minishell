@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/17 19:40:10 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/18 11:35:37 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,16 +80,7 @@ int	parent_process(t_cmd *cmd, t_exec *exec, int *fds)
 
 	if (cmd->input && cmd->heredoc)
 	{
-		p = fork();
-		if (p < 0)
-		{
-			perror(NULL);
-			return (-1);
-		}
-		if (p == 0)
-			heredoc_child(cmd, exec, fds);
-		else
-			heredoc_parent(fds, exec);
+		heredoc(cmd, exec, fds);
 	}
 	else if (cmd->before == PIPE_OP || cmd->after == PIPE_OP)
 	{
