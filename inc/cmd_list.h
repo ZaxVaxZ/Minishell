@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 05:47:46 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/15 18:34:25 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/18 14:15:12 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,11 @@ typedef struct s_cmd
 	int				in_fd;
 	int				out_fd;
 	int				params_cnt;
+	int				infile_cnt;
 	int				outfile_cnt;
 	char			rep;
-	char			*input;
+	char			**infiles;
+	int				*in_flags;
 	int				*out_flags;
 	char			**outfiles;
 	char			**params;

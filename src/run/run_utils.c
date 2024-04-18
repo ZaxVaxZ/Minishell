@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/04/17 18:59:07 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/18 15:31:54 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	exec_type(t_exec *exec, t_cmd **cmd)
 {
 	t_bool	ret;
 
-	if ((*cmd)->rep == RP)
+	if ((*cmd)->rep == RP || (*cmd)->rep == LP)
 		return (DO_NOT_EXECUTE);
 	if ((*cmd)->before == OR_OP || (*cmd)->before == AND_OP || (*cmd)->before == SEMICOLON)
 		wait_for_children(exec);

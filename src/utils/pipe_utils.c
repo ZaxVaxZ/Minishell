@@ -6,20 +6,31 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/18 11:35:37 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/18 18:55:37 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-int	open_outs_and_in(t_cmd *cmd, t_exec *exec)
+int	open_outs_and_in(t_cmd *cmd, t_exec *exec, int *fds)
 {
 	int	i;
 
-	if (cmd->input && !cmd->heredoc)
+	if (cmd->infile_cnt)
 	{
-		if (open_and_check(&cmd->in_fd, cmd->input, 0, exec) == -1)
-			return (-1);	
+		i = -1;
+		while (++i < cmd->infile_cnt)
+		{
+			if (!cmd->in_flags[i])
+			{
+				if (open_and_check(&cmd->in_fd, cmd->infiles[i], 0, exec) == -1)
+					return (-1);
+				if (i != cmd->infile_cnt - 1 && close_and_check(cmd->in_fd, exec) == -1)
+					return (-1);
+			}
+			//else if (cmd->in_flags[i])
+			//	heredoc(cmd, exec, fds, i);	
+		}
 	}
 	if (cmd->outfile_cnt)
 	{
@@ -44,9 +55,9 @@ void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 {
 	int	ret;
 
-	if (open_outs_and_in(cmd, exec) == -1)
+	if (open_outs_and_in(cmd, exec, fds) == -1)
 		exit(exec->last_status);
-	if (cmd->input && !cmd->heredoc)
+	if (cmd->infile_cnt && !cmd->heredoc)
 		if (dup_and_check(cmd->in_fd, STDIN_FILENO, exec) == -1)
 			exit(EXIT_FAILURE);
 	if (cmd->outfile_cnt)
@@ -76,13 +87,7 @@ void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 
 int	parent_process(t_cmd *cmd, t_exec *exec, int *fds)
 {
-	pid_t	p;
-
-	if (cmd->input && cmd->heredoc)
-	{
-		heredoc(cmd, exec, fds);
-	}
-	else if (cmd->before == PIPE_OP || cmd->after == PIPE_OP)
+	if (cmd->before == PIPE_OP || cmd->after == PIPE_OP)
 	{
 		close(fds[1]);
 		if (dup_and_check(fds[0], STDIN_FILENO, exec) == -1)

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:13:59 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/15 18:34:35 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/18 15:45:19 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,10 @@ t_cmd	*new_cmd_node(char **params)
 	node->rep = '\0';
 	node->status = 0;
 	node->in_fd = -1;
-	node->input = NULL;
+	node->infiles = NULL;
 	node->out_fd = -1;
 	node->outfile_cnt = 0;
+	node->infile_cnt = 0;
 	node->out_flags = NULL;
 	node->outfiles = NULL;
 	node->params_cnt = 0;
@@ -94,8 +95,13 @@ t_bool	free_cmd_node(t_cmd *node)
 		free(node->params[i++]);
 	if (node && node->params)
 		free(node->params);
-	if (node && node->input)
-		free(node->input);
+	i = 0;
+	while (node && node->infiles && node->infiles[i])
+		free(node->infiles[i++]);
+	if (node && node->infiles)
+		free(node->infiles);
+	if (node && node->infile_cnt && node->in_flags)
+		free(node->in_flags);
 	i = 0;
 	while (node && node->outfiles && node->outfiles[i])
 		free(node->outfiles[i++]);

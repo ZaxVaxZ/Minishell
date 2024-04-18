@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/17 13:34:37 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/18 17:22:29 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,10 +105,13 @@ static t_bool	queue_redir_to_cmd(t_queue **q, t_cmd *cmd)
 	}
 	if ((*q) && (*q)->type == Op_redir && (*q)->next && (*q)->s[0] == '<')
 	{
-		cmd->heredoc = ((*q)->s[1] == '<');
-		cmd->input = ft_strdup((*q)->next->s);
-		if (!cmd->input)
+		cmd->in_flags[cmd->infile_cnt] = ((*q)->s[1] == '<');
+		if (cmd->in_flags[cmd->infile_cnt])
+			cmd->heredoc = 1;
+		cmd->infiles[cmd->infile_cnt] = ft_strdup((*q)->next->s);
+		if (!cmd->infiles[cmd->infile_cnt++])
 			return (False);
+		cmd->infiles[cmd->infile_cnt] = NULL;
 	}
 	if ((*q) && (*q)->type == Op_redir)
 		(*q) = (*q)->next;
@@ -158,6 +161,7 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 	q = *queue;
 	while (q)
 	{
+		q = before_cmd(q, cmds);
 		if (!prep_cmd(q, &tmp))
 			return (free_and_return(queue, env, cmds, tmp));
 		while (q && !is_separator(q))
@@ -166,7 +170,6 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 				return (free_and_return(queue, env, cmds, tmp));
 			q = q->next;
 		}
-		q = before_cmd(q, cmds);
 		q = after_cmd(q, tmp, cmds);
 	}
 	return (True);

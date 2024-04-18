@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/17 17:21:32 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/18 18:45:29 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,6 @@ int	execute_commands(t_env **env, t_cmd **cmd, int *status)
 		exec.status_depth -= (exec.curr_depth < exec.status_depth);
 		if (tmp->rep != RP)
 		{
-			// if (!handle_cmd(env, &tmp, &exec))
 			if (!handle_cmds(env, &tmp, &exec))
 				break ;
 			if (tmp && tmp->rep == RP)
@@ -122,7 +121,8 @@ int	execute_commands(t_env **env, t_cmd **cmd, int *status)
 			tmp = tmp->next;
 	}
 	wait_for_children(&exec);
-	dup2(temp_stdin, STDIN_FILENO);
+	if (dup_and_check(temp_stdin, STDIN_FILENO, &exec) == -1)
+		return (exec.ret);
 	if (exec.ret != -5)
 		*status = exec.last_status;
 	return (exec.ret);

@@ -6,11 +6,12 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 05:23:45 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/01 16:48:03 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/18 17:22:24 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cmd_list.h"
+#include "ft_printf.h"
 #include <stdio.h>
 
 /* -----------------------
@@ -38,19 +39,33 @@ static int	count_words(t_queue *q)
 	}
 	return (count);
 }
-
-int	count_out_redirs(t_queue *q)
+/// @brief counts the infile and outfile redirs and sets their counters accordingly
+/// @param q the queue to traverse
+/// @param in the pointer to the in count
+/// @param out the pointer to the out count
+/// @return returns 0 if no infile or outfile; 1 for infile; 2 for out; 3 for both
+int	count_redirs(t_queue *q, int *in, int *out)
 {
-	int		redirs;
+	int	has_inf;
+	int	has_outf;
 
-	redirs = 0;
+	has_inf = 0;
+	has_outf = 0;
 	while (q && !is_separator(q))
 	{
 		if (q->type == Op_redir && q->s[0] == '>' && q->next)
-			redirs++;
+		{
+			(*out)++;
+			has_outf = 2;
+		}
+		else if (q->type == Op_redir && q->s[0] == '<' && q->next)
+		{
+			(*in)++;
+			has_inf = 1;
+		}
 		q = q->next;
 	}
-	return (redirs);
+	return (has_inf + has_outf);
 }
 
 t_bool	free_and_return(t_queue **q, t_env **env, t_cmd **cmds, t_cmd *cmd)
@@ -65,25 +80,41 @@ t_bool	free_and_return(t_queue **q, t_env **env, t_cmd **cmds, t_cmd *cmd)
 t_bool	prep_cmd(t_queue *q, t_cmd **node)
 {
 	char	**params;
+	int		in;
+	int		out;
 
 	params = malloc(sizeof(char *) * (count_words(q) + 1));
 	if (!params)
 		return (False);
 	*node = new_cmd_node(params);
+	in = 0;
+	out = 0;
 	if (!*node)
 	{
 		free(params);
 		return (False);
 	}
 	params[0] = NULL;
-	if (!count_out_redirs(q))
+	if (!count_redirs(q, &in, &out))
 		return (True);
-	(*node)->out_flags = malloc(sizeof(int) * count_out_redirs(q));
-	if (!(*node)->out_flags)
-		return (free_cmd_node(*node));
-	(*node)->outfiles = malloc(sizeof(char *) * (count_out_redirs(q) + 1));
-	if (!(*node)->outfiles)
-		return (free_cmd_node(*node));
+	if (in)
+	{
+		(*node)->in_flags = malloc(sizeof(int) * in);
+		if (!(*node)->in_flags)
+			return (free_cmd_node(*node));
+		(*node)->infiles = malloc(sizeof(char *) * (in + 1));
+		if (!(*node)->infiles)
+			return (free_cmd_node(*node));
+	}
+	if (out)
+	{
+		(*node)->out_flags = malloc(sizeof(int) * out);
+		if (!(*node)->out_flags)
+			return (free_cmd_node(*node));
+		(*node)->outfiles = malloc(sizeof(char *) * (out + 1));
+		if (!(*node)->outfiles)
+			return (free_cmd_node(*node));
+	}
 	return (True);
 }
 

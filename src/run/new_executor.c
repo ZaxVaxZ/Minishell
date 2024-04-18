@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 18:48:58 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/18 11:37:55 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/18 18:49:36 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,32 @@
 
 int	open_infiles(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 {
-	if (cmd->input)
+	int	i;
+
+	i = -1;
+	if (cmd->infile_cnt)
 	{
-		if (!cmd->heredoc)
+		while (cmd->infiles[++i])
 		{
-			if (open_and_check(&cmd->in_fd, cmd->input, 0, exec) == -1)
-				return (-1);
-			if (dup_and_check(cmd->in_fd, STDIN_FILENO, exec) == False)
-				return (False);
-			return (close_and_check(cmd->in_fd, exec));
+			if (!cmd->in_flags[i])
+			{
+				if (open_and_check(&cmd->in_fd, cmd->infiles[i], 0, exec) == -1)
+					return (-1);
+			}
+			else if (cmd->in_flags[i])
+				heredoc(cmd, exec, fds, i);
+			if (!cmd->in_flags[i] && i < cmd->infile_cnt - 1)
+			{
+				if (close_and_check(cmd->in_fd, exec) == -1)
+					return (-1);
+			}
 		}
-		else
-		{
-			if (heredoc(cmd, exec, fds) == False)
-				return (-1);
-		}
+		if (!cmd->in_flags[i] && (dup_and_check(cmd->in_fd, STDIN_FILENO, exec) == False))
+			return (-1);
+		if (!cmd->in_flags[i] && (close_and_check(cmd->in_fd, exec) == False))
+			return (-1);
 	}
-	return (0);
+	return (1);
 }
 
 int	open_outfiles(t_cmd *cmd, t_exec *exec)
@@ -82,8 +91,9 @@ t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec)
 	if ((*cmd)->before == PIPE_OP || (*cmd)->after == PIPE_OP)
 		if (pipe_and_check(fds, exec) == -1)
 			return (False);
-	if (open_outs_and_in(*cmd, exec) == -1)
-		return (False);
+	if (((*cmd)->before != PIPE_OP && (*cmd)->after != PIPE_OP)
+		&& open_outs_and_in(*cmd, exec, fds) == -1)
+			return (False);
 	exec->ret = resolve_builtin(env, *cmd, exec, False);
 	if (exec->ret < 0)
 		return (False);
