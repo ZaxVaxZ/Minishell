@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/18 15:31:02 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/19 21:06:37 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 
 int	g_signum;
 
+char	*return_cwd(char *old_cwd);
+char	*get_line(char *cwd);
+
 static void	stop_kill(int signal)
 {
 	char	*tmp;
@@ -34,10 +37,14 @@ static void	stop_kill(int signal)
 	g_signum = signal;
 	if (signal == SIGINT)
 	{
-		tmp = getcwd(NULL, 0);
+		tmp = return_cwd(NULL);
 		if (isatty(0))
-			ft_printf("\n%s> ", tmp);
+			ft_printf("\n%s ", tmp);
 		free(tmp);
+		//tmp = getcwd(NULL, 0);
+		//if (isatty(0))
+		//	ft_printf("\n%s> ", tmp);
+		//free(tmp);
 	}
 }
 
@@ -75,7 +82,6 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, int *status)
 	if (!build_commands(&q, &cmds, &envp))
 		return (1);
 	ret = execute_commands(&envp, &cmds, status);
-	// ret = execute_cmds(&envp, &cmds, status);
 	tmp = ft_itoa(*status);
 	if (tmp)
 	{
@@ -85,9 +91,86 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, int *status)
 	else
 		ret = -1;
 	free_up(cmd_line, &q, &cmds);
-	// print_commands(cmds);
 	return (ret);
 }
+
+char	*return_cwd(char *old_cwd)
+{
+	char	*final;
+	char	*cwd;
+	int		i;
+
+	if (old_cwd)
+		free(old_cwd);
+	cwd = getcwd(NULL, -1);
+	final = malloc(sizeof(char) * (ft_strlen(cwd) + 3));
+	if (!final)
+		return (NULL);
+	i = -1;
+	while (cwd[++i])
+		final[i] = cwd[i];
+	final[i++] = '>';
+	final[i++] = ' ';
+	final[i] = 0;
+	free(cwd);
+	return (final);
+}
+
+char	*get_line(char *cwd)
+{
+	char	*new;
+	char	*cmd;
+
+	cmd = readline(cwd);
+	if (!cmd)
+		return (NULL);
+	new = ft_strjoin_chr(cmd, '\n', "");
+	if (!new)
+		return (NULL);
+	return (new);
+}
+
+//int	main(int ac, char **av, char **env)
+//{
+//	char	*line;
+//	char	*cwd;
+//	char	*tmp;
+//	t_env	*enviro;
+//	int		status;
+
+//	cwd = return_cwd(NULL);
+//	enviro = to_env_list(env);
+//	signal(SIGINT, stop_kill);
+//	signal(SIGQUIT, stop_kill);
+//	g_signum = -1;
+//	while (1)
+//	{
+//		line = get_line(cwd);
+//		if (!line || handle_cmd_line(line, enviro, &status) == -1)
+//			break ;
+//		cwd = return_cwd(cwd);
+//		if (g_signum == SIGQUIT)
+//		{
+//			tmp = ft_itoa(131);
+//			if (!tmp)
+//				break ;
+//			if (!set_var(&enviro, "?", tmp, False))
+//				break ;
+//			free(tmp);
+//			g_signum = -1;
+//		}
+//		if (g_signum == SIGINT)
+//		{
+//			tmp = ft_itoa(1);
+//			if (!tmp)
+//				break ;
+//			if (!set_var(&enviro, "?", tmp, False))
+//				break ;
+//			free(tmp);
+//			g_signum = -1;
+//		}
+//	}
+//}
 
 int	main(int ac, char **av, char **env)
 {

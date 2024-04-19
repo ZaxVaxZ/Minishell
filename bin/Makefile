@@ -41,7 +41,8 @@ NAME	=	minishell
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) -o $@
+	@$(CC) $(CFLAGS) -L/usr/local/lib -I/usr/local/include -lreadline $(OBJS) -o $@
+#	@$(CC) $(CFLAGS) $(OBJS) -o $@
 
 %.o: %.c
 	@$(CC) -I$(INC) $(CFLAGS) -c $< -o $@

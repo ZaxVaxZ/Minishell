@@ -17,6 +17,8 @@
 		"cstdlib": "c",
 		"get_next_line.h": "c",
 		"typeinfo": "c",
-		"pipes.h": "c"
+		"pipes.h": "c",
+		"history.h": "c",
+		"readline.h": "c"
 	}
 }
