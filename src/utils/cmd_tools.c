@@ -55,12 +55,21 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, t_cmd **cmds)
 {
 	t_cmd	*p;
 	t_cmd	*last;
+	t_cmd	*l_cmd;
 
 	last = (*cmds);
+	l_cmd = last;
 	while (last && last->next)
-		last = last->next;
-	if (last)
-		tmp->before = last->after;
+	{
+		if (!last->rep)
+			l_cmd = last;
+		if (last->rep)
+			last = last->next;
+		else	
+			last = last->next;
+	}
+	if (l_cmd)
+		tmp->before = l_cmd->after;
 	add_cmd_node(cmds, tmp);
 	while (q && (q->type == Bracket_closed || q->type == Semicolon))
 	{

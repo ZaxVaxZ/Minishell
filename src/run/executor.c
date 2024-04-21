@@ -36,23 +36,6 @@ t_bool	execute(t_env **env, t_cmd *cmd, t_exec *exec)
 	return (False);
 }
 
-//t_bool	execute_cmd(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
-//{
-//	int		i;
-//	pid_t	pid;
-
-//	exec->last_op = after_to_op(cmd);
-//	pid = fork();
-//	if (pid == -1)
-//		return (False);
-//	if (pid == CHILD_PROCESS)
-//		exec_child(env, cmd, exec, fds);
-//	exec_parent(env, cmd, exec, fds);
-//	exec->last_pid = pid;
-//	exec->last_status += cmd->status * (!exec->last_status);
-//	return (True);
-//}
-
 t_bool	close_fds(int *fds)
 {
 	if (fds[0] != -1)
@@ -63,33 +46,6 @@ t_bool	close_fds(int *fds)
 	fds[1] = -1;
 	return (False);
 }
-
-//t_bool	handle_cmd(t_env **env, t_cmd **cmd, t_exec *exec)
-//{
-//	int		handle;
-//	int		fds[2];
-
-//	handle = exec_type(exec, cmd);
-// 	if (!*cmd || handle == DO_NOT_EXECUTE)
-// 		return (True);
-//	fds[0] = -1;
-//	fds[1] = -1;
-//	if (exec->last_op == PIPE_OP || (*cmd)->after == Op_pipe)
-//		pipe(fds);
-// 	exec->ret = resolve_builtin(env, *cmd, exec, False);
-// 	if (exec->ret < 0)
-// 		return (close_fds(fds));
-// 	else if (exec->ret == 1)
-//	{
-//		exec->last_status = 0;
-//		exec->last_pid = -1;
-//		exec->last_op = after_to_op(*cmd);
-//	}
-//	else if (!execute_cmd(env, *cmd, exec, fds))
-//		return (close_fds(fds));
-//	close_fds(fds);
-// 	return (True);
-//}
 
 int	execute_commands(t_env **env, t_cmd **cmd, int *status)
 {

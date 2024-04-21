@@ -99,13 +99,13 @@ int	exec_type(t_exec *exec, t_cmd **cmd)
 	{
 		exec->curr_depth += ((*cmd)->rep == LP);
 		ret = should_exec(exec, *cmd);
-		if ((*cmd)->rep == LP || !ret)
-			(*cmd) = (*cmd)->next;
+		if ((*cmd)->rep == LP || !ret)	
+			(*cmd) = (*cmd)->next;	
 		else
 			break ;
 	}
 	if (!*cmd || (*cmd)->rep == RP)
-		return (DO_NOT_EXECUTE);
+		return (DO_NOT_EXECUTE);	
 	return (IMMEDIATE_EXEC);
 	// if (exec->last_op == NON || exec->last_op == PIPE_OP)
 	// 	return (IMMEDIATE_EXEC);
