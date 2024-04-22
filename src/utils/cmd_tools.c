@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/18 17:22:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/22 14:01:12 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,22 +54,7 @@ static t_queue	*before_cmd(t_queue *q, t_cmd **cmds)
 static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, t_cmd **cmds)
 {
 	t_cmd	*p;
-	t_cmd	*last;
-	t_cmd	*l_cmd;
 
-	last = (*cmds);
-	l_cmd = last;
-	while (last && last->next)
-	{
-		if (!last->rep)
-			l_cmd = last;
-		if (last->rep)
-			last = last->next;
-		else	
-			last = last->next;
-	}
-	if (l_cmd)
-		tmp->before = l_cmd->after;
 	add_cmd_node(cmds, tmp);
 	while (q && (q->type == Bracket_closed || q->type == Semicolon))
 	{
@@ -87,12 +72,9 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, t_cmd **cmds)
 	}
 	if (q && is_separator(q) && tmp->after == 0)
 	{
-		if (q->type == Op_logic && !ft_strncmp(q->s, "&&", -1))
-			tmp->after = AND_OP;
-		else if (q->type == Op_logic && !ft_strncmp(q->s, "||", -1))
-			tmp->after = OR_OP;
-		else if (q->type == Op_pipe)
-			tmp->after = PIPE_OP;
+		tmp->after = OR_OP * (!ft_strncmp(q->s, "||", -1));
+		tmp->after = AND_OP * (!ft_strncmp(q->s, "&&", -1));
+		tmp->after = PIPE_OP * (q->type == Op_pipe);
 		q = q->next;
 	}
 	return (q);
@@ -166,13 +148,16 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 {
 	t_cmd	*tmp;
 	t_queue	*q;
+	int		tmp_before;
 
+	tmp_before = NON;
 	q = *queue;
 	while (q)
 	{
 		q = before_cmd(q, cmds);
 		if (!prep_cmd(q, &tmp))
 			return (free_and_return(queue, env, cmds, tmp));
+		tmp->before = tmp_before;
 		while (q && !is_separator(q))
 		{
 			if (!queue_node_to_cmd(&q, tmp, env))
@@ -180,6 +165,7 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 			q = q->next;
 		}
 		q = after_cmd(q, tmp, cmds);
+		tmp_before = tmp->after;
 	}
 	return (True);
 }

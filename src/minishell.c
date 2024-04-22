@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/19 21:06:37 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/22 14:48:54 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,8 @@ char	*get_line(char *cwd)
 	char	*new;
 	char	*cmd;
 
-	cmd = readline(cwd);
+	ft_printf("%s", cwd);
+	cmd = readline(NULL);
 	if (!cmd)
 		return (NULL);
 	new = ft_strjoin_chr(cmd, '\n', "");
