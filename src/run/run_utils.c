@@ -3,20 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   run_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/04/22 19:21:57 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/04/22 19:39:05 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-void	wait_for_children(t_exec *exec)
+int	wait_for_children(t_exec *exec, int *stand_in)
 {
 	int		status;
 	pid_t	child;
 
+	if (stand_in)
+	{
+		if (dup_and_check(*stand_in, STDIN_FILENO, exec) == -1)
+			return (-1);
+	}
 	child = 0;
 	while (child != -1)
 	{
@@ -27,6 +32,7 @@ void	wait_for_children(t_exec *exec)
 			exec->status_depth = exec->curr_depth;
 		}
 	}
+	return (1);
 }
 
 /// @brief searches for command in the env path variable
@@ -96,7 +102,7 @@ int	exec_type(t_exec *exec, t_cmd **cmd)
 	if ((*cmd)->rep == RP)
 		return (DO_NOT_EXECUTE);
 	if ((*cmd)->before == OR_OP || (*cmd)->before == AND_OP || (*cmd)->before == SEMICOLON)
-		wait_for_children(exec);
+		wait_for_children(exec, NULL);
 	while (*cmd)
 	{
 		exec->curr_depth += ((*cmd)->rep == LP);

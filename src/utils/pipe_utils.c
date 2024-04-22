@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/18 18:55:37 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/22 19:31:41 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	parent_process(t_cmd *cmd, t_exec *exec, int *fds)
 	{
 		close(fds[1]);
 		if (dup_and_check(fds[0], STDIN_FILENO, exec) == -1)
-			exit(EXIT_FAILURE);
+			return (-1);
 		close(fds[0]);
 	}
 	return (1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   last_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/22 18:22:10 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/04/22 19:38:31 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,11 @@ t_bool	execute(t_env **env, t_cmd *cmd, t_exec *exec)
 	return (False);
 }
 
-void	init_exec(t_exec *exec)
+int	init_exec(t_exec *exec, int *stand_in)
 {
+	*stand_in = dup(STDIN_FILENO);
+	if (*stand_in == -1)
+		return (-1);
 	exec->overall_status = 0;
 	exec->status_depth = 0;
 	exec->last_status = 0;
@@ -45,6 +48,7 @@ void	init_exec(t_exec *exec)
 	exec->last_pid = -1;
 	exec->ret = 0;
 	exec->last_op = NON;
+	return (1);
 }
 
 t_bool	exec_cmd(t_env **env, t_cmd **cmd, t_exec *exec, int *fds)
@@ -96,8 +100,10 @@ t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec)
 int	execute_commands(t_env **env, t_cmd *cmd, int *status)
 {
 	t_exec	exec;
+	int		sin;
 
-	init_exec(&exec);
+	if (init_exec(&exec, &sin) == -1)
+		return (-1);
 	while (cmd)
 	{
 		exec.curr_depth -= (cmd->rep == RP);
@@ -112,7 +118,8 @@ int	execute_commands(t_env **env, t_cmd *cmd, int *status)
 		if (cmd)
 			cmd = cmd->next;
 	}
-	wait_for_children(&exec);
+	if (wait_for_children(&exec, &sin) == -1)
+		return (-1);
 	if (exec.ret != -5)
 		*status = exec.last_status;
 	return (exec.ret);

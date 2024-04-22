@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/22 15:34:40 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/04/22 19:37:44 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_bool	clean_whitespace(t_queue *q);
 int		exec_type(t_exec *exec, t_cmd **cmd);
 char	*search_path(t_env **env, t_cmd *cmd);
 t_bool	should_exec(t_exec *exec, t_cmd *cmd);
-void	wait_for_children(t_exec *exec);
+int		wait_for_children(t_exec *exec, int *stand_in);
 
 t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec);
 t_bool	execute(t_env **env, t_cmd *cmd, t_exec *exec);
