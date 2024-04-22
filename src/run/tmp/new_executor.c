@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 18:48:58 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/18 18:49:36 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/22 19:56:40 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ int	execute_cmds(t_env **env, t_cmd **cmds, int *status)
 		if (handle_cmds(env, &curr_cmd, &e) == False)
 			break ;
 	}
-	wait_for_children(&e);
+	wait_for_children(&e, );
 	if (e.ret != -5)
 		*status = e.last_status;
 	if (dup_and_check(stdin, STDIN_FILENO, &e) == False)

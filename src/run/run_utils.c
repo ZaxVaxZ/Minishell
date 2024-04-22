@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/04/22 19:39:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/22 20:29:30 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,12 @@ char	*search_path(t_env **env, t_cmd *cmd)
 		com = ft_strjoin_chr(paths[i], '/', cmd->params[0]);
 		if (!com)
 			return ((char *)ft_freeup(paths));
-		if (!access(com, X_OK | F_OK))
-		{
-			ft_freeup(paths);
+		if (!access(com, X_OK | F_OK) && !ft_freeup(paths))
 			return (com);
-		}
 		free(com);
 	}
-	return ((char *)ft_freeup(paths));
+	ft_freeup(paths);
+	return (ft_strdup(cmd->params[0]));
 }
 
 t_bool	should_exec(t_exec *exec, t_cmd *cmd)
