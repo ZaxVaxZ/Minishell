@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/18 18:33:46 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/22 15:34:40 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ typedef struct s_exec
 
 t_bool	clean_whitespace(t_queue *q);
 int		resolve_builtin(t_env **env, t_cmd *cmd, t_exec *exec, t_bool child);
-int		execute_commands(t_env **env, t_cmd **cmd, int *status);
+int		execute_commands(t_env **env, t_cmd *cmd, int *status);
 t_bool	clean_whitespace(t_queue *q);
 int		exec_type(t_exec *exec, t_cmd **cmd);
 char	*search_path(t_env **env, t_cmd *cmd);

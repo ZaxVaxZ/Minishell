@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/22 14:01:12 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/22 15:22:49 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, t_cmd **cmds)
 	if (q && is_separator(q) && tmp->after == 0)
 	{
 		tmp->after = OR_OP * (!ft_strncmp(q->s, "||", -1));
-		tmp->after = AND_OP * (!ft_strncmp(q->s, "&&", -1));
-		tmp->after = PIPE_OP * (q->type == Op_pipe);
+		tmp->after += AND_OP * (!ft_strncmp(q->s, "&&", -1));
+		tmp->after += PIPE_OP * (q->type == Op_pipe);
 		q = q->next;
 	}
 	return (q);

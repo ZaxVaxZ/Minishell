@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/22 14:48:54 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/22 15:34:58 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, int *status)
 	clean_whitespace(q);
 	if (!build_commands(&q, &cmds, &envp))
 		return (1);
-	ret = execute_commands(&envp, &cmds, status);
+	ret = execute_commands(&envp, cmds, status);
 	tmp = ft_itoa(*status);
 	if (tmp)
 	{
