@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_builtins.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/04/17 16:34:53 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/22 19:22:55 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	resolve_builtin(t_env **env, t_cmd *cmd, t_exec *exec, t_bool child)
 	if (!cmd || !cmd->params || !cmd->params[0])
 		return (0);
 	ret = resolve_builtin_helper(env, cmd);
-	if (ret == 1 || ret == -1)
+	if (ret == 1 || ret < 0)
 		return (ret);
 	if (!ft_strncmp(cmd->params[0], "unset", -1))
 		unset(env, cmd->params + 1);

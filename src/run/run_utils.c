@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/04/22 18:54:08 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/04/22 19:21:57 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ char	*search_path(t_env **env, t_cmd *cmd)
 
 t_bool	should_exec(t_exec *exec, t_cmd *cmd)
 {
-	t_bool	ret;
+	int	ret;
 
-	ret = True;
+	ret = 1;
 	if (cmd->rep == RP)
 		return (True);
 	if (exec->curr_depth != exec->status_depth)
@@ -79,19 +79,15 @@ t_bool	should_exec(t_exec *exec, t_cmd *cmd)
 	}
 	else
 	{
-		if (exec->last_status == SUCCESS && cmd->before == OR_OP)
-			ret = False;
-		if (exec->last_status != SUCCESS && cmd->before == AND_OP)
-			ret = False;
-		if (exec->last_status == SUCCESS && exec->last_op == OR_OP
-			&& (cmd->before == PIPE_OP || cmd->after == PIPE_OP))
-			ret = False;
-		if (exec->last_status != SUCCESS && exec->last_op == AND_OP
-			&& (cmd->before == PIPE_OP || cmd->after == PIPE_OP))
-			ret = False;
-		if (!ret && cmd->after != PIPE_OP)
+		ret -= (exec->last_status == SUCCESS && cmd->before == OR_OP);
+		ret -= (exec->last_status != SUCCESS && cmd->before == AND_OP);
+		ret -= (exec->last_status == SUCCESS && exec->last_op == OR_OP
+			&& (cmd->before == PIPE_OP || cmd->after == PIPE_OP));
+		ret -= (exec->last_status != SUCCESS && exec->last_op == AND_OP
+			&& (cmd->before == PIPE_OP || cmd->after == PIPE_OP));
+		if (ret < 1 && cmd->after != PIPE_OP)
 			exec->last_op = cmd->after;
-		return (ret);
+		return (ret == 1);
 	}
 }
 
