@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/04/22 18:18:14 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/04/22 18:54:08 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,9 @@ t_bool	should_exec(t_exec *exec, t_cmd *cmd)
 {
 	t_bool	ret;
 
+	ret = True;
 	if (cmd->rep == RP)
 		return (True);
-	ret = True;
-	ft_printf("%s, %d, %d, %d, %d\n", cmd->params[0], exec->curr_depth, exec->status_depth, exec->last_status, exec->last_op);
 	if (exec->curr_depth != exec->status_depth)
 	{
 		if (exec->last_status == SUCCESS && exec->last_op == OR_OP)
@@ -84,6 +83,14 @@ t_bool	should_exec(t_exec *exec, t_cmd *cmd)
 			ret = False;
 		if (exec->last_status != SUCCESS && cmd->before == AND_OP)
 			ret = False;
+		if (exec->last_status == SUCCESS && exec->last_op == OR_OP
+			&& (cmd->before == PIPE_OP || cmd->after == PIPE_OP))
+			ret = False;
+		if (exec->last_status != SUCCESS && exec->last_op == AND_OP
+			&& (cmd->before == PIPE_OP || cmd->after == PIPE_OP))
+			ret = False;
+		if (!ret && cmd->after != PIPE_OP)
+			exec->last_op = cmd->after;
 		return (ret);
 	}
 }
