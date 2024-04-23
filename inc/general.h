@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   general.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/15 12:07:21 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/04/19 20:11:31 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GENERAL_H
 # define GENERAL_H
 
-# define BLACK   "\e[0;30m" // Black - Regular
+# define BLACK(str)   "\e[0;30m"str"\x1b[0m" // Black - Regular
 # define RED     "\e[0;31m" // Red
 # define GREEN   "\e[0;32m" // Green
 # define YELLOW  "\e[0;33m" // Yellow
@@ -70,7 +70,10 @@
 # define SC ';'
 # define DS '$'
 
+# include <stdio.h>
 # include <sys/wait.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 typedef enum e_bool
 {

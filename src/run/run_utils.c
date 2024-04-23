@@ -6,17 +6,22 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/04/15 19:04:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/22 20:29:30 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-void	wait_for_children(t_exec *exec)
+int	wait_for_children(t_exec *exec, int *stand_in)
 {
 	int		status;
 	pid_t	child;
 
+	if (stand_in)
+	{
+		if (dup_and_check(*stand_in, STDIN_FILENO, exec) == -1)
+			return (-1);
+	}
 	child = 0;
 	while (child != -1)
 	{
@@ -27,35 +32,7 @@ void	wait_for_children(t_exec *exec)
 			exec->status_depth = exec->curr_depth;
 		}
 	}
-}
-
-t_bool	redirect(t_cmd *cmd)
-{
-	int	i;
-
-	i = -1;
-	if (cmd->input)
-	{
-		cmd->in_fd = open(cmd->input, O_RDONLY);
-		if (cmd->in_fd == -1)
-			return (write_error("Couldn't open infile\n"));
-		if (dup2(cmd->in_fd, STDIN_FILENO) == -1)
-			return (write_error("Couldn't dup STDIN with infile\n"));
-		close(cmd->in_fd);
-	}
-	while (++i < cmd->outfile_cnt)
-	{
-		if (cmd->out_flags[i] == 1)
-			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_APPEND, 0644);
-		else if (!cmd->out_flags[i])
-			cmd->out_fd = open(cmd->outfiles[i], O_CREAT | O_TRUNC, 0644);
-		if (cmd->out_fd == -1)
-			return (write_error("Couldn't open outfile\n"));
-		if (dup2(cmd->out_fd, STDOUT_FILENO) == -1)
-			return (write_error("Couldn't dup outfiles\n"));
-		close(cmd->out_fd);
-	}
-	return (True);
+	return (1);
 }
 
 /// @brief searches for command in the env path variable
@@ -68,32 +45,34 @@ char	*search_path(t_env **env, t_cmd *cmd)
 	char	*com;
 	int		i;
 
-	if (!cmd->params || !get_var(*env, "PATH"))
+	if (!cmd->params || !cmd->params[0])
 		return (NULL);
+	if (!get_var(*env, "PATH"))
+		return (cmd->params[0]);
 	paths = ft_split(get_var(*env, "PATH"), ':');
+	if (!paths)
+		return (NULL);
 	i = -1;
 	while (paths && paths[++i])
 	{
 		com = ft_strjoin_chr(paths[i], '/', cmd->params[0]);
 		if (!com)
 			return ((char *)ft_freeup(paths));
-		if (!access(com, X_OK | F_OK))
-		{
-			ft_freeup(paths);
+		if (!access(com, X_OK | F_OK) && !ft_freeup(paths))
 			return (com);
-		}
 		free(com);
 	}
-	return ((char *)ft_freeup(paths));
+	ft_freeup(paths);
+	return (ft_strdup(cmd->params[0]));
 }
 
 t_bool	should_exec(t_exec *exec, t_cmd *cmd)
 {
-	t_bool	ret;
+	int	ret;
 
+	ret = 1;
 	if (cmd->rep == RP)
 		return (True);
-	ret = True;
 	if (exec->curr_depth != exec->status_depth)
 	{
 		if (exec->last_status == SUCCESS && exec->last_op == OR_OP)
@@ -104,41 +83,33 @@ t_bool	should_exec(t_exec *exec, t_cmd *cmd)
 	}
 	else
 	{
-		if (exec->last_status == SUCCESS && exec->last_op == OR_OP)
-			ret = False;
-		if (exec->last_status != SUCCESS && exec->last_op == AND_OP)
-			ret = False;
-		return (ret);
+		ret -= (exec->last_status == SUCCESS && cmd->before == OR_OP);
+		ret -= (exec->last_status != SUCCESS && cmd->before == AND_OP);
+		ret -= (exec->last_status == SUCCESS && exec->last_op == OR_OP
+			&& (cmd->before == PIPE_OP || cmd->after == PIPE_OP));
+		ret -= (exec->last_status != SUCCESS && exec->last_op == AND_OP
+			&& (cmd->before == PIPE_OP || cmd->after == PIPE_OP));
+		if (ret < 1 && cmd->after != PIPE_OP)
+			exec->last_op = cmd->after;
+		return (ret == 1);
 	}
 }
 
 int	exec_type(t_exec *exec, t_cmd **cmd)
 {
-	t_bool	ret;
-
 	if ((*cmd)->rep == RP)
 		return (DO_NOT_EXECUTE);
-	if (exec->last_op == OR_OP || exec->last_op == AND_OP || exec->last_op == SEMICOLON)
-		wait_for_children(exec);
+	if ((*cmd)->before == OR_OP || (*cmd)->before == AND_OP || (*cmd)->before == SEMICOLON)
+		wait_for_children(exec, NULL);
 	while (*cmd)
 	{
 		exec->curr_depth += ((*cmd)->rep == LP);
-		ret = should_exec(exec, *cmd);
-		//POSSIBLY NEEDS FIXING
-		if (!(*cmd)->rep && (*cmd)->next && (*cmd)->next->rep == RP)
-			exec->last_op = after_to_op(*cmd);
-		if ((*cmd)->rep == LP || !ret)
+		if ((*cmd)->rep == LP || !should_exec(exec, *cmd))
 			(*cmd) = (*cmd)->next;
 		else
 			break ;
 	}
 	if (!*cmd || (*cmd)->rep == RP)
-		return (DO_NOT_EXECUTE);
+		return (DO_NOT_EXECUTE);	
 	return (IMMEDIATE_EXEC);
-	// if (exec->last_op == NON || exec->last_op == PIPE_OP)
-	// 	return (IMMEDIATE_EXEC);
-	// if (exec->last_op == SEMICOLON)
-	// 	return (WAIT_THEN_EXEC);
-	// if (exec->last_op == OR_OP || exec->last_op == AND_OP)
-	// 	return (WAIT_THEN_EXEC);
 }

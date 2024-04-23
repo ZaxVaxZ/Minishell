@@ -6,11 +6,12 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 13:21:55 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/15 13:33:45 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/19 20:17:11 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+#include <stdio.h>
 
 /* -----------------------
  * Functions in the file:
@@ -29,7 +30,8 @@
 /// @return False if any malloc fails, True otherwise
 t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 {
-	int	occurs;
+	int		occurs;
+	char	*sub;
 
 	if (q && *q && queue_end(*q)->type == Illegal)
 		return (True);
@@ -40,7 +42,10 @@ t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 		return (True);
 	if (occurs > max_occurs)
 		occurs = max_occurs;
-	if (!add_str_to_queue(q, ft_substr(*s, 0, occurs)))
+	sub = ft_substr(*s, 0, occurs);
+	if (!sub)
+		return (False);
+	if (!add_str_to_queue(q, sub))
 		return (False);
 	*s += occurs;
 	if (op == DS && occurs > 0 && (is_valid_var_char(**s) || **s == '?'))

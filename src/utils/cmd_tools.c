@@ -6,13 +6,14 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/15 11:04:53 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/04/22 15:22:49 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cmd_list.h"
-#include <stdio.h>
 #include "general.h"
+#include "executor.h"
+#include <stdio.h>
 
 /* -----------------------
  * Functions in the file:
@@ -66,14 +67,14 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, t_cmd **cmds)
 			add_cmd_node(cmds, p);
 		}
 		else
-			tmp->after = Semicolon;
+			tmp->after = SEMICOLON;
 		q = q->next;
 	}
-	if (q && is_separator(q) && tmp->after == Illegal)
+	if (q && is_separator(q) && tmp->after == 0)
 	{
-		tmp->after = q->type;
-		if (q->type == Op_logic && !ft_strncmp(q->s, "||", -1))
-			tmp->or_op = True;
+		tmp->after = OR_OP * (!ft_strncmp(q->s, "||", -1));
+		tmp->after += AND_OP * (!ft_strncmp(q->s, "&&", -1));
+		tmp->after += PIPE_OP * (q->type == Op_pipe);
 		q = q->next;
 	}
 	return (q);
@@ -95,10 +96,13 @@ static t_bool	queue_redir_to_cmd(t_queue **q, t_cmd *cmd)
 	}
 	if ((*q) && (*q)->type == Op_redir && (*q)->next && (*q)->s[0] == '<')
 	{
-		cmd->heredoc = ((*q)->s[1] == '<');
-		cmd->input = ft_strdup((*q)->next->s);
-		if (!cmd->input)
+		cmd->in_flags[cmd->infile_cnt] = ((*q)->s[1] == '<');
+		if (cmd->in_flags[cmd->infile_cnt])
+			cmd->heredoc = 1;
+		cmd->infiles[cmd->infile_cnt] = ft_strdup((*q)->next->s);
+		if (!cmd->infiles[cmd->infile_cnt++])
 			return (False);
+		cmd->infiles[cmd->infile_cnt] = NULL;
 	}
 	if ((*q) && (*q)->type == Op_redir)
 		(*q) = (*q)->next;
@@ -144,13 +148,16 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 {
 	t_cmd	*tmp;
 	t_queue	*q;
+	int		tmp_before;
 
+	tmp_before = NON;
 	q = *queue;
 	while (q)
 	{
 		q = before_cmd(q, cmds);
 		if (!prep_cmd(q, &tmp))
 			return (free_and_return(queue, env, cmds, tmp));
+		tmp->before = tmp_before;
 		while (q && !is_separator(q))
 		{
 			if (!queue_node_to_cmd(&q, tmp, env))
@@ -158,6 +165,7 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 			q = q->next;
 		}
 		q = after_cmd(q, tmp, cmds);
+		tmp_before = tmp->after;
 	}
 	return (True);
 }

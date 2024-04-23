@@ -110,12 +110,12 @@ void	print_commands(t_cmd *cmds)
 			else
 				ft_printf("|%-10.10s", "");
 		}
-		if (cmds->heredoc)
-			ft_printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), "heredoc");
-		else if (cmds->input)
-			ft_printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), cmds->input);
-		else
-			ft_printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), "   NULL");
+		// if (cmds->heredoc)
+			// ft_printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), "heredoc");
+		// else if (cmds->input)
+			// ft_printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), cmds->input);
+		// else
+			// ft_printf("|%-10.10s|%-10.10s", type_to_str(cmds->after), "   NULL");
 		if (cmds->outfiles)
 			ft_printf("|%-10.10s|%-10.10s|\n", cmds->outfiles[0], cmds->outfiles[cmds->outfile_cnt - 1]);
 		else
