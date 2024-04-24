@@ -38,11 +38,12 @@ void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i)
 	exit(0);
 }
 
-t_bool	heredoc_parent(int *fds, t_exec *exec)
+t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec)
 {
 	wait(&exec->last_status);
 	close(fds[1]);
-	if (dup_and_check(fds[0], STDIN_FILENO, exec) == -1)
+	(*cmd)->in_fd = dup(fds[0]);
+	if ((*cmd)->in_fd == -1)
 		return (False);
 	close(fds[0]);
 	return (True);
@@ -62,7 +63,7 @@ t_bool	heredoc(t_cmd *cmd, t_exec *exec, int *fds, int i)
 	}
 	if (p == 0)
 		heredoc_child(cmd, exec, fds, i);
-	if (heredoc_parent(fds, exec) == False)
+	if (heredoc_parent(&cmd, fds, exec) == False)
 		return (False);
 	return (True);
 }

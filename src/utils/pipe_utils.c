@@ -25,11 +25,11 @@ int	open_outs_and_in(t_cmd *cmd, t_exec *exec, int *fds)
 			{
 				if (open_and_check(&cmd->in_fd, cmd->infiles[i], 0, exec) == -1)
 					return (-1);
-				if (i != cmd->infile_cnt - 1 && close_and_check(cmd->in_fd, exec) == -1)
-					return (-1);
 			}
-			//else if (cmd->in_flags[i])
-			//	heredoc(cmd, exec, fds, i);	
+			else if (cmd->in_flags[i])
+				heredoc(cmd, exec, fds, i);
+			if (i != cmd->infile_cnt - 1 && close_and_check(cmd->in_fd, exec) == -1)
+				return (-1);
 		}
 	}
 	if (cmd->outfile_cnt)
@@ -64,13 +64,20 @@ void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 
 	if (open_outs_and_in(cmd, exec, fds) == -1)
 		child_free_and_exit(env, exec, exec->last_status);
-	if (cmd->infile_cnt && !cmd->heredoc)
+	// if (cmd->infile_cnt && !cmd->heredoc)
+	if (cmd->infile_cnt)
+	{
 		if (dup_and_check(cmd->in_fd, STDIN_FILENO, exec) == -1)
 			child_free_and_exit(env, exec, EXIT_FAILURE);
+		close_and_check(cmd->in_fd, exec);
+	}
 	if (cmd->outfile_cnt)
+	{
 		if (dup_and_check(cmd->out_fd, STDOUT_FILENO, exec) == -1)
 			child_free_and_exit(env, exec, EXIT_FAILURE);
-	if (cmd->after == PIPE_OP && !cmd->outfile_cnt)
+		close_and_check(cmd->out_fd, exec);
+	}
+	if ((cmd->after == PIPE_OP && !cmd->outfile_cnt))
 	{
 		if (close_and_check(fds[0], exec) == -1)
 			child_free_and_exit(env, exec, exec->last_status);
@@ -98,7 +105,7 @@ int	parent_process(t_cmd *cmd, t_exec *exec, int *fds)
 	{
 		close(fds[1]);
 		if (dup_and_check(fds[0], STDIN_FILENO, exec) == -1)
-			return (-1);
+		return (-1);
 		close(fds[0]);
 	}
 	return (1);
