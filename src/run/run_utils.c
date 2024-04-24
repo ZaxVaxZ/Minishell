@@ -6,13 +6,13 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/04/22 20:29:30 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/24 17:10:46 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-int	wait_for_children(t_exec *exec, int *stand_in)
+int	wait_for_children(t_exec *exec, int *stand_in, int *stand_out)
 {
 	int		status;
 	pid_t	child;
@@ -20,6 +20,11 @@ int	wait_for_children(t_exec *exec, int *stand_in)
 	if (stand_in)
 	{
 		if (dup_and_check(*stand_in, STDIN_FILENO, exec) == -1)
+			return (-1);
+	}
+	if (stand_out)
+	{
+		if (dup_and_check(*stand_out, STDOUT_FILENO, exec) == -1)
 			return (-1);
 	}
 	child = 0;
@@ -100,7 +105,7 @@ int	exec_type(t_exec *exec, t_cmd **cmd)
 	if ((*cmd)->rep == RP)
 		return (DO_NOT_EXECUTE);
 	if ((*cmd)->before == OR_OP || (*cmd)->before == AND_OP || (*cmd)->before == SEMICOLON)
-		wait_for_children(exec, NULL);
+		wait_for_children(exec, NULL, NULL);
 	while (*cmd)
 	{
 		exec->curr_depth += ((*cmd)->rep == LP);

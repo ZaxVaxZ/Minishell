@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/22 19:06:22 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/24 14:59:03 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,23 +112,20 @@ char	*return_cwd(char *old_cwd)
 	char	*cwd;
 	int		i;
 
-	if (isatty(0))
-	{
-		if (old_cwd)
-			free(old_cwd);
-		cwd = getcwd(NULL, 0);
-		final = malloc(sizeof(char) * (ft_strlen(cwd) + 3));
-		if (!final)
-			return (NULL);
-		i = -1;
-		while (cwd[++i])
-			final[i] = cwd[i];
-		final[i++] = '>';
-		final[i++] = ' ';
-		final[i] = 0;
-		free(cwd);
-		return (final);
-	}
+	if (old_cwd)
+		free(old_cwd);
+	cwd = getcwd(NULL, 0);
+	final = malloc(sizeof(char) * (ft_strlen(cwd) + 3));
+	if (!final)
+		return (NULL);
+	i = -1;
+	while (cwd[++i])
+		final[i] = cwd[i];
+	final[i++] = '>';
+	final[i++] = ' ';
+	final[i] = 0;
+	free(cwd);
+	return (final);
 }
 
 char	*get_line(char *cwd)

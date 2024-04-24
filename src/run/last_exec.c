@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/22 20:27:14 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/24 22:02:57 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,13 @@ t_bool	execute(t_env **env, t_cmd *cmd, t_exec *exec)
 	return (False);
 }
 
-int	init_exec(t_exec *exec, int *stand_in, t_cmd **cmds)
+int	init_exec(t_exec *exec, int *stand_in, int *stand_out, t_cmd **cmds)
 {
 	*stand_in = dup(STDIN_FILENO);
 	if (*stand_in == -1)
+		return (-1);
+	*stand_out = dup(STDOUT_FILENO);
+	if (*stand_out == -1)
 		return (-1);
 	exec->overall_status = 0;
 	exec->status_depth = 0;
@@ -102,8 +105,9 @@ int	execute_commands(t_env **env, t_cmd *cmd, int *status)
 {
 	t_exec	exec;
 	int		sin;
+	int		sout;
 
-	if (init_exec(&exec, &sin, &cmd) == -1)
+	if (init_exec(&exec, &sin, &sout, &cmd) == -1)
 		return (-1);
 	while (cmd)
 	{
@@ -119,7 +123,7 @@ int	execute_commands(t_env **env, t_cmd *cmd, int *status)
 		if (cmd)
 			cmd = cmd->next;
 	}
-	if (wait_for_children(&exec, &sin) == -1)
+	if (wait_for_children(&exec, &sin, &sout) == -1)
 		return (-1);
 	if (exec.ret != -5)
 		*status = exec.last_status;

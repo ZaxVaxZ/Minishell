@@ -4,21 +4,28 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <string.h>
 
 int main(void)
 {
-	char	*line;
-	char	*cwd;
-
-	cwd = getcwd(NULL, -1);
-	line = readline(cwd);
-	while (line)
+	char *str = "hello there";
+	for (int i = 0; i < 12; i++)
 	{
-		add_history(line);
-		free(line);
-		write(1, "Line: ", 6);
-		write(1, line, strlen(line));
-		write(1, "\n", 1);
-		line = readline(">");
+		//if (i % 2)
+		//	str[i] = '\b';
+		//else
+			//str[i] = [i];
+		write(1, str + i, 1);
+		usleep(60000);
+	}
+	for (int i = 0; i < 12; i++)
+	{
+		//if (i % 2)
+		//	str[i] = '\b';
+		//else
+			//str[i] = [i];
+		write(1, "\b", 1);
+		usleep(60000);
 	}
 }

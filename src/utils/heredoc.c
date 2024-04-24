@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/18 18:47:57 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/24 20:47:47 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i)
 
 t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec)
 {
-	wait(&exec->last_status);
+	waitpid(exec->last_pid, &exec->last_status, 0);
 	close(fds[1]);
 	(*cmd)->in_fd = dup(fds[0]);
 	if ((*cmd)->in_fd == -1)
@@ -61,6 +61,7 @@ t_bool	heredoc(t_cmd *cmd, t_exec *exec, int *fds, int i)
 		perror(NULL);
 		return (False);
 	}
+	exec->last_pid = p;
 	if (p == 0)
 		heredoc_child(cmd, exec, fds, i);
 	if (heredoc_parent(&cmd, fds, exec) == False)
