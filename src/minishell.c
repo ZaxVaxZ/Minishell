@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/24 14:59:03 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/26 19:14:30 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@
 #include <string.h>
 #include "./../tmp/tmp_utils.h"
 
-int	g_signum;
-
 char	*return_cwd(char *old_cwd);
 char	*get_line(char *cwd);
 
@@ -37,16 +35,10 @@ static void	stop_kill(int signal)
 	g_signum = signal;
 	if (signal == SIGINT)
 	{
-		// rl_line_buffer = "";
-		// rl_redisplay();
 		tmp = return_cwd(NULL);
 		if (isatty(0))
 			ft_printf("\n%s ", tmp);
 		free(tmp);
-		//tmp = getcwd(NULL, 0);
-		//if (isatty(0))
-		//	ft_printf("\n%s> ", tmp);
-		//free(tmp);
 	}
 }
 

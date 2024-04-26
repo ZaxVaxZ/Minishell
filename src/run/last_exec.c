@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/24 22:02:57 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/26 18:47:11 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,9 @@ int	init_exec(t_exec *exec, int *stand_in, int *stand_out, t_cmd **cmds)
 t_bool	exec_cmd(t_env **env, t_cmd **cmd, t_exec *exec, int *fds)
 {
 	pid_t	proc_id;
+	int		s;
 
+	heredoc_loop(*cmd, exec);
 	proc_id = fork();
 	if (proc_id < 0)
 	{

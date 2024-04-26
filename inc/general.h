@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/19 20:11:31 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/26 16:05:48 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,7 @@ typedef enum e_bool
 	False,
 	True
 }	t_bool;
+
+int	g_signum;
 
 #endif

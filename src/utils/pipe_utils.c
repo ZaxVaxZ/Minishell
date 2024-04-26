@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/24 22:05:33 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/26 20:16:41 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ int	open_outs_and_in(t_cmd *cmd, t_exec *exec, int *fds)
 				if (open_and_check(&cmd->in_fd, cmd->infiles[i], 0, exec) == -1)
 					return (-1);
 			}
-			else if (cmd->in_flags[i])
-				heredoc(cmd, exec, fds, i);
 			if (i != cmd->infile_cnt - 1 && close_and_check(cmd->in_fd, exec) == -1)
 				return (-1);
 		}
@@ -46,12 +44,40 @@ int	open_outs_and_in(t_cmd *cmd, t_exec *exec, int *fds)
 	return (1);
 }
 
-void	child_free_and_exit(t_env **env, t_exec *exec, int status)
+static void	child_free_and_exit(t_env **env, t_exec *exec, int status)
 {
 	free_env(env);
 	free_cmd(exec->cmd_head);
 	exit(status);
 }
+
+static void	dups_and_closes(t_cmd *cmd, t_exec *exec, t_env **env, int *fds)
+{
+	if (cmd->infile_cnt)
+	{
+		if (dup_and_check(cmd->in_fd, STDIN_FILENO, exec) == -1)
+			child_free_and_exit(env, exec, EXIT_FAILURE);
+		if (close_and_check(cmd->in_fd, exec) == -1)
+			child_free_and_exit(env, exec, EXIT_FAILURE);
+	}
+	if (cmd->outfile_cnt)
+	{
+		if (dup_and_check(cmd->out_fd, STDOUT_FILENO, exec) == -1)
+			child_free_and_exit(env, exec, EXIT_FAILURE);
+		if (close_and_check(cmd->out_fd, exec) == -1)
+			child_free_and_exit(env, exec, EXIT_FAILURE);
+	}
+	if (cmd->after == PIPE_OP && !cmd->outfile_cnt)
+	{
+		if (close_and_check(fds[0], exec) == -1)
+			child_free_and_exit(env, exec, exec->last_status);
+		if (dup_and_check(fds[1], STDOUT_FILENO, exec) == -1)
+			child_free_and_exit(env, exec, exec->last_status);
+		if (close_and_check(fds[1], exec) == -1)
+			child_free_and_exit(env, exec, exec->last_status);
+	}
+}
+
 
 /// @brief this will execute the command and open/close pipes accordingly
 /// @param cmd the cmd node
@@ -64,28 +90,7 @@ void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 
 	if (open_outs_and_in(cmd, exec, fds) == -1)
 		child_free_and_exit(env, exec, exec->last_status);
-	if (cmd->infile_cnt)
-	{
-		if (dup_and_check(cmd->in_fd, STDIN_FILENO, exec) == -1)
-			child_free_and_exit(env, exec, EXIT_FAILURE);
-		if (close_and_check(cmd->in_fd, exec) == -1)
-			child_free_and_exit(env, exec, EXIT_FAILURE);
-	}
-	if (cmd->outfile_cnt)
-	{
-		if (dup_and_check(cmd->out_fd, STDOUT_FILENO, exec) == -1)
-			child_free_and_exit(env, exec, EXIT_FAILURE);
-		close_and_check(cmd->out_fd, exec);
-	}
-	if (cmd->after == PIPE_OP && !cmd->outfile_cnt)
-	{
-		if (close_and_check(fds[0], exec) == -1)
-			child_free_and_exit(env, exec, exec->last_status);
-		if (dup_and_check(fds[1], STDOUT_FILENO, exec) == -1)
-			child_free_and_exit(env, exec, exec->last_status);
-		if (close_and_check(fds[1], exec) == -1)
-			child_free_and_exit(env, exec, exec->last_status);
-	}
+	dups_and_closes(cmd, exec, env, fds);
 	ret = resolve_builtin(env, cmd, exec, True);
 	if (ret == 0)
 	{
@@ -101,10 +106,6 @@ void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 
 int	parent_process(t_cmd *cmd, t_exec *exec, int *fds)
 {
-	if (cmd->heredoc)
-	{
-		waitpid(exec->last_pid, &exec->last_status, 0);
-	}
 	if (cmd->before == PIPE_OP || cmd->after == PIPE_OP)
 	{
 		close(fds[1]);
