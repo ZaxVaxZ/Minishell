@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/26 18:39:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/29 17:14:31 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct s_exec
 	int		overall_status;
 	int		last_status;
 	int		last_op;
+	t_env	**env;
 	pid_t	last_pid;
 	t_cmd	**cmd_head;
 }	t_exec;
@@ -72,6 +73,7 @@ int		open_outfiles(t_cmd *cmd, t_exec *exec);
 void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds);
 int		parent_process(t_cmd *cmd, t_exec *exec, int *fds);
 t_bool	heredoc(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env);
+char	*expand_variable(char *line, t_env **env, char **words, int *i);
 t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec);
 t_bool	heredoc_loop(t_cmd *cmd, t_exec *exec, t_env **env);
 void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env);

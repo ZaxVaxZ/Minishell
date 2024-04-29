@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"signal.h": "c",
+		"executor.h": "c",
+		"get_next_line.h": "c"
+	}
+}
