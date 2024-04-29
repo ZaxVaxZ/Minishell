@@ -81,6 +81,5 @@ typedef enum e_bool
 	True
 }	t_bool;
 
-int	g_signum;
 
 #endif

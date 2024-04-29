@@ -60,7 +60,7 @@ t_bool	exec_cmd(t_env **env, t_cmd **cmd, t_exec *exec, int *fds)
 	pid_t	proc_id;
 	int		s;
 
-	heredoc_loop(*cmd, exec);
+	heredoc_loop(*cmd, exec, env);
 	proc_id = fork();
 	if (proc_id < 0)
 	{

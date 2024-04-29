@@ -25,6 +25,8 @@
 #include <string.h>
 #include "./../tmp/tmp_utils.h"
 
+int	g_signum;
+
 char	*return_cwd(char *old_cwd);
 char	*get_line(char *cwd);
 

@@ -71,10 +71,10 @@ int		open_infiles(t_env **env, t_cmd *cmd, t_exec *exec, int *fds);
 int		open_outfiles(t_cmd *cmd, t_exec *exec);
 void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds);
 int		parent_process(t_cmd *cmd, t_exec *exec, int *fds);
-t_bool	heredoc(t_cmd *cmd, t_exec *exec, int *fds, int i);
+t_bool	heredoc(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env);
 t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec);
-t_bool	heredoc_loop(t_cmd *cmd, t_exec *exec);
-void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i);
+t_bool	heredoc_loop(t_cmd *cmd, t_exec *exec, t_env **env);
+void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env);
 int		open_outs_and_in(t_cmd *cmd, t_exec *exec, int *fds);
 
 #endif
