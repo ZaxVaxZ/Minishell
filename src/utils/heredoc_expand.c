@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 12:18:21 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/29 17:13:52 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/01 15:11:12 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ char	*expand_variable(char *line, t_env **env, char **words, int *i)
 {
 	char	*res;
 	char	*name;
-	//int		i;
 	int		j;
 	char	*var;
 	int		newline;

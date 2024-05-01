@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 18:48:58 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/22 19:56:40 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/04/30 16:36:19 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec)
 		if (pipe_and_check(fds, exec) == -1)
 			return (False);
 	if (((*cmd)->before != PIPE_OP && (*cmd)->after != PIPE_OP)
-		&& open_outs_and_in(*cmd, exec, fds) == -1)
+		&& open_outs_and_in(*cmd, exec) == -1)
 			return (False);
 	exec->ret = resolve_builtin(env, *cmd, exec, False);
 	if (exec->ret < 0)

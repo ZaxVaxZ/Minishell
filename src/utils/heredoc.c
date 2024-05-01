@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/29 17:21:53 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/01 19:28:53 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,17 @@
 #include "get_next_line.h"
 #include "general.h"
 
-void	handle(int sig)
-{
-	(void)sig;
-}
-
 void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env)
 {
 	char	*line;
 	char	**words;
 	char	*ret;
+	void	*s;
 	int		word_i;
 
 	close(fds[0]);
 	exec->last_status = SUCCESS;
+	s = signal(SIGINT, stop_kill);
 	while (1)
 	{
 		write(1, "> ", 2);
@@ -45,8 +42,11 @@ void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env)
 		free(line);
 	}
 	close(fds[1]);
+	if (ret)
+		free(ret);
 	if (line)
 		free(line);
+	signal(SIGINT, s);
 	exit(exec->last_status);
 }
 
@@ -65,7 +65,6 @@ t_bool	heredoc_loop(t_cmd *cmd, t_exec *exec, t_env **env)
 {
 	int	i;
 	int	heredoc_fds[2];
-	int	s;
 
 	i = 0;
 	if (cmd->heredoc)
@@ -73,8 +72,11 @@ t_bool	heredoc_loop(t_cmd *cmd, t_exec *exec, t_env **env)
 		while (i < cmd->infile_cnt)
 		{
 			if (cmd->in_flags[i])
-				heredoc(cmd, exec, heredoc_fds, i, env);
-			if (i != cmd->infile_cnt - 1)
+			{
+				if (heredoc(cmd, exec, heredoc_fds, i, env) == False)
+					return (False);
+			}
+			if (cmd->in_flags[i] && i != cmd->infile_cnt - 1)
 			{
 				if (close_and_check(cmd->in_fd, exec) == -1)
 					return (False);
@@ -91,8 +93,6 @@ t_bool	heredoc(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env)
 
 	if (pipe_and_check(fds, exec) == -1)
 		return (False);
-	signal(SIGQUIT, handle);
-	signal(SIGINT, handle);
 	p = fork();
 	if (p < 0)
 	{
@@ -102,7 +102,5 @@ t_bool	heredoc(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env)
 	exec->last_pid = p;
 	if (p == 0)
 		heredoc_child(cmd, exec, fds, i, env);
-	if (heredoc_parent(&cmd, fds, exec) == False)
-		return (False);
-	return (True);
+	return (heredoc_parent(&cmd, fds, exec));
 }

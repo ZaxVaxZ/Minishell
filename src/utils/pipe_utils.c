@@ -6,13 +6,13 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/26 20:16:41 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/01 19:18:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-int	open_outs_and_in(t_cmd *cmd, t_exec *exec, int *fds)
+int	open_outs_and_in(t_cmd *cmd, t_exec *exec)
 {
 	int	i;
 
@@ -21,12 +21,9 @@ int	open_outs_and_in(t_cmd *cmd, t_exec *exec, int *fds)
 		i = -1;
 		while (++i < cmd->infile_cnt)
 		{
-			if (!cmd->in_flags[i])
-			{
-				if (open_and_check(&cmd->in_fd, cmd->infiles[i], 0, exec) == -1)
+			if (!cmd->in_flags[i] && (open_and_check(&cmd->in_fd, cmd->infiles[i], 0, exec) == -1))
 					return (-1);
-			}
-			if (i != cmd->infile_cnt - 1 && close_and_check(cmd->in_fd, exec) == -1)
+			if (i != cmd->infile_cnt - 1 && !cmd->in_flags[i] && close_and_check(cmd->in_fd, exec) == -1)
 				return (-1);
 		}
 	}
@@ -78,7 +75,6 @@ static void	dups_and_closes(t_cmd *cmd, t_exec *exec, t_env **env, int *fds)
 	}
 }
 
-
 /// @brief this will execute the command and open/close pipes accordingly
 /// @param cmd the cmd node
 /// @param exec the exec struct
@@ -88,7 +84,7 @@ void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 {
 	int	ret;
 
-	if (open_outs_and_in(cmd, exec, fds) == -1)
+	if (open_outs_and_in(cmd, exec) == -1)
 		child_free_and_exit(env, exec, exec->last_status);
 	dups_and_closes(cmd, exec, env, fds);
 	ret = resolve_builtin(env, cmd, exec, True);
@@ -108,10 +104,12 @@ int	parent_process(t_cmd *cmd, t_exec *exec, int *fds)
 {
 	if (cmd->before == PIPE_OP || cmd->after == PIPE_OP)
 	{
-		close(fds[1]);
+		if (close_and_check(fds[1], exec))
+			return (-1);
 		if (dup_and_check(fds[0], STDIN_FILENO, exec) == -1)
 			return (-1);
-		close(fds[0]);
+		if (close_and_check(fds[0], exec))
+			return (-1);
 	}	
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/29 18:18:28 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/01 18:58:24 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "./../tmp/tmp_utils.h"
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "./../tmp/tmp_utils.h"
 
-int	g_signum;
+//int	g_signum;
 
 char	*return_cwd(char *old_cwd);
 char	*get_line(char *cwd);
 
-static void	stop_kill(int signal)
+void	stop_kill(int signal)
 {
 	char	*tmp;
 	char	*line;
@@ -43,10 +43,10 @@ static void	stop_kill(int signal)
 		tmp = return_cwd(NULL);
 		if (isatty(0))
 		{
-			ft_printf("\n%s", tmp);
-			rl_line_buffer = "";
+			//rl_replace_line("", 0);
 			rl_redisplay();
 			rl_on_new_line();
+			ft_printf("\n%s", tmp);
 		}
 		free(tmp);
 	}
@@ -95,6 +95,8 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, int *status)
 	if (!build_commands(&q, &cmds, &envp))
 		return (1);
 	ret = execute_commands(&envp, cmds, status);
+	if (ret == -5)
+		exit(*status);
 	tmp = ft_itoa(*status);
 	if (tmp)
 	{
@@ -159,6 +161,7 @@ int	main(int ac, char **av, char **env)
 	signal(SIGINT, stop_kill);
 	signal(SIGQUIT, stop_kill);
 	g_signum = -1;
+	status = 0;
 	while (True)
 	{
 		line = get_line(cwd);
@@ -193,68 +196,3 @@ int	main(int ac, char **av, char **env)
 	free_env(&enviro);
 	clear_history();
 }
-
-//int	main(int ac, char **av, char **env)
-//{
-//	char	*tmp;
-//	char	*cmd_line;
-//	t_env	*envp;
-//	int		status;
-//	int		ret;
-
-//	(void)ac;
-//	(void)av;
-//	g_signum = -1;
-//	tmp = getcwd(NULL, 0);
-//	if (isatty(0))
-//		ft_printf("%s> ", tmp);
-//	signal(SIGINT, stop_kill);
-//	signal(SIGQUIT, stop_kill);
-//	cmd_line = get_next_line(0);
-//	envp = to_env_list(env);
-//	add_var(&envp, "PWD", tmp);
-//	free(tmp);
-//	while (cmd_line)
-//	{
-//		if (handle_cmd_line(cmd_line, envp, &status) < 0)
-//			break ;
-//		if (g_signum == SIGQUIT)
-//		{
-//			tmp = ft_itoa(131);
-//			if (!tmp)
-//				break ;
-//			if (!set_var(&envp, "?", tmp, False))
-//				break ;
-//			free(tmp);
-//		g_signum = -1;
-//		}
-//		tmp = getcwd(NULL, 0);
-//		if (isatty(0) && g_signum == -1)
-//			ft_printf("%s> ", tmp);
-//		free(tmp);
-//		if (g_signum == SIGINT)
-//		{
-//			tmp = ft_itoa(1);
-//			if (!tmp)
-//				break ;
-//			if (!set_var(&envp, "?", tmp, False))
-//				break ;
-//			free(tmp);
-//			g_signum = -1;
-//		}
-//		cmd_line = get_next_line(0);
-//		if (g_signum == SIGINT)
-//		{
-//			tmp = ft_itoa(130);
-//			if (!tmp)
-//				break ;
-//			if (!set_var(&envp, "?", tmp, False))
-//				break ;
-//			free(tmp);
-//		}
-//		g_signum = -1;
-//	}
-//	free_env(&envp);
-//	ft_printf("\n");
-//	exit(status);
-//}

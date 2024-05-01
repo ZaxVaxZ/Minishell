@@ -2,6 +2,7 @@
 CC		=	cc
 CFLAGS	=	#-Wall -Wextra -Werror -O3
 CFLAGS	+=	-fsanitize=address -g3
+CPPFLAGS += 
 
 ### []+--------={ Directories }=--------+[] ###
 INC		=	./../inc
@@ -41,7 +42,8 @@ NAME	=	minishell
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) -L/usr/local/lib -I/usr/local/include $(OBJS) -o $@ -lreadline
+#	@$(CC) $(CFLAGS) $(LIBS) -L/opt/vagrant/embedded/lib/ -I/opt/vagrant/embedded/include/readline $(OBJS) -o $@ -lreadline -lhistory
+	@$(CC) $(CFLAGS) $(LIBS) -L$(HOME)/.brew/opt/readline/lib -I$(HOME)/.brew/opt/readline/include/readline $(OBJS) -o $@ -lreadline -lhistory
 #	@$(CC) $(CFLAGS) $(OBJS) -o $@
 
 %.o: %.c

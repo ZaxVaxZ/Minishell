@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_builtins.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/04/22 19:22:55 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/05/01 18:55:05 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,16 @@ int	resolve_builtin(t_env **env, t_cmd *cmd, t_exec *exec, t_bool child)
 {
 	int	ret;
 
-	if (!child && (cmd->before == PIPE_OP || cmd->after == PIPE_OP))
+	if ((!child && (cmd->before == PIPE_OP || cmd->after == PIPE_OP))
+		|| (child && cmd->before != PIPE_OP && cmd->after != PIPE_OP)
+		|| (!cmd || !cmd->params || !cmd->params[0]))
 		return (0);
-	if (child && cmd->before != PIPE_OP && cmd->after != PIPE_OP)
-		return (0);
-	if (!cmd || !cmd->params || !cmd->params[0])
-		return (0);
+	if (cmd->infile_cnt || cmd->outfile_cnt)
+		open_outs_and_in(cmd, exec);
+	if (cmd->outfile_cnt)
+		dup2(cmd->out_fd, STDOUT_FILENO);
 	ret = resolve_builtin_helper(env, cmd);
-	if (ret == 1 || ret < 0)
+	if (ret == 1 || ret < 0 || ret == -5)
 		return (ret);
 	if (!ft_strncmp(cmd->params[0], "unset", -1))
 		unset(env, cmd->params + 1);
