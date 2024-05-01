@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/01 19:18:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/01 20:59:49 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,13 @@ int	parent_process(t_cmd *cmd, t_exec *exec, int *fds)
 {
 	if (cmd->before == PIPE_OP || cmd->after == PIPE_OP)
 	{
-		if (close_and_check(fds[1], exec))
+		if (cmd->heredoc)
+			return (1);
+		else if (close_and_check(fds[1], exec) == -1)
 			return (-1);
 		if (dup_and_check(fds[0], STDIN_FILENO, exec) == -1)
 			return (-1);
-		if (close_and_check(fds[0], exec))
+		if (close_and_check(fds[0], exec) == -1)
 			return (-1);
 	}	
 	return (1);

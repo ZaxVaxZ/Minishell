@@ -3,6 +3,7 @@
 		"signal.h": "c",
 		"executor.h": "c",
 		"get_next_line.h": "c",
-		"typeinfo": "c"
+		"typeinfo": "c",
+		"signals.h": "c"
 	}
 }

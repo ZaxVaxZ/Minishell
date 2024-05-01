@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/05/01 18:35:35 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/01 20:30:04 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include "get_next_line.h"
+# include "signals.h"
 
 # define NON 0
 # define OR_OP 1

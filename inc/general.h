@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/05/01 18:39:40 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/01 20:50:02 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,26 @@ typedef enum e_bool
 	True
 }	t_bool;
 
-void	stop_kill(int signal);
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	t_bool			exported;
+	struct s_env	*next;
+}	t_env;
+
+
+typedef struct s_msh
+{
+	char	*line;
+	char	*cwd;
+	int		status;
+	void	*interrupt;
+	void	*q;
+	t_env	*env;
+}	t_msh;
+
+char	*return_cwd(char *old_cwd);
+char	*get_line(char *cwd);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/05/01 18:58:24 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/01 20:54:26 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 #include "cmd_list.h"
 #include "env_list.h"
 #include "ft_printf.h"
-#include <signal.h>
+//#include <signal.h>
+#include "signals.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,28 +30,24 @@
 
 //int	g_signum;
 
-char	*return_cwd(char *old_cwd);
-char	*get_line(char *cwd);
+//void	sig_handle(int signal)
+//{
+//	char	*tmp;
+//	char	*line;
 
-void	stop_kill(int signal)
-{
-	char	*tmp;
-	char	*line;
-
-	g_signum = signal;
-	if (signal == SIGINT)
-	{
-		tmp = return_cwd(NULL);
-		if (isatty(0))
-		{
-			//rl_replace_line("", 0);
-			rl_redisplay();
-			rl_on_new_line();
-			ft_printf("\n%s", tmp);
-		}
-		free(tmp);
-	}
-}
+//	g_signum = signal;
+//	if (signal == SIGINT)
+//	{
+//		tmp = return_cwd(NULL);
+//		if (isatty(0))
+//		{
+//			//rl_replace_line("", 0);
+//			rl_redisplay();
+//			rl_on_new_line();
+//		}
+//		free(tmp);
+//	}
+//}
 
 static int	free_up(char *cmd_line, t_queue **q, t_cmd **cmds)
 {
@@ -63,7 +60,7 @@ static int	free_up(char *cmd_line, t_queue **q, t_cmd **cmds)
 	return (0);
 }
 
-static int	handle_cmd_line(char *cmd_line, t_env *envp, int *status)
+static int	handle_cmd_line(char *cmd_line, t_env *envp, t_msh *m)
 {
 	int		ret;
 	char	*tmp;
@@ -94,10 +91,10 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, int *status)
 	clean_whitespace(q);
 	if (!build_commands(&q, &cmds, &envp))
 		return (1);
-	ret = execute_commands(&envp, cmds, status);
+	ret = execute_commands(&envp, cmds, &m->status);
 	if (ret == -5)
-		exit(*status);
-	tmp = ft_itoa(*status);
+		exit(m->status);
+	tmp = ft_itoa(m->status);
 	if (tmp)
 	{
 		if (!set_var(&envp, "?", tmp, False))
@@ -148,51 +145,63 @@ char	*get_line(char *cwd)
 	return (new);
 }
 
+//int	main(int ac, char **av, char **env)
+//{
+//	char		*line;
+//	char		*cwd;
+//	char		*tmp;
+//	t_env		*enviro;
+//	int			status;
+
+//	cwd = return_cwd(NULL);
+//	enviro = to_env_list(env);
+//	signal(SIGINT, sig_handle);
+//	signal(SIGQUIT, sig_handle);
+//	g_signum = -1;
+//	status = 0;
+//	while (True)
+//	{
+//		line = get_line(cwd);
+//		if (!line || handle_cmd_line(line, enviro, &status) == -1)
+//			break ;
+//		cwd = return_cwd(cwd);
+//		if (set_sig(&enviro, &tmp) == False)
+//			break ;
+//	}
+//	if (line)
+//		free(line);
+//	if (cwd)
+//		free(cwd);
+//	free_env(&enviro);
+//	clear_history();
+//}
+
 int	main(int ac, char **av, char **env)
 {
-	char		*line;
-	char		*cwd;
-	char		*tmp;
-	t_env		*enviro;
-	int			status;
+	t_msh		m;
+	//t_env		*enviro;
 
-	cwd = return_cwd(NULL);
-	enviro = to_env_list(env);
-	signal(SIGINT, stop_kill);
-	signal(SIGQUIT, stop_kill);
+	m.cwd = return_cwd(NULL);
+	write(1, "test1", 5);
+	m.env = to_env_list(env);
+	write(1, "test2", 5);
+	m.interrupt = signal(SIGINT, sig_handle);
+	m.q = signal(SIGQUIT, sig_handle);
 	g_signum = -1;
-	status = 0;
+	m.status = 0;
 	while (True)
 	{
-		line = get_line(cwd);
-		if (!line || handle_cmd_line(line, enviro, &status) == -1)
+		m.line = get_line(m.cwd);
+		if (!m.line || handle_cmd_line(m.line, m.env, &m) == -1)
 			break ;
-		cwd = return_cwd(cwd);
-		if (g_signum == SIGQUIT)
-		{
-			tmp = ft_itoa(131);
-			if (!tmp)
-				break ;
-			if (!set_var(&enviro, "?", tmp, False))
-				break ;
-			free(tmp);
-			g_signum = -1;
-		}
-		if (g_signum == SIGINT)
-		{
-			tmp = ft_itoa(1);
-			if (!tmp)
-				break ;
-			if (!set_var(&enviro, "?", tmp, False))
-				break ;
-			free(tmp);
-			g_signum = -1;
-		}
+		m.cwd = return_cwd(m.cwd);
+		if (set_sig(&m.env) == False)
+			break ;
 	}
-	if (line)
-		free(line);
-	if (cwd)
-		free(cwd);
-	free_env(&enviro);
+	if (m.line)
+		free(m.line);
+	if (m.cwd)
+		free(m.cwd);
+	free_env(&m.env);
 	clear_history();
 }

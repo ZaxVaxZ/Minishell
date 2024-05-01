@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:14:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/02 15:45:19 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/01 20:49:21 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,6 @@
 # include <stdlib.h>
 # include "general.h"
 # include "libft.h"
-
-typedef struct s_env
-{
-	char			*key;
-	char			*value;
-	t_bool			exported;
-	struct s_env	*next;
-}	t_env;
 
 t_env	*new_env_node(char *key, char *value, t_bool exported);
 void	add_env_node(t_env **env, t_env *to_add);

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/01 19:28:53 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/01 20:29:41 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env)
 
 	close(fds[0]);
 	exec->last_status = SUCCESS;
-	s = signal(SIGINT, stop_kill);
+	s = signal(SIGINT, sig_handle);
 	while (1)
 	{
 		write(1, "> ", 2);
