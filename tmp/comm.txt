@@ -45,3 +45,6 @@ exit needs to work
 echo retested
 pwd retested
 DO CD
+
+
+His work is very clean and organized, and it shows a lot of care and interest and time spent on the code. But it's not just looks, the code works perfectly great and is accurate to what is asked for. He fully explained the concepts and showed a lot of understanding and comprehension, and that he dived into C++ and cared about learning it well. I even asked him about a case from outside the project and he answered it accurately, showing that he fully understands how everything works. Great work!!
