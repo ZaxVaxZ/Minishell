@@ -42,11 +42,14 @@ char	*get_word(char *word, int *j, int newline)
 	int		i;
 
 	i = *j;
-	while (word[*j] && word[*j] != '$')
+	// while (word[*j] != '\0' && word[*j] != '$')
+	while (word[*j] != '\0')
+	{
+		if (word[*j] == '$' || word[*j] == '\n')
+			break ;
 		(*j)++;
-	if (newline && word[*j] == '\n')
-		(*j)--;
-	w = malloc(sizeof(char) * ((*j - i) + 1));
+	}
+	w = malloc(sizeof(char) * ((*j - i) + (word[*j] == '\n') + 1));
 	if (!w)
 		return (NULL);
 	*j = i;
@@ -86,13 +89,12 @@ char	*expand_variable(char *line, t_env **env, char **words, int *i)
 			newline = (words[(*i)][j] == '\n');
 			if (words[(*i)][j] == '$' && ++j)
 			{
-				if (words[(*i)][j] == '$')
-					var = get_var(*env, "$");
+				if (words[*i][j] == '$')
+					j++;
 				else if (!is_valid_var_char(words[(*i)][j]))
 				{
 					name = ft_strdup("$");
 					var = ft_strjoin(name, &words[(*i)][j]);
-					free(name);
 				}
 				else
 				{

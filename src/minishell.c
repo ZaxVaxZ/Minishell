@@ -28,7 +28,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-//int	g_signum;
+// int	g_signum;
 
 //void	sig_handle(int signal)
 //{
@@ -187,7 +187,7 @@ int	main(int ac, char **av, char **env)
 	write(1, "test2", 5);
 	m.interrupt = signal(SIGINT, sig_handle);
 	m.q = signal(SIGQUIT, sig_handle);
-	g_signum = -1;
+	// g_signum = -1;
 	m.status = 0;
 	while (True)
 	{

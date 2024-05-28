@@ -14,17 +14,24 @@
 #include "get_next_line.h"
 #include "general.h"
 
+extern int g_signum;
+
+void	sig_test(int signal)
+{
+	g_signum = signal;
+}
+
 void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env)
 {
 	char	*line;
 	char	**words;
 	char	*ret;
-	void	*s;
+	void	(*s)(int);
 	int		word_i;
 
 	close(fds[0]);
 	exec->last_status = SUCCESS;
-	s = signal(SIGINT, sig_handle);
+	s = signal(SIGINT, sig_test);
 	while (1)
 	{
 		write(1, "> ", 2);
@@ -42,11 +49,11 @@ void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env)
 		free(line);
 	}
 	close(fds[1]);
+	signal(SIGINT, s);
 	if (ret)
 		free(ret);
 	if (line)
 		free(line);
-	signal(SIGINT, s);
 	exit(exec->last_status);
 }
 

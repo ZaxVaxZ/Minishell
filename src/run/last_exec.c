@@ -84,6 +84,8 @@ t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec)
 	handle = exec_type(exec, cmd);
 	if (!*cmd || handle == DO_NOT_EXECUTE)
 		return (True);
+	if ((*cmd)->or_op)
+		waitpid(exec->last_pid, NULL, 0);
 	if ((*cmd)->before == PIPE_OP || (*cmd)->after == PIPE_OP)
 	{
 		if (pipe_and_check(fds, exec) == -1)

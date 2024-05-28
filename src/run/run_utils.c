@@ -104,6 +104,8 @@ int	exec_type(t_exec *exec, t_cmd **cmd)
 {
 	if ((*cmd)->rep == RP)
 		return (DO_NOT_EXECUTE);
+	if ((*cmd)->heredoc && (*cmd)->after == AND_OP && (*cmd)->next && (*cmd)->next->heredoc)
+		(*cmd)->or_op = True;
 	if ((*cmd)->before == OR_OP || (*cmd)->before == AND_OP || (*cmd)->before == SEMICOLON)
 		wait_for_children(exec, NULL, NULL);
 	while (*cmd)

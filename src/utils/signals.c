@@ -12,6 +12,8 @@
 
 #include "signals.h"
 
+int	g_signum;
+
 void	sig_handle(int signal)
 {
 	char	*tmp;
@@ -22,7 +24,7 @@ void	sig_handle(int signal)
 		if (isatty(0))
 		{
 			tmp = return_cwd(NULL);
-			//rl_replace_line("", 0);
+			rl_replace_line("", 0);
 			write(1, "\n", 1);
 			rl_on_new_line();
 			rl_redisplay();

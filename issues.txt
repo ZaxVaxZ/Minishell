@@ -1,0 +1,2 @@
+heredoc issues:
+	$$USER expected behaviour: print the result of the variable $$ and then print USER

@@ -104,15 +104,61 @@ static t_bool	join_words(t_queue **h)
 /// @return False if any malloc fails, True otherwise
 static int	unpack_vars(t_queue **h, t_queue *q, int *open, t_env *env)
 {
+	char	*tmp;
+	char	*dollar;
+	int		variable;
+	static int	switched_variable = 0;
+
 	if (open[0])
 		return (syntax_error(h, "'", True, False));
 	if (open[1])
 		return (syntax_error(h, "\"", True, False));
 	if (open[2])
 		return (syntax_error(h, ")", True, False));
+	variable = 0;
 	while (q)
 	{
-		if (q->type == Variable)
+		if (q->type == Op_redir && !ft_strncmp("<<", q->s, -1) && switched_variable)
+		{
+			switched_variable = 0;
+			break ;
+		}
+		else if (q->type == Op_redir && !ft_strncmp("<<", q->s, -1) && q->next && !switched_variable)
+		{
+			if (q->type == Op_redir && !ft_strncmp("<<", q->s, -1) && q->next)
+			{
+				if (q->next->type == Variable)
+				{
+					variable = 1;
+					delete_next(&q);
+				}
+				q = q->next;
+			}
+			while (q && q->next)
+			{
+				if (q->next->type == Variable)
+				{
+					variable = 1;
+					delete_next(&q);
+				}
+				if (q->type != Whitespace && q->type != Variable)
+					break ;
+				else
+					q = q->next;
+			}
+			if (variable)
+			{
+				q->type = Word;
+				dollar = ft_strdup("$");
+				tmp = ft_strjoin(dollar, q->s);
+				printf("q->s before %s\n", q->s);
+				free(q->s);
+				q->s = tmp;
+				switched_variable = 1;
+				printf("q->s after %s\n", q->s);
+			}
+		}
+		else if (q->type == Variable)
 		{
 			q->type = Word;
 			free(q->s);

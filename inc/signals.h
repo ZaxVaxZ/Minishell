@@ -17,6 +17,8 @@
 # include "env_list.h"
 # include "libft.h"
 
+/* int	g_signum; */
+
 void	sig_handle(int signal);
 t_bool	set_sig(t_env **enviro);
 

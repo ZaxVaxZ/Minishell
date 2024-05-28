@@ -75,6 +75,11 @@ static void	dups_and_closes(t_cmd *cmd, t_exec *exec, t_env **env, int *fds)
 	}
 }
 
+void	child_sig(int sig)
+{
+	return ;
+}
+
 /// @brief this will execute the command and open/close pipes accordingly
 /// @param cmd the cmd node
 /// @param exec the exec struct
@@ -84,6 +89,7 @@ void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 {
 	int	ret;
 
+	signal(SIGINT, child_sig);
 	if (open_outs_and_in(cmd, exec) == -1)
 		child_free_and_exit(env, exec, exec->last_status);
 	dups_and_closes(cmd, exec, env, fds);

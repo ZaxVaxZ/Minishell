@@ -75,7 +75,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-int	g_signum;
+/* int	g_signum; */
 
 typedef enum e_bool
 {
