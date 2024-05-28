@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 12:18:21 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/01 15:11:12 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:50:42 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,21 @@ char	*expand_variable(char *line, t_env **env, char **words, int *i)
 	int		j;
 	char	*var;
 	int		newline;
+	char	*del;
 
 	if (!line)
 		return (NULL);
 	(*i) = -1;
 	newline = 0;
 	words = ft_split(line, ' ');
+	if (words[0] && words[0][0] == '$' && !words[1])
+	{
+		del = ft_strdup(words[0]);
+		ft_freeup(words);
+		return (del);
+	}
+	if (!words)
+		return (NULL);
 	var = NULL;
 	name = NULL;
 	res = NULL;

@@ -6,11 +6,12 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 13:37:53 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/04/29 14:01:55 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/28 12:10:51 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
 char	*ft_strjoin(char *s1, char *s2)
 {

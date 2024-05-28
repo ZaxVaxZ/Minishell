@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 04:46:55 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/02 17:14:00 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/28 17:23:56 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,9 @@ static int	unpack_vars(t_queue **h, t_queue *q, int *open, t_env *env)
 		if (q->type == Op_redir && !ft_strncmp("<<", q->s, -1) && switched_variable)
 		{
 			switched_variable = 0;
-			break ;
+			return (0);
 		}
-		else if (q->type == Op_redir && !ft_strncmp("<<", q->s, -1) && q->next && !switched_variable)
+		else if (q->type == Op_redir && !ft_strncmp("<<", q->s, -1) && !switched_variable)
 		{
 			if (q->type == Op_redir && !ft_strncmp("<<", q->s, -1) && q->next)
 			{
@@ -151,11 +151,9 @@ static int	unpack_vars(t_queue **h, t_queue *q, int *open, t_env *env)
 				q->type = Word;
 				dollar = ft_strdup("$");
 				tmp = ft_strjoin(dollar, q->s);
-				printf("q->s before %s\n", q->s);
 				free(q->s);
 				q->s = tmp;
 				switched_variable = 1;
-				printf("q->s after %s\n", q->s);
 			}
 		}
 		else if (q->type == Variable)

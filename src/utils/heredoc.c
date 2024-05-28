@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/01 20:29:41 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/28 17:12:29 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,16 @@ void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env)
 
 	close(fds[0]);
 	exec->last_status = SUCCESS;
+	g_signum = -1;
 	s = signal(SIGINT, sig_test);
+	printf("Delimiter %s\n", cmd->infiles[i]);
 	while (1)
 	{
+		if (g_signum == SIGINT)
+		{
+			exec->last_status = 1;
+			break ;
+		}
 		write(1, "> ", 2);
 		line = get_next_line(STDIN_FILENO);
 		ret = expand_variable(line, env, words, &word_i);
@@ -45,15 +52,16 @@ void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env)
 		 	exec->last_status = EXIT_FAILURE;
 			break ;
 		}
-		free(ret);
-		free(line);
+		if (ret)
+			free(ret);
+		if (line)
+			free(line);
 	}
 	close(fds[1]);
-	signal(SIGINT, s);
-	if (ret)
-		free(ret);
-	if (line)
-		free(line);
+	//if (ret)
+	//	free(ret);
+	//if (line)
+	//	free(line);
 	exit(exec->last_status);
 }
 
