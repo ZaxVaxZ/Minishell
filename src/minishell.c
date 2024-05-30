@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/05/01 20:54:26 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/30 17:48:35 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,9 +182,7 @@ int	main(int ac, char **av, char **env)
 	//t_env		*enviro;
 
 	m.cwd = return_cwd(NULL);
-	write(1, "test1", 5);
 	m.env = to_env_list(env);
-	write(1, "test2", 5);
 	m.interrupt = signal(SIGINT, sig_handle);
 	m.q = signal(SIGQUIT, sig_handle);
 	// g_signum = -1;

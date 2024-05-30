@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 20:19:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/28 11:34:17 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/30 18:29:57 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,12 @@ void	sig_handle(int signal)
 			free(tmp);
 		}
 	}
+}
+
+void	sig_heredoc(int sig)
+{
+	g_signum = sig;
+	return ;
 }
 
 t_bool	set_sig(t_env **enviro)

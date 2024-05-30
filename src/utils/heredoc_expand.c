@@ -6,11 +6,10 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 12:18:21 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/28 16:50:42 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/30 16:05:25 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "queues.h"
 #include "executor.h"
 
 char	*get_var_name(char *word, int *j, int *newline)
@@ -42,7 +41,6 @@ char	*get_word(char *word, int *j, int newline)
 	int		i;
 
 	i = *j;
-	// while (word[*j] != '\0' && word[*j] != '$')
 	while (word[*j] != '\0')
 	{
 		if (word[*j] == '$' || word[*j] == '\n')
@@ -65,66 +63,73 @@ char	*get_word(char *word, int *j, int newline)
 	return (w);
 }
 
-char	*expand_variable(char *line, t_env **env, char **words, int *i)
+int	init_expand(t_expand *exp, char *line, t_env **env, char *delimiter)
 {
-	char	*res;
-	char	*name;
-	int		j;
-	char	*var;
-	int		newline;
-	char	*del;
+	exp->line = line;
+	exp->env = env;
+	exp->delimiter = delimiter;
+	exp->words = ft_split(line, ' ');
+	if (!exp->words)
+		return (-1);
+	exp->var = NULL;
+	exp->res = NULL;
+	exp->var_name = NULL;
+	exp->newline = 0;
+	return (1);
+}
 
-	if (!line)
-		return (NULL);
-	(*i) = -1;
-	newline = 0;
-	words = ft_split(line, ' ');
-	if (words[0] && words[0][0] == '$' && !words[1])
+void	set_name_var(t_expand *exp, int i, int *j)
+{
+	if (exp->words[i][*j] == '$' && ++(*j))
 	{
-		del = ft_strdup(words[0]);
-		ft_freeup(words);
-		return (del);
+		if (exp->words[i][*j] == '$')
+			(*j)++;
+		else if (!is_valid_var_char(exp->words[i][*j]))
+		{
+			exp->name = ft_strdup("$");
+			exp->var = ft_strjoin(exp->name, &exp->words[i][*j]);
+		}
+		else
+		{
+			exp->name = get_var_name(exp->words[i], j, &exp->newline);
+			exp->var = get_var((*exp->env), exp->name);
+			free(exp->name);
+		}
 	}
-	if (!words)
+	else if (exp->words[i][*j] && exp->words[i][*j] != '\n')
+		exp->var = get_word(exp->words[i], j, exp->newline);
+	*j -= (exp->words[i][*j] == '$');
+	if (exp->var)
+		exp->res = ft_strjoin(exp->res, exp->var);
+	if (exp->newline)
+		exp->res = ft_strjoin(exp->res, "\n");
+}
+
+char	*expand_variable(t_expand *exp)
+{
+	int		i;
+	int		j;
+
+	if (!exp->line)
 		return (NULL);
-	var = NULL;
-	name = NULL;
-	res = NULL;
-	while (words[++(*i)])
+	if (!ft_strncmp(exp->line, exp->delimiter, ft_strlen(exp->line) - 1)
+		&& ft_strlen(exp->line) - 1 == ft_strlen(exp->delimiter))
+		return (ft_strjoin(exp->delimiter, "\n"));
+	i = -1;
+	while (exp->words[++i])
 	{
 		j = -1;
-		while (words[(*i)][++j])
+		while (exp->words[i][++j])
 		{
-			newline = (words[(*i)][j] == '\n');
-			if (words[(*i)][j] == '$' && ++j)
-			{
-				if (words[*i][j] == '$')
-					j++;
-				else if (!is_valid_var_char(words[(*i)][j]))
-				{
-					name = ft_strdup("$");
-					var = ft_strjoin(name, &words[(*i)][j]);
-				}
-				else
-				{
-					name = get_var_name(words[(*i)], &j, &newline);
-					var = get_var(*env, name);
-					free(name);
-				}
-			}
-			else if (words[(*i)][j] && words[(*i)][j] != '\n')
-				var = get_word(words[(*i)], &j, newline);
-			j -= (words[(*i)][j] == '$');
-			if (var)
-				res = ft_strjoin(res, var);
-			if (newline)
-				res = ft_strjoin(res, "\n");
-			if (words[(*i) + 1])
-				res = ft_strjoin(res, " ");
-			if (words[(*i)][j] == '\0')
+			exp->newline = (exp->words[i][j] == '\n');
+			set_name_var(exp, i, &j);
+			j -= (exp->words[i][j] == '$');
+			if (exp->words[i + 1])
+				exp->res = ft_strjoin(exp->res, " ");
+			if (exp->words[i][j] == '\0')
 				break;
 		}
 	}
-	ft_freeup(words);
-	return (res);
+	ft_freeup(exp->words);
+	return (exp->res);
 }

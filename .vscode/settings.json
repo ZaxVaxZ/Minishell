@@ -4,6 +4,7 @@
 		"executor.h": "c",
 		"get_next_line.h": "c",
 		"typeinfo": "c",
-		"signals.h": "c"
+		"signals.h": "c",
+		"parser.h": "c"
 	}
 }

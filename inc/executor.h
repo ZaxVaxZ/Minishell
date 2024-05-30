@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/05/28 12:41:56 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/30 15:16:38 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,28 @@ typedef struct s_exec
 	t_cmd	**cmd_head;
 }	t_exec;
 
+typedef struct s_heredoc
+{
+	t_env 	**env;
+	t_cmd 	*cmd;
+	t_exec 	*exec; 
+	int 	*fds;
+	int		i;
+}	t_heredoc;
+
+typedef struct s_expand
+{
+	char	*res;
+	char	*var;
+	char 	*line; 
+	t_env 	**env;
+	char	*name;
+	char 	**words;
+	int		newline;
+	char	*var_name;
+	char	*delimiter;
+}	t_expand;
+
 t_bool	clean_whitespace(t_queue *q);
 int		resolve_builtin(t_env **env, t_cmd *cmd, t_exec *exec, t_bool child);
 int		execute_commands(t_env **env, t_cmd *cmd, int *status);
@@ -74,11 +96,16 @@ int		open_infiles(t_env **env, t_cmd *cmd, t_exec *exec, int *fds);
 int		open_outfiles(t_cmd *cmd, t_exec *exec);
 void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds);
 int		parent_process(t_cmd *cmd, t_exec *exec, int *fds);
-t_bool	heredoc(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env);
-char	*expand_variable(char *line, t_env **env, char **words, int *i);
+//t_bool	heredoc(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env);
+t_bool	heredoc(t_heredoc *h);
+//char	*expand_variable(char *line, t_env **env, char **words, int *i, char *delim);
+char	*expand_variable(t_expand *exp);
 t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec);
 t_bool	heredoc_loop(t_cmd *cmd, t_exec *exec, t_env **env);
-void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env);
+//void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env);
+void	heredoc_child(t_heredoc *h);
 int		open_outs_and_in(t_cmd *cmd, t_exec *exec);
+
+int		init_expand(t_expand *exp, char *line, t_env **env, char *delimiter);
 
 #endif

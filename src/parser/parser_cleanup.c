@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 04:46:55 by marvin            #+#    #+#             */
-/*   Updated: 2024/05/28 17:23:56 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/30 16:07:34 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,35 @@ void	delete_next(t_queue **q)
 	(*q)->next = tmp->next;
 	free(tmp->s);
 	free(tmp);
+}
+
+int	dont_unpack(t_queue **h, t_queue *q, int *open, t_env *env)
+{
+	char	*tmp;
+	char	*dollar;
+
+	if (q->type == Op_redir && !ft_strncmp("<<", q->s, -1))
+	{
+		if (q->next->type == Whitespace)
+			delete_next(&q);
+		if (q->next->type == Variable)
+		{
+			delete_next(&q);
+			dollar = ft_strdup("$");
+			if (!dollar)
+				return (-1);
+			if (q->next)
+			{
+				tmp = ft_strjoin(dollar, q->next->s);
+				if (!tmp)
+					return (-1);
+			}
+			free(q->next->s);
+			q->next->s = tmp;
+		}
+		return (1);
+	}
+	return (0);
 }
 
 /// @brief Collapse a Double or Single quote sequence into a full string
@@ -104,10 +133,8 @@ static t_bool	join_words(t_queue **h)
 /// @return False if any malloc fails, True otherwise
 static int	unpack_vars(t_queue **h, t_queue *q, int *open, t_env *env)
 {
-	char	*tmp;
 	char	*dollar;
-	int		variable;
-	static int	switched_variable = 0;
+	char	*tmp;
 
 	if (open[0])
 		return (syntax_error(h, "'", True, False));
@@ -115,48 +142,11 @@ static int	unpack_vars(t_queue **h, t_queue *q, int *open, t_env *env)
 		return (syntax_error(h, "\"", True, False));
 	if (open[2])
 		return (syntax_error(h, ")", True, False));
-	variable = 0;
 	while (q)
 	{
-		if (q->type == Op_redir && !ft_strncmp("<<", q->s, -1) && switched_variable)
-		{
-			switched_variable = 0;
-			return (0);
-		}
-		else if (q->type == Op_redir && !ft_strncmp("<<", q->s, -1) && !switched_variable)
-		{
-			if (q->type == Op_redir && !ft_strncmp("<<", q->s, -1) && q->next)
-			{
-				if (q->next->type == Variable)
-				{
-					variable = 1;
-					delete_next(&q);
-				}
-				q = q->next;
-			}
-			while (q && q->next)
-			{
-				if (q->next->type == Variable)
-				{
-					variable = 1;
-					delete_next(&q);
-				}
-				if (q->type != Whitespace && q->type != Variable)
-					break ;
-				else
-					q = q->next;
-			}
-			if (variable)
-			{
-				q->type = Word;
-				dollar = ft_strdup("$");
-				tmp = ft_strjoin(dollar, q->s);
-				free(q->s);
-				q->s = tmp;
-				switched_variable = 1;
-			}
-		}
-		else if (q->type == Variable)
+		if (dont_unpack(h, q, open, env) == -1)
+			return (1);
+		if (q->type == Variable)
 		{
 			q->type = Word;
 			free(q->s);

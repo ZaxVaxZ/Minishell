@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 20:23:38 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/28 10:43:11 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/30 16:11:12 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,6 @@
 
 void	sig_handle(int signal);
 t_bool	set_sig(t_env **enviro);
+void	sig_heredoc(int signal);
 
 #endif
