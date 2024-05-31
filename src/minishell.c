@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/05/30 17:48:35 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/31 13:17:42 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, t_msh *m)
 		return (0);
 	if (parse_clean_up(&q, envp))
 	{
-		free_env(&envp);
 		free(cmd_line);
 		return (1);
 	}
