@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/30 18:09:47 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/05/31 13:46:44 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,30 +39,75 @@ int	check_and_write(t_heredoc *h, char **ret, char **line)
 	return (1);
 }
 
+// void	heredoc_child(t_heredoc *h)
+// {
+// 	char		*line;
+// 	char		*ret;
+// 	t_expand	exp;
+// 	void		(*s)(int);
+
+// 	close(h->fds[0]);
+// 	h->exec->last_status = SUCCESS;
+// 	g_signum = -1;
+// 	s = signal(SIGINT, sig_heredoc);
+// 	while (1)
+// 	{
+// 		write(1, "> ", 2);
+// 		line = get_next_line(STDIN_FILENO);
+// 		if (init_expand(&exp, line, h->env, h->cmd->infiles[h->i]) == -1)
+// 			break ;
+// 		ret = expand_variable(&exp);
+// 		if (check_and_write(h, &ret, &line) <= 0)
+// 			break ;
+// 	}
+// 	close(h->fds[1]);
+// 	if (ret)
+// 		free(ret);
+// 	if (line)
+// 		free(line);
+// 	exit(h->exec->last_status);
+// }
 void	heredoc_child(t_heredoc *h)
 {
+	int			i;
+	int			j;
 	char		*line;
-	char		*ret;
-	t_expand	exp;
-	void		(*s)(int);
+	char		*var;
 
 	close(h->fds[0]);
 	h->exec->last_status = SUCCESS;
 	g_signum = -1;
-	s = signal(SIGINT, sig_heredoc);
+	signal(SIGINT, sig_heredoc);
 	while (1)
 	{
 		write(1, "> ", 2);
 		line = get_next_line(STDIN_FILENO);
-		if (init_expand(&exp, line, h->env, h->cmd->infiles[h->i]) == -1)
+		if (!line || !ft_strncmp(line, h->cmd->infiles[h->i], ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n'))
+			&& ft_strlen(h->cmd->infiles[h->i]) == ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n'))
 			break ;
-		ret = expand_variable(&exp);
-		if (check_and_write(h, &ret, &line) <= 0)
-			break ;
+		i = 0;
+		while (line[i])
+		{
+			if (line[i] != DS)
+				write(h->fds[1], line + i, 1);
+			else
+			{
+				j = i;
+				while (line[j] && line[j] != SPACE && line[j] != TAB && line[j] != NL)
+					j++;
+				var = ft_substr(line, i + 1, j - i - 1);
+				ft_printf("%s, %s\n", var, get_var(*h->env, var));
+				if (var && get_var(*(h->env), var))
+					write(h->fds[1], get_var(*(h->env), var), ft_strlen(get_var(*(h->env), var)));
+				if (var)
+					free(var);
+				i = j - 1;
+			}
+			i++;
+		}
+		free(line);
 	}
 	close(h->fds[1]);
-	if (ret)
-		free(ret);
 	if (line)
 		free(line);
 	exit(h->exec->last_status);
