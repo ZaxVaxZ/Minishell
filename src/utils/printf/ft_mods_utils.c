@@ -6,32 +6,32 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 17:17:46 by ehammoud          #+#    #+#             */
-/*   Updated: 2023/12/20 11:22:35 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/06/01 15:47:41 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static int	ft_atoi(const char *str)
-{
-	size_t			i;
-	unsigned int	n;
-	unsigned int	lm;
+// static int	ft_atoi(const char *str)
+// {
+// 	size_t			i;
+// 	unsigned int	n;
+// 	unsigned int	lm;
 
-	if (!str)
-		return (-1);
-	n = 0;
-	i = 0;
-	lm = INT_MAX;
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		if ((str[i] - 48ul > lm % 10 && n == lm / 10) || n > lm / 10)
-			return (-1);
-		n = n * 10 + (str[i] - '0');
-		i++;
-	}
-	return (n);
-}
+// 	if (!str)
+// 		return (-1);
+// 	n = 0;
+// 	i = 0;
+// 	lm = INT_MAX;
+// 	while (str[i] >= '0' && str[i] <= '9')
+// 	{
+// 		if ((str[i] - 48ul > lm % 10 && n == lm / 10) || n > lm / 10)
+// 			return (-1);
+// 		n = n * 10 + (str[i] - '0');
+// 		i++;
+// 	}
+// 	return (n);
+// }
 
 static void	init_mods(t_mods *mods, int v)
 {

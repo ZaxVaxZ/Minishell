@@ -3,33 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 20:19:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/30 18:29:57 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/01 17:08:04 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "signals.h"
 
-int	g_signum;
+extern int	g_signum;
 
 void	sig_handle(int signal)
 {
 	char	*tmp;
 
-	g_signum = signal;
 	if (signal == SIGINT)
 	{
-		if (isatty(0))
-		{
-			tmp = return_cwd(NULL);
-			rl_replace_line("", 0);
-			write(1, "\n", 1);
-			rl_on_new_line();
-			rl_redisplay();
-			free(tmp);
-		}
+		g_signum = signal;
+		rl_replace_line("", 0);
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_redisplay();
+		// if (isatty(0))
+		// {
+		// 	// tmp = return_cwd(NULL);
+		// 	rl_replace_line("", 0);
+		// 	write(1, "\n", 1);
+		// 	rl_on_new_line();
+		// 	rl_redisplay();
+		// 	// free(tmp);
+		// }
 	}
 }
 
@@ -51,7 +55,7 @@ t_bool	set_sig(t_env **enviro)
 		if (!set_var(enviro, "?", tmp, False))
 			return (False);
 		free(tmp);
-		g_signum = -1;
+		// g_signum = -1;
 	}
 	if (g_signum == SIGINT)
 	{
@@ -61,7 +65,7 @@ t_bool	set_sig(t_env **enviro)
 		if (!set_var(enviro, "?", tmp, False))
 			return (False);
 		free(tmp);
-		g_signum = -1;
+		// g_signum = -1;
 	}
 	return (True);
 }

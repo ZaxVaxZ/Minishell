@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/05/31 13:17:42 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/01 17:11:59 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-// int	g_signum;
+extern int	g_signum;
 
 //void	sig_handle(int signal)
 //{
@@ -133,7 +133,7 @@ char	*get_line(char *cwd)
 	char	*new;
 	char	*cmd;
 
-	cmd = readline(cwd);
+	cmd = readline("Jesters-Minishell > ");
 	if (!cmd)
 		return (NULL);
 	new = ft_strjoin_chr(cmd, '\n', "");
@@ -175,16 +175,40 @@ char	*get_line(char *cwd)
 //	clear_history();
 //}
 
+t_bool	shllvlhandle(t_env **env)
+{
+	char	*tmp;
+
+	if (!get_var(*env, "SHLVL"))
+		add_var(env, "SHLVL", ft_itoa(1));
+	else
+	{
+		tmp = ft_itoa(ft_atoi(get_var(*env, "SHLVL")) + 1);
+		if (!tmp)
+			return (False);
+		set_var(env, "SHLVL", tmp, True);
+		free(tmp);
+	}
+	return (True);
+}
+
 int	main(int ac, char **av, char **env)
 {
 	t_msh		m;
 	//t_env		*enviro;
 
+	g_signum = -1;
 	m.cwd = return_cwd(NULL);
 	m.env = to_env_list(env);
 	m.interrupt = signal(SIGINT, sig_handle);
 	m.q = signal(SIGQUIT, sig_handle);
-	// g_signum = -1;
+	if (!shllvlhandle(&m.env))
+	{
+		free_env(&m.env);
+		if (m.cwd)
+			free(m.cwd);
+		return (1);
+	}
 	m.status = 0;
 	while (True)
 	{

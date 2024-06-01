@@ -18,7 +18,8 @@ EXE		=	$(SFD)/run
 ### []+--------={ Source Files }=--------+[] ###
 SRCS	=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c		\
 			$(LFT)/ft_substr.c $(LFT)/ft_strchr.c $(LFT)/ft_strjoin.c		\
-			$(LFT)/ft_strjoin_chr.c $(LFT)/ft_split.c $(LFT)/ft_itoa.c $(LFT)/ft_strtrim.c	\
+			$(LFT)/ft_strjoin_chr.c $(LFT)/ft_split.c $(LFT)/ft_itoa.c		\
+			$(LFT)/ft_strtrim.c $(LFT)/ft_atoi.c												\
 			$(GNL)/get_next_line.c $(GNL)/get_next_line_utils.c				\
 			$(PRF)/ft_mods_utils.c $(PRF)/ft_printaddr.c $(PRF)/ft_printf.c	\
 			$(PRF)/ft_printhex.c $(PRF)/ft_printstr.c $(PRF)/ft_printchar.c	\
@@ -31,10 +32,10 @@ SRCS	=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c		\
 			$(UTL)/cmd_utils.c	$(UTL)/pipe_utils.c							\
 			$(PRS)/parser.c $(PRS)/parser_utils.c $(PRS)/parser_extras.c	\
 			$(PRS)/parser_checkers.c $(PRS)/parser_cleanup.c 				\
-			$(EXE)/run_builtins.c $(EXE)/run_utils.c		\
-			$(SFD)/minishell.c	./../tmp/tmp_utils.c	\
-			$(UTL)/heredoc.c $(UTL)/pipe_checks.c $(EXE)/last_exec.c $(UTL)/heredoc_expand.c 	\
-			$(UTL)/signals.c
+			$(EXE)/run_builtins.c $(EXE)/run_utils.c						\
+			$(SFD)/minishell.c	./../tmp/tmp_utils.c						\
+			$(UTL)/heredoc.c $(UTL)/pipe_checks.c $(EXE)/last_exec.c		\
+			$(UTL)/heredoc_expand.c $(UTL)/signals.c
 
 ### []+--------={ Object files and Program name }=--------+[] ###
 OBJS	=	$(SRCS:.c=.o)

@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/31 13:46:44 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/06/01 15:33:59 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,20 @@ void	heredoc_child(t_heredoc *h)
 				write(h->fds[1], line + i, 1);
 			else
 			{
-				j = i;
-				while (line[j] && line[j] != SPACE && line[j] != TAB && line[j] != NL)
+				if (!is_valid_var_char(line[i + 1]))
+				{
+					write(h->fds[1], line + i++, 1);
+					continue ;
+				}
+				else if (found_in(line[i + 1], DIGIT))
+				{
+					i += 2;
+					continue ;
+				}
+				j = ++i;
+				while (is_valid_var_char(line[j]))
 					j++;
-				var = ft_substr(line, i + 1, j - i - 1);
+				var = ft_substr(line, i, j - i);
 				ft_printf("%s, %s\n", var, get_var(*h->env, var));
 				if (var && get_var(*(h->env), var))
 					write(h->fds[1], get_var(*(h->env), var), ft_strlen(get_var(*(h->env), var)));
