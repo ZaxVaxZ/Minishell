@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/06/02 16:08:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/02 17:24:16 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	do_nothing(int sig)
 {
-	(void)sig;
-	return ;
+	if (sig == SIGINT)
+		return ;
 }
 
 t_bool	execute(t_env **env, t_cmd *cmd, t_exec *exec)
@@ -66,9 +66,9 @@ t_bool	exec_cmd(t_env **env, t_cmd **cmd, t_exec *exec, int *fds)
 	pid_t	proc_id;
 	int		s;
 
+	signal(SIGINT, do_nothing);
 	if (heredoc_loop(*cmd, exec, env) == False)
 		return (True);
-	signal(SIGINT, do_nothing);
 	proc_id = fork();
 	if (proc_id < 0)
 	{

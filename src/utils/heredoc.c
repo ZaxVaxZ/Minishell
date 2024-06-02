@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/02 16:08:53 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/02 17:25:41 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,11 @@ void	heredoc_child(t_heredoc *h)
 	char		*line;
 	char		*var;
 
+	signal(SIGINT, sig_heredoc);
 	close(h->fds[0]);
 	g_signum = -1;
 	while (1)
 	{
-		if (g_signum == SIGINT)
-		{
-			g_signum = -1;
-			exit(EXIT_FAILURE);
-		}
 		write(1, "> ", 2);
 		line = get_next_line(STDIN_FILENO);
 		if (!line || !ft_strncmp(line, h->cmd->infiles[h->i], ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n'))
@@ -150,7 +146,6 @@ t_bool	heredoc(t_heredoc *h)
 
 	if (pipe_and_check(h->fds, h->exec) == -1)
 		return (False);
-	signal(SIGINT, sig_heredoc);
 	p = fork();
 	if (p < 0)
 	{

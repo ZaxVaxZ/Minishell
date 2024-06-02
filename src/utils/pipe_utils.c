@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/01 15:34:53 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/06/02 16:34:06 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 {
 	int	ret;
 
-	signal(SIGINT, child_sig);
+	//signal(SIGINT, child_sig);
 	if (open_outs_and_in(cmd, exec) == -1)
 		child_free_and_exit(env, exec, exec->last_status);
 	dups_and_closes(cmd, exec, env, fds);

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 20:19:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/02 16:01:15 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/02 17:16:51 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	sig_handle(int signal)
 {
 	char	*tmp;
 
+	//g_signum = signal;
 	if (signal == SIGINT)
 	{
 		g_signum = signal;
@@ -30,7 +31,9 @@ void	sig_handle(int signal)
 
 void	sig_heredoc(int sig)
 {
-	g_signum = sig;
+	//g_signum = sig;
+	if (sig == SIGINT)
+		exit(EXIT_FAILURE);
 }
 
 t_bool	set_sig(t_env **enviro)
@@ -55,5 +58,6 @@ t_bool	set_sig(t_env **enviro)
 			return (False);
 		free(tmp);
 	}
+	g_signum = -1;
 	return (True);
 }

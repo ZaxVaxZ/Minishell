@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/06/02 16:04:40 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/02 17:19:03 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,9 @@ int	main(int ac, char **av, char **env)
 	m.status = 0;
 	while (True)
 	{
-		m.line = get_line(m.cwd);
+		if (g_signum != SIGINT)
+			m.line = get_line(m.cwd);
+			
 		if (!m.line || handle_cmd_line(m.line, m.env, &m) == -1)
 			break ;
 		m.cwd = return_cwd(m.cwd);
