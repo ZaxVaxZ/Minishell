@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/06/01 17:11:59 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/06/02 16:04:40 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,25 +29,6 @@
 #include <readline/history.h>
 
 extern int	g_signum;
-
-//void	sig_handle(int signal)
-//{
-//	char	*tmp;
-//	char	*line;
-
-//	g_signum = signal;
-//	if (signal == SIGINT)
-//	{
-//		tmp = return_cwd(NULL);
-//		if (isatty(0))
-//		{
-//			//rl_replace_line("", 0);
-//			rl_redisplay();
-//			rl_on_new_line();
-//		}
-//		free(tmp);
-//	}
-//}
 
 static int	free_up(char *cmd_line, t_queue **q, t_cmd **cmds)
 {
@@ -133,7 +114,7 @@ char	*get_line(char *cwd)
 	char	*new;
 	char	*cmd;
 
-	cmd = readline("Jesters-Minishell > ");
+	cmd = readline(cwd);
 	if (!cmd)
 		return (NULL);
 	new = ft_strjoin_chr(cmd, '\n', "");
@@ -143,37 +124,6 @@ char	*get_line(char *cwd)
 		free(cmd);
 	return (new);
 }
-
-//int	main(int ac, char **av, char **env)
-//{
-//	char		*line;
-//	char		*cwd;
-//	char		*tmp;
-//	t_env		*enviro;
-//	int			status;
-
-//	cwd = return_cwd(NULL);
-//	enviro = to_env_list(env);
-//	signal(SIGINT, sig_handle);
-//	signal(SIGQUIT, sig_handle);
-//	g_signum = -1;
-//	status = 0;
-//	while (True)
-//	{
-//		line = get_line(cwd);
-//		if (!line || handle_cmd_line(line, enviro, &status) == -1)
-//			break ;
-//		cwd = return_cwd(cwd);
-//		if (set_sig(&enviro, &tmp) == False)
-//			break ;
-//	}
-//	if (line)
-//		free(line);
-//	if (cwd)
-//		free(cwd);
-//	free_env(&enviro);
-//	clear_history();
-//}
 
 t_bool	shllvlhandle(t_env **env)
 {
@@ -195,7 +145,6 @@ t_bool	shllvlhandle(t_env **env)
 int	main(int ac, char **av, char **env)
 {
 	t_msh		m;
-	//t_env		*enviro;
 
 	g_signum = -1;
 	m.cwd = return_cwd(NULL);

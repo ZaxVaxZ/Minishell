@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/05/01 20:14:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/02 16:06:00 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	wait_for_children(t_exec *exec, int *stand_in, int *stand_out)
 			exec->status_depth = exec->curr_depth;
 		}
 	}
+	signal(SIGINT, sig_handle);
 	return (1);
 }
 

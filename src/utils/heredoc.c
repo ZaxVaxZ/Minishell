@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/01 15:33:59 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/06/02 16:08:53 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,34 +39,6 @@ int	check_and_write(t_heredoc *h, char **ret, char **line)
 	return (1);
 }
 
-// void	heredoc_child(t_heredoc *h)
-// {
-// 	char		*line;
-// 	char		*ret;
-// 	t_expand	exp;
-// 	void		(*s)(int);
-
-// 	close(h->fds[0]);
-// 	h->exec->last_status = SUCCESS;
-// 	g_signum = -1;
-// 	s = signal(SIGINT, sig_heredoc);
-// 	while (1)
-// 	{
-// 		write(1, "> ", 2);
-// 		line = get_next_line(STDIN_FILENO);
-// 		if (init_expand(&exp, line, h->env, h->cmd->infiles[h->i]) == -1)
-// 			break ;
-// 		ret = expand_variable(&exp);
-// 		if (check_and_write(h, &ret, &line) <= 0)
-// 			break ;
-// 	}
-// 	close(h->fds[1]);
-// 	if (ret)
-// 		free(ret);
-// 	if (line)
-// 		free(line);
-// 	exit(h->exec->last_status);
-// }
 void	heredoc_child(t_heredoc *h)
 {
 	int			i;
@@ -75,11 +47,14 @@ void	heredoc_child(t_heredoc *h)
 	char		*var;
 
 	close(h->fds[0]);
-	h->exec->last_status = SUCCESS;
 	g_signum = -1;
-	signal(SIGINT, sig_heredoc);
 	while (1)
 	{
+		if (g_signum == SIGINT)
+		{
+			g_signum = -1;
+			exit(EXIT_FAILURE);
+		}
 		write(1, "> ", 2);
 		line = get_next_line(STDIN_FILENO);
 		if (!line || !ft_strncmp(line, h->cmd->infiles[h->i], ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n'))
@@ -125,12 +100,18 @@ void	heredoc_child(t_heredoc *h)
 
 t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec)
 {
+	int	exit;
+
+	signal(SIGINT, sig_handle);
 	waitpid(exec->last_pid, &exec->last_status, 0);
+	exit = WEXITSTATUS(exec->last_status);
 	close(fds[1]);
 	(*cmd)->in_fd = dup(fds[0]);
 	if ((*cmd)->in_fd == -1)
 		return (False);
 	close(fds[0]);
+	if (exit == EXIT_FAILURE)
+		return (False);
 	return (True);
 }
 
@@ -169,6 +150,7 @@ t_bool	heredoc(t_heredoc *h)
 
 	if (pipe_and_check(h->fds, h->exec) == -1)
 		return (False);
+	signal(SIGINT, sig_heredoc);
 	p = fork();
 	if (p < 0)
 	{
