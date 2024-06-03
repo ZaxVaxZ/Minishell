@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   last_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/06/03 12:24:10 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/03 16:48:18 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ t_bool	exec_cmd(t_env **env, t_cmd **cmd, t_exec *exec, int *fds)
 	int		s;
 
 	signal(SIGINT, do_nothing);
+	signal(SIGQUIT, do_nothing);
 	if (heredoc_loop(*cmd, exec, env) == False)
 		return (True);
 	proc_id = fork();
@@ -92,8 +93,8 @@ t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec)
 	handle = exec_type(exec, cmd);
 	if (!*cmd || handle == DO_NOT_EXECUTE)
 		return (True);
-	if ((*cmd)->or_op)
-		waitpid(exec->last_pid, NULL, 0);
+	// if ((*cmd)->or_op)
+	// 	waitpid(exec->last_pid, NULL, 0);
 	if ((*cmd)->before == PIPE_OP || (*cmd)->after == PIPE_OP)
 	{
 		if (pipe_and_check(fds, exec) == -1)

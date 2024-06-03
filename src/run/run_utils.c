@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/06/02 16:06:00 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/03 16:29:42 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,15 @@ int	wait_for_children(t_exec *exec, int *stand_in, int *stand_out)
 		if (exec->last_pid != -1 && (int)child == exec->last_pid)
 		{
 			exec->last_status = WEXITSTATUS(status);
+			if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+				exec->last_status = 130;
+			if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
+				exec->last_status = 131;
 			exec->status_depth = exec->curr_depth;
 		}
 	}
 	signal(SIGINT, sig_handle);
+	signal(SIGQUIT, SIG_IGN);
 	return (1);
 }
 

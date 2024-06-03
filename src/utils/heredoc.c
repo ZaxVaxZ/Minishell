@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/02 17:25:41 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/03 17:07:19 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,15 @@ int	check_and_write(t_heredoc *h, char **ret, char **line)
 	return (1);
 }
 
+void	uwu(int sig)
+{
+	write(1, "\b\b  \b\b", 6);
+}
+// void	uwu2(int sig)
+// {
+// 	write(1, "a\b\bb", 4);
+// }
+
 void	heredoc_child(t_heredoc *h)
 {
 	int			i;
@@ -47,6 +56,7 @@ void	heredoc_child(t_heredoc *h)
 	char		*var;
 
 	signal(SIGINT, sig_heredoc);
+	signal(SIGQUIT, uwu);
 	close(h->fds[0]);
 	g_signum = -1;
 	while (1)
@@ -77,7 +87,6 @@ void	heredoc_child(t_heredoc *h)
 				while (is_valid_var_char(line[j]))
 					j++;
 				var = ft_substr(line, i, j - i);
-				ft_printf("%s, %s\n", var, get_var(*h->env, var));
 				if (var && get_var(*(h->env), var))
 					write(h->fds[1], get_var(*(h->env), var), ft_strlen(get_var(*(h->env), var)));
 				if (var)
@@ -98,7 +107,8 @@ t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec)
 {
 	int	exit;
 
-	signal(SIGINT, sig_handle);
+	// signal(SIGQUIT, uwu);
+	// signal(SIGINT, sig_handle);
 	waitpid(exec->last_pid, &exec->last_status, 0);
 	exit = WEXITSTATUS(exec->last_status);
 	close(fds[1]);
