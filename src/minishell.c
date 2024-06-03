@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/06/02 17:19:03 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/03 12:54:11 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #include "cmd_list.h"
 #include "env_list.h"
 #include "ft_printf.h"
-//#include <signal.h>
 #include "signals.h"
 #include <unistd.h>
 #include <stdio.h>
@@ -66,6 +65,7 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, t_msh *m)
 	if (parse_clean_up(&q, envp))
 	{
 		free(cmd_line);
+		set_var(&envp, "?", ft_itoa(258), False);
 		return (1);
 	}
 	clean_whitespace(q);
@@ -78,11 +78,11 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, t_msh *m)
 	if (tmp)
 	{
 		if (!set_var(&envp, "?", tmp, False))
-			ret = -1;
+			ret = -2;
 		free(tmp);
 	}
 	else
-		ret = -1;
+		ret = -2;
 	free_up(cmd_line, &q, &cmds);
 	return (ret);
 }
@@ -163,12 +163,11 @@ int	main(int ac, char **av, char **env)
 	{
 		if (g_signum != SIGINT)
 			m.line = get_line(m.cwd);
-			
-		if (!m.line || handle_cmd_line(m.line, m.env, &m) == -1)
-			break ;
-		m.cwd = return_cwd(m.cwd);
 		if (set_sig(&m.env) == False)
 			break ;
+		if (!m.line || handle_cmd_line(m.line, m.env, &m) == -2)
+			break ;
+		m.cwd = return_cwd(m.cwd);
 	}
 	if (m.line)
 		free(m.line);

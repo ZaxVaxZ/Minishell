@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/02 16:34:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/03 11:02:20 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,13 +97,14 @@ void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 	ret = resolve_builtin(env, cmd, exec, True);
 	if (ret == 0)
 	{
-		if (execute(env, cmd, exec) == False)
-			exec->last_status = EXIT_FAILURE;
+		//if (execute(env, cmd, exec) == False)
+		execute(env, cmd, exec);
+			//exec->last_status = EXIT_FAILURE;
 	}
-	else if (ret == -1)
-		exec->last_status = EXIT_FAILURE;
-	else
-		exec->last_status = SUCCESS;
+	//else if (ret == -1)
+	//	exec->last_status = EXIT_FAILURE;
+	//else
+	//	exec->last_status = SUCCESS;
 	child_free_and_exit(env, exec, exec->last_status);
 }
 

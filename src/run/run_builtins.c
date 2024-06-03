@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/05/01 18:55:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/03 12:03:47 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,5 @@ int	resolve_builtin(t_env **env, t_cmd *cmd, t_exec *exec, t_bool child)
 	}
 	else
 		return (0);
-	return (1);
+	return (ret);
 }
