@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/05/30 15:16:38 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/04 16:51:53 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int		parent_process(t_cmd *cmd, t_exec *exec, int *fds);
 t_bool	heredoc(t_heredoc *h);
 //char	*expand_variable(char *line, t_env **env, char **words, int *i, char *delim);
 char	*expand_variable(t_expand *exp);
-t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec);
+t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec, t_env **env);
 t_bool	heredoc_loop(t_cmd *cmd, t_exec *exec, t_env **env);
 //void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env);
 void	heredoc_child(t_heredoc *h);
