@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/06/04 18:05:03 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/06/06 16:18:54 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ int	execute_commands(t_env **env, t_cmd *cmd, int *status)
 
 	if (init_exec(&exec, &sin, &sout, &cmd) == -1)
 		return (-1);
+	exec.env = env;
 	while (cmd)
 	{
 		exec.curr_depth -= (cmd->rep == RP);
