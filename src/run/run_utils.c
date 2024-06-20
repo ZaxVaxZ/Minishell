@@ -33,8 +33,6 @@ int	wait_for_children(t_exec *exec, int *stand_in, int *stand_out)
 	}
 	signal(SIGINT, sig_handle);
 	signal(SIGQUIT, SIG_IGN);
-	if (!tmp)
-		return (-1);
 	if (stand_in)
 	{
 		if (dup_and_check(*stand_in, STDIN_FILENO, exec) == -1)
