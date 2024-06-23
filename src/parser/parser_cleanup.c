@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_cleanup.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 04:46:55 by marvin            #+#    #+#             */
-/*   Updated: 2024/05/30 16:07:34 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/23 19:36:57 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,9 +133,6 @@ static t_bool	join_words(t_queue **h)
 /// @return False if any malloc fails, True otherwise
 static int	unpack_vars(t_queue **h, t_queue *q, int *open, t_env *env)
 {
-	char	*dollar;
-	char	*tmp;
-
 	if (open[0])
 		return (syntax_error(h, "'", True, False));
 	if (open[1])
