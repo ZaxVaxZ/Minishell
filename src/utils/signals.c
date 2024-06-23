@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 20:19:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/03 16:28:34 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/06/04 17:52:03 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,6 @@ void	sig_handle(int sig)
 		rl_on_new_line();
 		rl_redisplay();
 	}
-}
-
-void	sig_heredoc(int sig)
-{
-	if (sig == SIGINT)
-		exit(EXIT_FAILURE);
 }
 
 t_bool	set_sig(t_env **enviro)

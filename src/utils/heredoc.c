@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/03 17:07:19 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/06/04 18:05:52 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	heredoc_child(t_heredoc *h)
 	char		*line;
 	char		*var;
 
-	signal(SIGINT, sig_heredoc);
+	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, uwu);
 	close(h->fds[0]);
 	g_signum = -1;
@@ -103,20 +103,30 @@ void	heredoc_child(t_heredoc *h)
 	exit(h->exec->last_status);
 }
 
-t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec)
+t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec, t_env **env)
 {
-	int	exit;
+	int	ex;
+	char	*tmp;
 
-	// signal(SIGQUIT, uwu);
-	// signal(SIGINT, sig_handle);
-	waitpid(exec->last_pid, &exec->last_status, 0);
-	exit = WEXITSTATUS(exec->last_status);
+	waitpid(exec->last_pid, &ex, 0);
+	if (WIFSIGNALED(ex) && WTERMSIG(ex) == SIGINT)
+	{
+		exec->last_status = 1;
+		(*cmd)->status = exec->last_status;
+		write(1, "\n", 1);
+		tmp = ft_itoa(1);
+		if (!tmp)
+			return (False);
+		set_var(env, "?", tmp, False);
+		free(tmp);
+		return (False);
+	}
 	close(fds[1]);
 	(*cmd)->in_fd = dup(fds[0]);
 	if ((*cmd)->in_fd == -1)
 		return (False);
 	close(fds[0]);
-	if (exit == EXIT_FAILURE)
+	if (ex == EXIT_FAILURE)
 		return (False);
 	return (True);
 }
@@ -165,5 +175,5 @@ t_bool	heredoc(t_heredoc *h)
 	h->exec->last_pid = p;
 	if (p == 0)
 		heredoc_child(h);
-	return (heredoc_parent(&h->cmd, h->fds, h->exec));
+	return (heredoc_parent(&h->cmd, h->fds, h->exec, h->env));
 }
