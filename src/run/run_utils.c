@@ -7,7 +7,11 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*   Updated: 2024/06/06 16:19:06 by ehammoud         ###   ########.fr       */
+=======
+/*   Updated: 2024/06/03 16:29:42 by ehammoud         ###   ########.fr       */
+>>>>>>> parent of 6eafb14... fixed all signals and exit statuses
 =======
 /*   Updated: 2024/06/03 16:29:42 by ehammoud         ###   ########.fr       */
 >>>>>>> parent of 6eafb14... fixed all signals and exit statuses

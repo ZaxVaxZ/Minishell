@@ -7,7 +7,11 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*   Updated: 2024/06/06 16:16:57 by ehammoud         ###   ########.fr       */
+=======
+/*   Updated: 2024/06/03 16:51:17 by ehammoud         ###   ########.fr       */
+>>>>>>> parent of 6eafb14... fixed all signals and exit statuses
 =======
 /*   Updated: 2024/06/03 16:51:17 by ehammoud         ###   ########.fr       */
 >>>>>>> parent of 6eafb14... fixed all signals and exit statuses
