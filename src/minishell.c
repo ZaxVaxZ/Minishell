@@ -6,7 +6,11 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/06/06 16:16:57 by ehammoud         ###   ########.fr       */
+=======
+/*   Updated: 2024/06/03 16:51:17 by ehammoud         ###   ########.fr       */
+>>>>>>> parent of 6eafb14... fixed all signals and exit statuses
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +68,8 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, t_msh *m)
 		return (0);
 	if (parse_clean_up(&q, envp))
 	{
-		tmp = ft_itoa(258);
 		free(cmd_line);
-		if (!tmp)
-			return (1);
-		set_var(&envp, "?", tmp, False);
-		free(tmp);
+		set_var(&envp, "?", ft_itoa(258), False);
 		return (1);
 	}
 	clean_whitespace(q);
@@ -77,11 +77,7 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, t_msh *m)
 		return (1);
 	ret = execute_commands(&envp, cmds, &m->status);
 	if (ret == -5)
-	{
-		if (!m->status && ft_strncmp(get_var(envp, "?"), "0", -1))
-			exit(ft_atoi(get_var(envp, "?")));
 		exit(m->status);
-	}
 	tmp = ft_itoa(m->status);
 	if (tmp)
 	{
