@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_cleanup.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 04:46:55 by marvin            #+#    #+#             */
-/*   Updated: 2024/06/23 19:36:57 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/06/25 19:16:18 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	delete_next(t_queue **q)
 	free(tmp);
 }
 
-int	dont_unpack(t_queue **h, t_queue *q, int *open, t_env *env)
+int	dont_unpack(t_queue *q)
 {
 	char	*tmp;
 	char	*dollar;
@@ -50,12 +50,12 @@ int	dont_unpack(t_queue **h, t_queue *q, int *open, t_env *env)
 			dollar = ft_strdup("$");
 			if (!dollar)
 				return (-1);
-			if (q->next)
-			{
+			//if (q->next)
+			//{
 				tmp = ft_strjoin(dollar, q->next->s);
 				if (!tmp)
 					return (-1);
-			}
+			//}
 			free(q->next->s);
 			q->next->s = tmp;
 		}
@@ -141,7 +141,7 @@ static int	unpack_vars(t_queue **h, t_queue *q, int *open, t_env *env)
 		return (syntax_error(h, ")", True, False));
 	while (q)
 	{
-		if (dont_unpack(h, q, open, env) == -1)
+		if (dont_unpack(q) == -1)
 			return (1);
 		if (q->type == Variable)
 		{

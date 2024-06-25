@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/04 18:05:52 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/06/25 19:17:14 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,11 @@ int	check_and_write(t_heredoc *h, char **ret, char **line)
 	return (1);
 }
 
-void	uwu(int sig)
+void	heredoc_sigquit(int sig)
 {
+	(void)sig;
 	write(1, "\b\b  \b\b", 6);
 }
-// void	uwu2(int sig)
-// {
-// 	write(1, "a\b\bb", 4);
-// }
 
 void	heredoc_child(t_heredoc *h)
 {
@@ -56,15 +53,15 @@ void	heredoc_child(t_heredoc *h)
 	char		*var;
 
 	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, uwu);
+	signal(SIGQUIT, heredoc_sigquit);
 	close(h->fds[0]);
 	g_signum = -1;
 	while (1)
 	{
 		write(1, "> ", 2);
 		line = get_next_line(STDIN_FILENO);
-		if (!line || !ft_strncmp(line, h->cmd->infiles[h->i], ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n'))
-			&& ft_strlen(h->cmd->infiles[h->i]) == ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n'))
+		if (!line || (!ft_strncmp(line, h->cmd->infiles[h->i], ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n'))
+			&& ft_strlen(h->cmd->infiles[h->i]) == ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n')))
 			break ;
 		i = 0;
 		while (line[i])

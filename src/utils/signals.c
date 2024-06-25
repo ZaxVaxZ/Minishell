@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 20:19:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/04 17:52:03 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/06/25 19:17:57 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ extern int	g_signum;
 
 void	sig_handle(int sig)
 {
-	char	*tmp;
-
 	g_signum = sig;
 	if (sig == SIGINT)
 	{

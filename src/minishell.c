@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/06/06 16:16:57 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/06/25 22:16:41 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ static int	free_up(char *cmd_line, t_queue **q, t_cmd **cmds)
 {
 	if (cmd_line)
 		free(cmd_line);
+	cmd_line = NULL;
 	if (q)
 		free_queue(q);
 	if (cmds)
@@ -80,7 +81,8 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, t_msh *m)
 	{
 		if (!m->status && ft_strncmp(get_var(envp, "?"), "0", -1))
 			exit(ft_atoi(get_var(envp, "?")));
-		exit(m->status);
+		free_up(cmd_line, &q, &cmds);
+		return (ret);
 	}
 	tmp = ft_itoa(m->status);
 	if (tmp)
@@ -123,6 +125,7 @@ char	*get_line(char *cwd)
 	char	*cmd;
 
 	cmd = readline(cwd);
+	new = NULL;
 	if (!cmd)
 		return (NULL);
 	new = ft_strjoin_chr(cmd, '\n', "");
@@ -174,14 +177,17 @@ int	main(int ac, char **av, char **env)
 			m.line = get_line(m.cwd);
 		if (set_sig(&m.env) == False)
 			break ;
-		if (!m.line || handle_cmd_line(m.line, m.env, &m) == -2)
+		if (!m.line || handle_cmd_line(m.line, m.env, &m) < 0)
 			break ;
 		m.cwd = return_cwd(m.cwd);
 	}
-	if (m.line)
-		free(m.line);
+	//if (m.line)
+	//	free(m.line);
 	if (m.cwd)
 		free(m.cwd);
 	free_env(&m.env);
 	clear_history();
+	exit(m.status);
+	(void)ac;
+	(void)av;
 }

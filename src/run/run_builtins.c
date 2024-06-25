@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/06/03 12:03:47 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/25 21:39:47 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_bool	clean_whitespace(t_queue *q)
 	return (True);
 }
 
-static int	resolve_builtin_helper(t_env **env, t_cmd *cmd)
+static int	resolve_builtin_helper(t_env **env, t_cmd *cmd, t_exec *exec)
 {
 	char	*cwd;
 
@@ -59,7 +59,11 @@ static int	resolve_builtin_helper(t_env **env, t_cmd *cmd)
 			return (-1);
 	}
 	else if (!ft_strncmp(cmd->params[0], "exit", -1))
+	{
+		exiting(cmd->params + 1, exec);
+		//exit(*exec->exit_status);
 		return (-5);
+	}
 	else
 		return (0);
 	return (1);
@@ -77,7 +81,7 @@ int	resolve_builtin(t_env **env, t_cmd *cmd, t_exec *exec, t_bool child)
 		open_outs_and_in(cmd, exec);
 	if (cmd->outfile_cnt)
 		dup2(cmd->out_fd, STDOUT_FILENO);
-	ret = resolve_builtin_helper(env, cmd);
+	ret = resolve_builtin_helper(env, cmd, exec);
 	if (ret == 1 || ret < 0 || ret == -5)
 		return (ret);
 	if (!ft_strncmp(cmd->params[0], "unset", -1))

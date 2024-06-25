@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   last_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/06/06 16:18:54 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/06/25 20:00:25 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	do_nothing(int sig)
 
 t_bool	execute(t_env **env, t_cmd *cmd, t_exec *exec)
 {
-	int		i;
 	char	*com;
 	char	**tmp;
 
@@ -64,8 +63,7 @@ int	init_exec(t_exec *exec, int *stand_in, int *stand_out, t_cmd **cmds)
 t_bool	exec_cmd(t_env **env, t_cmd **cmd, t_exec *exec, int *fds)
 {
 	pid_t	proc_id;
-	int		s;
-
+	
 	signal(SIGINT, do_nothing);
 	signal(SIGQUIT, do_nothing);
 	if (heredoc_loop(*cmd, exec, env) == False)
@@ -93,14 +91,14 @@ t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec)
 	handle = exec_type(exec, cmd);
 	if (!*cmd || handle == DO_NOT_EXECUTE)
 		return (True);
-	// if ((*cmd)->or_op)
-	// 	waitpid(exec->last_pid, NULL, 0);
 	if ((*cmd)->before == PIPE_OP || (*cmd)->after == PIPE_OP)
 	{
 		if (pipe_and_check(fds, exec) == -1)
 			return (False);
 	}
 	exec->ret = resolve_builtin(env, *cmd, exec, False);
+	if (exec->ret == -5)
+		return (True);
 	if (exec->ret < 0)
 	{
 		exec->last_status = EXIT_FAILURE;
@@ -126,6 +124,7 @@ int	execute_commands(t_env **env, t_cmd *cmd, int *status)
 	if (init_exec(&exec, &sin, &sout, &cmd) == -1)
 		return (-1);
 	exec.env = env;
+	exec.exit_status = status;
 	while (cmd)
 	{
 		exec.curr_depth -= (cmd->rep == RP);

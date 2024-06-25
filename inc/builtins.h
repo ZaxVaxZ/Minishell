@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 13:07:12 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/03 22:16:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/25 19:39:09 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 # include "parser.h"
 # include "env_list.h"
 # include "ft_printf.h"
+# include "executor.h"
 
-void	exiting(int code);
 t_bool	cd(t_env **env, char *pwd, char *dir);
 t_bool	unset(t_env **env, char **params);
 t_bool	pwd(void);

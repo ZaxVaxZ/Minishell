@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/06/04 16:51:53 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/06/25 19:40:24 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_exec
 	int		overall_status;
 	int		last_status;
 	int		last_op;
+	int		*exit_status;
 	t_env	**env;
 	pid_t	last_pid;
 	t_cmd	**cmd_head;
@@ -107,5 +108,6 @@ void	heredoc_child(t_heredoc *h);
 int		open_outs_and_in(t_cmd *cmd, t_exec *exec);
 
 int		init_expand(t_expand *exp, char *line, t_env **env, char *delimiter);
+void	exiting(char **params, t_exec *exec);
 
 #endif
