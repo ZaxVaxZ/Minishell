@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/06/26 12:46:41 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/26 13:42:55 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static int	resolve_builtin_helper(t_env **env, t_cmd *cmd, t_exec *exec)
 	}
 	else if (!ft_strncmp(cmd->params[0], "exit", -1))
 	{
-		if (exiting(cmd->params + 1, exec) == -2)
+		if (exiting(cmd, cmd->params + 1, exec) == -2)
 			return (-1);
 		return (-5);
 	}
