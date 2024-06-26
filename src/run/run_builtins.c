@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/06/26 13:42:55 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/26 15:02:06 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int	resolve_builtin(t_env **env, t_cmd *cmd, t_exec *exec, t_bool child)
 	ret = resolve_builtin_helper(env, cmd, exec);
 	if (ret == 1 || ret < 0 || ret == -5)
 		return (ret);
+	ret = 1;
 	if (!ft_strncmp(cmd->params[0], "unset", -1))
 		unset(env, cmd->params + 1);
 	else if (!ft_strncmp(cmd->params[0], "export", -1))
