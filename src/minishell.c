@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/06/25 22:16:41 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/26 13:27:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,11 +156,15 @@ t_bool	shllvlhandle(t_env **env)
 int	main(int ac, char **av, char **env)
 {
 	t_msh		m;
+	int			cmd_ret;
+	char		*zero;
 
 	g_signum = -1;
 	m.cwd = return_cwd(NULL);
 	m.env = to_env_list(env);
-	add_var(&m.env, "?", ft_strdup("0"));
+	zero = ft_strdup("0");
+	add_var(&m.env, "?", zero);
+	free(zero);
 	m.interrupt = signal(SIGINT, sig_handle);
 	m.q = signal(SIGQUIT, SIG_IGN);
 	if (!shllvlhandle(&m.env))
@@ -177,8 +181,13 @@ int	main(int ac, char **av, char **env)
 			m.line = get_line(m.cwd);
 		if (set_sig(&m.env) == False)
 			break ;
-		if (!m.line || handle_cmd_line(m.line, m.env, &m) < 0)
+		if (!m.line)
 			break ;
+		cmd_ret = handle_cmd_line(m.line, m.env, &m);
+		if (cmd_ret == -2 || cmd_ret == -5)
+			break ;
+		//if (!m.line || handle_cmd_line(m.line, m.env, &m) == -2)
+		//	break ;
 		m.cwd = return_cwd(m.cwd);
 	}
 	//if (m.line)

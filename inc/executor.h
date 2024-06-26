@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/06/25 19:40:24 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/26 12:44:09 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,6 @@ void	heredoc_child(t_heredoc *h);
 int		open_outs_and_in(t_cmd *cmd, t_exec *exec);
 
 int		init_expand(t_expand *exp, char *line, t_env **env, char *delimiter);
-void	exiting(char **params, t_exec *exec);
+int		exiting(char **params, t_exec *exec);
 
 #endif
