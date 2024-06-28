@@ -1,4 +1,4 @@
-piping with heredoc
-&& and || with heredoc
-heredoc expansion
-
+<<<<a ls
+ls && (echo hi)
+uwu && (echo hi)
+cd with no parameters (exit code 1)
