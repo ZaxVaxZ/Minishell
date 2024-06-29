@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/06/26 13:27:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/29 13:08:07 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, t_msh *m)
 	t_queue	*q;
 	t_cmd	*cmds;
 	char	*trimmed;
+	int		p_cleanup;
 
 	if (!cmd_line || !*cmd_line || cmd_line[0] == NL)
 		return (free_up(cmd_line, NULL, NULL));
@@ -61,9 +62,10 @@ static int	handle_cmd_line(char *cmd_line, t_env *envp, t_msh *m)
 		add_history(trimmed);
 		free(trimmed);
 	}
-	if (parse_clean_up(&q, envp) == -2)
+	p_cleanup = parse_clean_up(&q, envp);
+	if (p_cleanup == -2)
 		return (0);
-	if (parse_clean_up(&q, envp))
+	if (p_cleanup)
 	{
 		tmp = ft_itoa(258);
 		free(cmd_line);

@@ -6,11 +6,29 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 13:31:22 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/28 12:23:17 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/06/29 12:48:37 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
+
+t_bool	cd_home(t_env **env, char *pwd)
+{
+	if (get_var(*env, "HOME"))
+	{
+		if (set_var(env, "OLDPWD", pwd, True) == False)
+			return (False);
+		chdir(get_var(*env, "HOME"));
+		if (set_var(env, "PWD", get_var(*env, "HOME"), True) == False)
+			return (False);
+	}
+	else
+	{
+		write(2, "cd: HOME not set\n", 17);
+		return (False);
+	}
+	return (True);
+}
 
 t_bool	cd(t_env **env, char *pwd, char *dir)
 {
@@ -18,7 +36,7 @@ t_bool	cd(t_env **env, char *pwd, char *dir)
 	t_bool	ret;
 
 	if (!dir)
-		return (True);
+		return (cd_home(env, pwd));
 	if (dir[0] == '/')
 		tmp = ft_strdup(dir);
 	else
