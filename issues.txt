@@ -2,3 +2,5 @@ heredoc issues:
 	$$USER expected behaviour: print the result of the variable $$ and then print USER
 
 --track-fds=yes --tool=memcheck --leak-check=full --show-leak-kinds=all --track-children=yes
+
+valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp --trace-children=yes --track-fds=yes ./bin/minishell

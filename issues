@@ -2,3 +2,14 @@
 ls && (echo hi)
 uwu && (echo hi)
 cd with no parameters (exit code 1)
+
+ls | <<>file1					> > > > > > > > >file1: command not found 
+
+fix heredoc delimiter parsing
+don't allow parse tokens after illegal
+heredoc taking input from duped pipe (FIXED)
+echo hi > $ksjflsdj (redirect to a variable that doesn't exist in the environment)
+heredoc with an outfile
+capitalization of commands (use strcasecmp to strcmp the commands rather than strncmp)
+ls && <<a cat | <<b cat SEGV on unknown address
+echo hi <<a ls (should heredoc but not heredoc-ing)

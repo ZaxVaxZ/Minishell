@@ -6,13 +6,13 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/06/28 12:45:48 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/09 16:41:37 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-int	wait_for_children(t_exec *exec, int *stand_in, int *stand_out)
+int	wait_for_children(t_exec *exec)
 {
 	int		status;
 	pid_t	child;
@@ -33,15 +33,25 @@ int	wait_for_children(t_exec *exec, int *stand_in, int *stand_out)
 	}
 	signal(SIGINT, sig_handle);
 	signal(SIGQUIT, SIG_IGN);
-	if (stand_in)
+	if (exec->std_in && *exec->std_in)
 	{
-		if (dup_and_check(*stand_in, STDIN_FILENO, exec) == -1)
+		if (dup_and_check(*exec->std_in, STDIN_FILENO, exec) == -1)
 			return (-1);
 	}
-	if (stand_out)
+	if (exec->std_out && *exec->std_out)
 	{
-		if (dup_and_check(*stand_out, STDOUT_FILENO, exec) == -1)
+		if (dup_and_check(*exec->std_out, STDOUT_FILENO, exec) == -1)
 			return (-1);
+	}
+	if (exec->std_in)
+	{
+		free(exec->std_in);
+		exec->std_in = NULL;
+	}
+	if (exec->std_out)
+	{
+		free(exec->std_out);
+		exec->std_out = NULL;
 	}
 	return (1);
 }
@@ -111,9 +121,10 @@ int	exec_type(t_exec *exec, t_cmd **cmd)
 	if ((*cmd)->rep == RP)
 		return (DO_NOT_EXECUTE);
 	if ((*cmd)->heredoc && (*cmd)->after == AND_OP && (*cmd)->next && (*cmd)->next->heredoc)
-		(*cmd)->or_op = True;
+		return (DO_NOT_EXECUTE);
+		//(*cmd)->or_op = True;
 	if ((*cmd)->before == OR_OP || (*cmd)->before == AND_OP || (*cmd)->before == SEMICOLON)
-		wait_for_children(exec, NULL, NULL);
+		wait_for_children(exec);
 	while (*cmd)
 	{
 		exec->curr_depth += ((*cmd)->rep == LP);

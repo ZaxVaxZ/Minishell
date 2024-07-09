@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/06/26 13:43:18 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/08 20:53:38 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ typedef struct s_exec
 	int		last_status;
 	int		last_op;
 	int		*exit_status;
+	int		*std_in;
+	int		*std_out;
 	t_env	**env;
 	pid_t	last_pid;
 	t_cmd	**cmd_head;
@@ -82,7 +84,7 @@ t_bool	clean_whitespace(t_queue *q);
 int		exec_type(t_exec *exec, t_cmd **cmd);
 char	*search_path(t_env **env, t_cmd *cmd);
 t_bool	should_exec(t_exec *exec, t_cmd *cmd);
-int		wait_for_children(t_exec *exec, int *stand_in, int *stand_out);
+int		wait_for_children(t_exec *exec);
 
 t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec);
 t_bool	execute(t_env **env, t_cmd *cmd, t_exec *exec);

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/06/26 15:02:09 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/08 23:03:08 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,27 @@ t_bool	execute(t_env **env, t_cmd *cmd, t_exec *exec)
 	return (False);
 }
 
-int	init_exec(t_exec *exec, int *stand_in, int *stand_out, t_cmd **cmds)
+int	init_exec(t_exec *exec, t_cmd **cmds)
 {
-	*stand_in = dup(STDIN_FILENO);
-	if (*stand_in == -1)
+	exec->std_in = malloc(sizeof(int));
+	if (!exec->std_in)
+	{
+		exec->std_out = NULL;
 		return (-1);
-	*stand_out = dup(STDOUT_FILENO);
-	if (*stand_out == -1)
+	}
+	exec->std_out = malloc(sizeof(int));
+	if (!exec->std_out)
+	{
+		free(exec->std_in);
+		exec->std_in = NULL;
+		exec->std_out = NULL;
+		return (-1);
+	}
+	*exec->std_in = dup(STDIN_FILENO);
+	if (*exec->std_in == -1)
+		return (-1);
+	*exec->std_out = dup(STDOUT_FILENO);
+	if (*exec->std_out == -1)
 		return (-1);
 	exec->overall_status = 0;
 	exec->status_depth = 0;
@@ -118,10 +132,8 @@ t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec)
 int	execute_commands(t_env **env, t_cmd *cmd, int *status)
 {
 	t_exec	exec;
-	int		sin;
-	int		sout;
 
-	if (init_exec(&exec, &sin, &sout, &cmd) == -1)
+	if (init_exec(&exec, &cmd) == -1)
 		return (-1);
 	exec.env = env;
 	exec.exit_status = status;
@@ -139,7 +151,7 @@ int	execute_commands(t_env **env, t_cmd *cmd, int *status)
 		if (cmd)
 			cmd = cmd->next;
 	}
-	if (wait_for_children(&exec, &sin, &sout) == -1)
+	if (wait_for_children(&exec) == -1)
 		return (-1);
 	if (exec.ret != -5)
 		*status = exec.last_status;

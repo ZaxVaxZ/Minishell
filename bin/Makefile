@@ -1,7 +1,7 @@
 ### []+--------={ Commands and Flags }=--------+[] ###
 CC		=	cc
-CFLAGS	=	-Wall -Wextra -Werror -O3
-CFLAGS	+=	-fsanitize=address -g3
+#CFLAGS	=	-Wall -Wextra -Werror -O3
+#CFLAGS	+=	-fsanitize=address -g3
 
 ### []+--------={ Directories }=--------+[] ###
 INC		=	./../inc
@@ -18,7 +18,7 @@ EXE		=	$(SFD)/run
 SRCS	=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c		\
 			$(LFT)/ft_substr.c $(LFT)/ft_strchr.c $(LFT)/ft_strjoin.c		\
 			$(LFT)/ft_strjoin_chr.c $(LFT)/ft_split.c $(LFT)/ft_itoa.c		\
-			$(LFT)/ft_strtrim.c $(LFT)/ft_atoi.c							\
+			$(LFT)/ft_strtrim.c $(LFT)/ft_atoi.c ../src/minishell_utils.c	\
 			$(GNL)/get_next_line.c $(GNL)/get_next_line_utils.c				\
 			$(PRF)/ft_mods_utils.c $(PRF)/ft_printaddr.c $(PRF)/ft_printf.c	\
 			$(PRF)/ft_printhex.c $(PRF)/ft_printstr.c $(PRF)/ft_printchar.c	\
