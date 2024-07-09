@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/08 20:53:38 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/09 20:23:53 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ typedef struct s_exec
 	int		last_status;
 	int		last_op;
 	int		*exit_status;
-	int		*std_in;
-	int		*std_out;
+	int		std_in;
+	int		std_out;
 	t_env	**env;
 	pid_t	last_pid;
 	t_cmd	**cmd_head;

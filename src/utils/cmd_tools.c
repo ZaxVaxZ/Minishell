@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/05/01 18:35:48 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/09 18:53:28 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,8 @@ t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
 			q = q->next;
 		}
 		q = after_cmd(q, tmp, cmds);
-		tmp_before = tmp->after;
+		if (tmp->after)
+			tmp_before = tmp->after;
 	}
 	return (True);
 }

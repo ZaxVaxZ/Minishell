@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/09 16:36:53 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/09 20:24:20 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,8 @@ void	heredoc_child(t_heredoc *h)
 	g_signum = -1;
 	if (h->cmd->before == PIPE_OP)
 	{
-		if (h->exec->std_in)
-		{
-			temp_in = dup(*h->exec->std_in);
-			dup2(temp_in, STDIN_FILENO);
-		}
+		temp_in = dup(h->exec->std_in);
+		dup2(temp_in, STDIN_FILENO);
 	}
 	while (1)
 	{

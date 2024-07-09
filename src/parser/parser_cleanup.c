@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 04:46:55 by marvin            #+#    #+#             */
-/*   Updated: 2024/06/29 13:10:56 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/09 22:05:02 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,8 @@ int	parse_clean_up(t_queue **h, t_env *envp)
 		return (syntax_error(h, queue_end(q)->s, False, (!queue_end(q)->s)));
 	while (q)
 	{
+		if (q->type == Op_redir && !ft_strncmp(q->s, "<<", -1) && q->next->type == Illegal)
+			return (syntax_error(h, q->next->s, 0, 0));
 		open[0] += (q->type == Sq_open) - (q->type == Sq_closed);
 		open[1] += (q->type == Dq_open) - (q->type == Dq_closed);
 		open[2] += (q->type == Bracket_open) - (q->type == Bracket_closed);

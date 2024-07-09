@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/09 16:41:37 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/09 20:24:24 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,26 +33,10 @@ int	wait_for_children(t_exec *exec)
 	}
 	signal(SIGINT, sig_handle);
 	signal(SIGQUIT, SIG_IGN);
-	if (exec->std_in && *exec->std_in)
-	{
-		if (dup_and_check(*exec->std_in, STDIN_FILENO, exec) == -1)
-			return (-1);
-	}
-	if (exec->std_out && *exec->std_out)
-	{
-		if (dup_and_check(*exec->std_out, STDOUT_FILENO, exec) == -1)
-			return (-1);
-	}
-	if (exec->std_in)
-	{
-		free(exec->std_in);
-		exec->std_in = NULL;
-	}
-	if (exec->std_out)
-	{
-		free(exec->std_out);
-		exec->std_out = NULL;
-	}
+	if (dup_and_check(exec->std_in, STDIN_FILENO, exec) == -1)
+		return (-1);
+	if (dup_and_check(exec->std_out, STDOUT_FILENO, exec) == -1)
+		return (-1);
 	return (1);
 }
 
@@ -134,6 +118,6 @@ int	exec_type(t_exec *exec, t_cmd **cmd)
 			break ;
 	}
 	if (!*cmd || (*cmd)->rep == RP)
-		return (DO_NOT_EXECUTE);	
+		return (DO_NOT_EXECUTE);
 	return (IMMEDIATE_EXEC);
 }

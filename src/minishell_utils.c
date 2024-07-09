@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:44:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/09 17:38:25 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/09 21:30:50 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	add_to_history(char *cmd_line, t_queue *q)
 {
 	char	*trimmed_str;
 
-	if (q)
+	if (q && q->type == Word)
 	{
 		trimmed_str = ft_strtrim(cmd_line, "\n");
 		if (!trimmed_str)
@@ -92,6 +92,22 @@ int	handle_cmd_line(char *cmd_line, t_env **envp, t_msh *m)
 	print_queue(q);
 	if (!build_commands(&q, &cmds, envp))
 		return (1);
+	//for (t_cmd *t = cmds; t; t = t->next)
+	//{
+	//	const char *strs[] = {[AND_OP]= "and",
+	//					[OR_OP]= "or",
+	//					[PIPE_OP] = "pipe",
+	//					[SEMICOLON] = "semicolon"};
+	//	if (t->params)
+	//		printf("command: %s Before: %s After: %s\n", t->params[0], strs[t->before], strs[t->after]);
+	//	else
+	//	{
+	//		if (t->rep == LP)
+	//			printf("LP\n");
+	//		else if (t->rep == RP)
+	//			printf("RP\n");
+	//	}
+	//}
 	ret = execute_commands(envp, cmds, &m->status);
 	if (ret == -5)
 	{
