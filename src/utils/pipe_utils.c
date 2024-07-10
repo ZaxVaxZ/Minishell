@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/09 16:53:03 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/10 20:36:57 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,21 +90,12 @@ void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 {
 	int	ret;
 
-	//signal(SIGINT, child_sig);
 	if (open_outs_and_in(cmd, exec) == -1)
 		child_free_and_exit(env, exec, exec->last_status);
 	dups_and_closes(cmd, exec, env, fds);
 	ret = resolve_builtin(env, cmd, exec, True);
 	if (ret == 0)
-	{
-		//if (execute(env, cmd, exec) == False)
 		execute(env, cmd, exec);
-			//exec->last_status = EXIT_FAILURE;
-	}
-	//else if (ret == -1)
-	//	exec->last_status = EXIT_FAILURE;
-	//else
-	//	exec->last_status = SUCCESS;
 	child_free_and_exit(env, exec, exec->last_status);
 }
 
@@ -112,14 +103,14 @@ int	parent_process(t_cmd *cmd, t_exec *exec, int *fds)
 {
 	if (cmd->before == PIPE_OP || cmd->after == PIPE_OP)
 	{
-		if (cmd->heredoc)
-			return (1);
-		else if (close_and_check(fds[1], exec) == -1)
+		//if (cmd->heredoc)
+		//	return (1);
+		if (close_and_check(fds[1], exec) == -1)
 			return (-1);
 		if (dup_and_check(fds[0], STDIN_FILENO, exec) == -1)
 			return (-1);
 		if (close_and_check(fds[0], exec) == -1)
 			return (-1);
-	}	
+	}
 	return (1);
 }

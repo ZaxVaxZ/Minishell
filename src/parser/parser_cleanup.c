@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 04:46:55 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/09 22:05:02 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/10 19:08:17 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,3 +191,9 @@ int	parse_clean_up(t_queue **h, t_env *envp)
 		return (-1);
 	return (ret);
 }
+
+/*
+	if a word was found and an opening bracket follows;
+		the string after the bracket is taken as the illegal token
+	else if a word was found and a word
+*/

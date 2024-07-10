@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/09 20:23:47 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/10 20:49:53 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,17 @@ t_bool	execute(t_env **env, t_cmd *cmd, t_exec *exec)
 int	init_exec(t_exec *exec, t_cmd **cmds)
 {
 	exec->std_in = dup(STDIN_FILENO);
+	if (exec->std_in == -1)
+	{
+		perror(NULL);
+		return (-1);
+	}
 	exec->std_out = dup(STDOUT_FILENO);
+	if (exec->std_out == -1)
+	{
+		perror(NULL);
+		return (-1);
+	}
 	exec->overall_status = 0;
 	exec->status_depth = 0;
 	exec->last_status = 0;

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/09 20:23:53 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/10 20:16:01 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@
 # define IMMEDIATE_EXEC 2
 # define CHILD_PROCESS 0
 # define SUCCESS 0
+# define READEND 0
+# define WRITEEND 1
 
 typedef struct s_exec
 {

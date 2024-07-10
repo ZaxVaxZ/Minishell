@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/09 20:24:20 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/10 21:06:32 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	check_and_write(t_heredoc *h, char **ret, char **line)
 	if (!ft_strncmp(*ret, h->cmd->infiles[h->i], ft_strlen(*ret) - 1)
 		&& ft_strlen(*ret) - 1 == ft_strlen(h->cmd->infiles[h->i]))
 		return (0);
-	if (write(h->fds[1], *ret, ft_strlen(*ret)) == -1)
+	if (write(h->fds[WRITEEND], *ret, ft_strlen(*ret)) == -1)
 	{
 		h->exec->last_status = EXIT_FAILURE;
 		return (-1);
@@ -55,7 +55,7 @@ void	heredoc_child(t_heredoc *h)
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, heredoc_sigquit);
-	close(h->fds[0]);
+	close(h->fds[READEND]);
 	g_signum = -1;
 	if (h->cmd->before == PIPE_OP)
 	{
@@ -73,12 +73,12 @@ void	heredoc_child(t_heredoc *h)
 		while (line[i])
 		{
 			if (line[i] != DS)
-				write(h->fds[1], line + i, 1);
+				write(h->fds[WRITEEND], line + i, 1);
 			else
 			{
 				if (!is_valid_var_char(line[i + 1]))
 				{
-					write(h->fds[1], line + i++, 1);
+					write(h->fds[WRITEEND], line + i++, 1);
 					continue ;
 				}
 				else if (found_in(line[i + 1], DIGIT))
@@ -91,7 +91,7 @@ void	heredoc_child(t_heredoc *h)
 					j++;
 				var = ft_substr(line, i, j - i);
 				if (var && get_var(*(h->env), var))
-					write(h->fds[1], get_var(*(h->env), var), ft_strlen(get_var(*(h->env), var)));
+					write(h->fds[WRITEEND], get_var(*(h->env), var), ft_strlen(get_var(*(h->env), var)));
 				if (var)
 					free(var);
 				i = j - 1;
@@ -100,7 +100,7 @@ void	heredoc_child(t_heredoc *h)
 		}
 		free(line);
 	}
-	close(h->fds[1]);
+	close(h->fds[WRITEEND]);
 	if (line)
 		free(line);
 	exit(h->exec->last_status);
@@ -108,7 +108,7 @@ void	heredoc_child(t_heredoc *h)
 
 t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec, t_env **env)
 {
-	int	ex;
+	int		ex;
 	char	*tmp;
 
 	waitpid(exec->last_pid, &ex, 0);
@@ -124,11 +124,11 @@ t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec, t_env **env)
 		free(tmp);
 		return (False);
 	}
-	close(fds[1]);
-	(*cmd)->in_fd = dup(fds[0]);
+	close(fds[WRITEEND]);
+	(*cmd)->in_fd = dup(fds[READEND]);
 	if ((*cmd)->in_fd == -1)
 		return (False);
-	close(fds[0]);
+	close(fds[READEND]);
 	if (ex == EXIT_FAILURE)
 		return (False);
 	return (True);
