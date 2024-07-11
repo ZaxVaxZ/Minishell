@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/10 20:34:52 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/11 19:27:25 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	resolve_builtin(t_env **env, t_cmd *cmd, t_exec *exec, t_bool child)
 	if (cmd->infile_cnt || cmd->outfile_cnt)
 	{
 		if (open_outs_and_in(cmd, exec) == -1)
-			return (-1);
+			return (2);
 	}
 	if (cmd->outfile_cnt)
 	{

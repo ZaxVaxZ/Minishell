@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/10 20:36:57 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/11 20:53:09 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 {
 	int	ret;
 
+	close(exec->std_in);
+	close(exec->std_out);
 	if (open_outs_and_in(cmd, exec) == -1)
 		child_free_and_exit(env, exec, exec->last_status);
 	dups_and_closes(cmd, exec, env, fds);

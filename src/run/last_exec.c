@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/10 20:49:53 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/11 19:29:35 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,11 @@ t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec)
 	exec->ret = resolve_builtin(env, *cmd, exec, False);
 	if (exec->ret == -5)
 		return (False);
+	else if (exec->ret == 2)
+	{
+		exec->last_status = EXIT_FAILURE;
+		return (True);
+	}
 	if (exec->ret < 0)
 	{
 		exec->last_status = EXIT_FAILURE;
