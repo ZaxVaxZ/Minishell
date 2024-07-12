@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:44:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/10 15:14:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/12 12:13:28 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	handle_cmd_line(char *cmd_line, t_env **envp, t_msh *m)
 	if (syntax_error_cleanup(envp, cmd_line, p_cleanup == 1) <= 0)
 		return (1);
 	clean_whitespace(q);
-	print_queue(q);
+	//print_queue(q);
 	if (!build_commands(&q, &cmds, envp))
 		return (1);
 	//for (t_cmd *t = cmds; t; t = t->next)

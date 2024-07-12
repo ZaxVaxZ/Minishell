@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 05:47:46 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/26 18:53:45 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/12 14:33:30 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 typedef struct s_cmd
 {
+	int				last_fd;
 	int				status;
 	int				in_fd;
 	int				out_fd;

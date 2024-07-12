@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/10 21:06:32 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/12 19:02:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,10 @@ void	heredoc_child(t_heredoc *h)
 	g_signum = -1;
 	if (h->cmd->before == PIPE_OP)
 	{
-		temp_in = dup(h->exec->std_in);
-		dup2(temp_in, STDIN_FILENO);
+		if (dup_and_check(h->exec->std_in, STDIN_FILENO, h->exec) == -1)
+			return ;
+		if (close_and_check(h->exec->std_in, h->exec) == -1)
+			return ;
 	}
 	while (1)
 	{
@@ -103,6 +105,13 @@ void	heredoc_child(t_heredoc *h)
 	close(h->fds[WRITEEND]);
 	if (line)
 		free(line);
+	close(h->exec->std_in);
+	close(h->exec->std_out);
+	if (h->cmd->after == PIPE_OP || h->cmd->before == PIPE_OP)
+	{
+		close(h->exec->fds[READEND]);
+		close(h->exec->fds[WRITEEND]);
+	}
 	exit(h->exec->last_status);
 }
 
@@ -122,6 +131,8 @@ t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec, t_env **env)
 			return (False);
 		set_var(env, "?", tmp, False);
 		free(tmp);
+		close(fds[WRITEEND]);
+		close(fds[READEND]);
 		return (False);
 	}
 	close(fds[WRITEEND]);

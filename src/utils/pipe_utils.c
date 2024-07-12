@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/11 20:53:09 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/12 19:41:24 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	open_outs_and_in(t_cmd *cmd, t_exec *exec)
 			if (i != cmd->outfile_cnt - 1 && close_and_check(cmd->out_fd, exec) == -1)
 				return (-1);
 		}
-	}
+	}\
 	return (1);
 }
 
@@ -103,15 +103,19 @@ void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 
 int	parent_process(t_cmd *cmd, t_exec *exec, int *fds)
 {
+	if (cmd->in_fd)
+	{
+		if (close_and_check(cmd->in_fd, exec) == -1)
+			return (-1);
+	}
 	if (cmd->before == PIPE_OP || cmd->after == PIPE_OP)
 	{
-		//if (cmd->heredoc)
-		//	return (1);
-		if (close_and_check(fds[1], exec) == -1)
+		if (close_and_check(fds[WRITEEND], exec) == -1)
 			return (-1);
-		if (dup_and_check(fds[0], STDIN_FILENO, exec) == -1)
-			return (-1);
-		if (close_and_check(fds[0], exec) == -1)
+		if (cmd->after == PIPE_OP)
+			if (dup_and_check(fds[READEND], STDIN_FILENO, exec) == -1)
+				return (-1);
+		if (close_and_check(fds[READEND], exec) == -1)
 			return (-1);
 	}
 	return (1);

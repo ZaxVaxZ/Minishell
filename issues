@@ -25,3 +25,10 @@ heredoc with an outfile
 when infile cant be opened and the next command is OR'd, the next command won't execute
 ls (echo hi) -> syntax error near unexpected token: echo (token after LP should be considered the error)
 <<a ls && <<b cat -> cat will run indefinitely
+closing the temp stdin and stdout in the parent
+
+ls | echo hi: process terminating with signal 13 (SIGPIPE)
+	supposedly, ls is writing to a broken pipe
+
+<<a ls | <<b ls
+	atleast 1 to 2 extra file descriptors opened

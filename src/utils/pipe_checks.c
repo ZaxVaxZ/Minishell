@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:58:04 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/10 20:20:37 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/12 14:36:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,10 @@ int	close_and_check(int fd, t_exec *exec)
 		if (exec)
 			exec->last_status = EXIT_FAILURE;
 		perror(NULL);
+		fd = -1;
 		return (-1);
 	}
+	fd = -1;
 	return (1);
 }
 
