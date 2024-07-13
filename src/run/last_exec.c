@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/12 19:32:44 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/13 17:19:58 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ t_bool	execute(t_env **env, t_cmd *cmd, t_exec *exec)
 	{
 		if (com)
 			free(com);
-		ft_freeup(tmp);
+		if (tmp)
+			ft_freeup(tmp);
 		write_error(cmd->params[0]);
 		write_error(": command not found\n");
 		exec->last_status = 127;
@@ -100,6 +101,7 @@ t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec)
 		return (True);
 	if ((*cmd)->before == PIPE_OP || (*cmd)->after == PIPE_OP)
 	{
+		printf("opening pipes for cmd %s in handle_cmds\n", (*cmd)->params[0]);
 		if (pipe_and_check(fds, exec) == -1)
 			return (False);
 		exec->fds = fds;

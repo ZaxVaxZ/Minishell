@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:58:04 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/12 14:36:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/13 12:04:16 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ int	pipe_and_check(int *fds, t_exec *exec)
 
 int	close_and_check(int fd, t_exec *exec)
 {
-	if (fd < 0 || close(fd) == -1)
+	if (fd < 0)
+		return (1);
+	if (close(fd) == -1)
 	{
 		if (exec)
 			exec->last_status = EXIT_FAILURE;

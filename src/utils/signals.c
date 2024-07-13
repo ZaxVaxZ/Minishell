@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 20:19:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/09 21:32:17 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/13 15:51:50 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	sig_handle(int sig)
 	{
 		g_signum = sig;
 		rl_replace_line("", 0);
-		write(1, "\n", 1);
+		write(1, TEXT_RESET"\n", ft_strlen(TEXT_RESET) + 1);
 		rl_on_new_line();
 		rl_redisplay();
 	}

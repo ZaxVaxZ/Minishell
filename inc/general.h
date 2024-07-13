@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/08 12:04:10 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/13 15:16:46 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,6 @@ typedef struct s_msh
 
 char	*return_cwd(char *old_cwd);
 void	rl_replace_line (const char *text, int clear_undo);
-char	*get_line(char *cwd);
+char	*get_line(void);
 
 #endif

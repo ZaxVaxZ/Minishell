@@ -1,3 +1,5 @@
+valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp --track-fds=yes --trace-children=yes ./bin/minishell
+
 <<<<a ls
 ls && (echo hi)
 uwu && (echo hi)
@@ -22,13 +24,15 @@ using an invalid file as infile causes permission denied to be printed twice (FI
 
 heredoc with an outfile
 
-when infile cant be opened and the next command is OR'd, the next command won't execute
+when infile cant be opened and the next command is OR'd, the next command won't execute (FIXED)
 ls (echo hi) -> syntax error near unexpected token: echo (token after LP should be considered the error)
-<<a ls && <<b cat -> cat will run indefinitely
-closing the temp stdin and stdout in the parent
+<<a ls && <<b cat -> cat will run indefinitely (FIXED)
+closing the temp stdin and stdout in the parent (FIXED)
 
-ls | echo hi: process terminating with signal 13 (SIGPIPE)
-	supposedly, ls is writing to a broken pipe
+ls | echo hi: process terminating with signal 13 (SIGPIPE) (FIXED)
+	supposedly, ls is writing to a broken pipe (FIXED)
 
 <<a ls | <<b ls
-	atleast 1 to 2 extra file descriptors opened
+	atleast 1 to 2 extra file descriptors opened (FIXED)
+
+sleep 2; echo hi: bad file descriptor

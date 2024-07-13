@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/12 16:00:16 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/13 14:45:39 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	*search_path(t_env **env, t_cmd *cmd)
 	if (!cmd->params || !cmd->params[0])
 		return (NULL);
 	if (!get_var(*env, "PATH"))
-		return (cmd->params[0]);
+		return (ft_strdup(cmd->params[0]));
 	paths = ft_split(get_var(*env, "PATH"), ':');
 	if (!paths)
 		return (NULL);

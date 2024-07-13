@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/08 22:52:39 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/13 17:23:27 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,14 @@ char	*return_cwd(char *old_cwd)
 	return (final);
 }
 
-char	*get_line(char *cwd)
+char	*get_line(void)
 {
 	char	*new;
 	char	*cmd;
+	char	*buf;
 
-	cmd = readline(cwd);
+	cmd = readline("minishell > ");
+	//cmd = readline(YELLOW_BOLD"shell > "TEXT_RESET);
 	new = NULL;
 	if (!cmd)
 		return (NULL);
@@ -119,7 +121,7 @@ int	main(int ac, char **av, char **env)
 	{
 		write(1, TEXT_RESET, ft_strlen(TEXT_RESET));
 		if (g_signum != SIGINT)
-			m.line = get_line(m.cwd);
+			m.line = get_line();
 		if (set_sig(&m.env) == False)
 			break ;
 		if (!m.line)
