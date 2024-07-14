@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/13 17:23:27 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 14:46:56 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,33 +32,6 @@ extern int	g_signum;
 int		free_up(char *cmd_line, t_queue **q, t_cmd **cmds);
 int		handle_cmd_line(char *cmd_line, t_env **envp, t_msh *m);
 
-char	*return_cwd(char *old_cwd)
-{
-	char	*final;
-	char	*cwd;
-	int		i;
-
-	if (old_cwd)
-		free(old_cwd);
-	cwd = getcwd(NULL, 0);
-	if (cwd == NULL)
-	{
-		write(2, "Path too large\n", 15);
-		return (NULL);
-	}
-	final = malloc(sizeof(char) * (ft_strlen(cwd) + 3));
-	if (!final)
-		return (NULL);
-	i = -1;
-	while (cwd[++i])
-		final[i] = cwd[i];
-	final[i++] = '>';
-	final[i++] = ' ';
-	final[i] = 0;
-	free(cwd);
-	return (final);
-}
-
 char	*get_line(void)
 {
 	char	*new;
@@ -66,7 +39,6 @@ char	*get_line(void)
 	char	*buf;
 
 	cmd = readline("minishell > ");
-	//cmd = readline(YELLOW_BOLD"shell > "TEXT_RESET);
 	new = NULL;
 	if (!cmd)
 		return (NULL);
@@ -76,6 +48,7 @@ char	*get_line(void)
 	if (cmd)
 		free(cmd);
 	return (new);
+	return (NULL);
 }
 
 t_bool	shllvlhandle(t_env **env)
@@ -102,7 +75,6 @@ int	main(int ac, char **av, char **env)
 	char		*zero;
 
 	g_signum = -1;
-	m.cwd = return_cwd(NULL);
 	m.env = to_env_list(env);
 	zero = ft_strdup("0");
 	add_var(&m.env, "?", zero);
@@ -112,15 +84,13 @@ int	main(int ac, char **av, char **env)
 	if (!shllvlhandle(&m.env))
 	{
 		free_env(&m.env);
-		if (m.cwd)
-			free(m.cwd);
 		return (1);
 	}
 	m.status = 0;
 	while (True)
 	{
 		write(1, TEXT_RESET, ft_strlen(TEXT_RESET));
-		if (g_signum != SIGINT)
+		if (g_signum != SIGINT && isatty(0))
 			m.line = get_line();
 		if (set_sig(&m.env) == False)
 			break ;
@@ -129,10 +99,7 @@ int	main(int ac, char **av, char **env)
 		cmd_ret = handle_cmd_line(m.line, &m.env, &m);
 		if (cmd_ret == -2 || cmd_ret == -5)
 			break ;
-		m.cwd = return_cwd(m.cwd);
 	}
-	if (m.cwd)
-		free(m.cwd);
 	free_env(&m.env);
 	clear_history();
 	exit(m.status);

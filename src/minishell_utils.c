@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:44:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/12 12:13:28 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 13:24:08 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,17 @@
 #include <readline/history.h>
 
 int	free_up(char *cmd_line, t_queue **q, t_cmd **cmds)
-{\
-	cmd_line = NULL;
+{
+	if (cmd_line)
+	{
+		free(cmd_line);
+		cmd_line = NULL;
+	}
 	if (q)
 		free_queue(q);
 	if (cmds)
 		free_cmd(cmds);
+	printf("freed\n");
 	return (0);
 }
 
@@ -112,7 +117,10 @@ int	handle_cmd_line(char *cmd_line, t_env **envp, t_msh *m)
 	if (ret == -5)
 	{
 		if (!m->status && ft_strncmp(get_var(*envp, "?"), "0", -1))
+		{
+			free_up(cmd_line, &q, &cmds);
 			exit(ft_atoi(get_var(*envp, "?")));
+		}
 		free_up(cmd_line, &q, &cmds);
 		return (ret);
 	}
@@ -126,5 +134,6 @@ int	handle_cmd_line(char *cmd_line, t_env **envp, t_msh *m)
 	else
 		ret = -2;
 	free_up(cmd_line, &q, &cmds);
+	printf("done\n");
 	return (ret);
 }

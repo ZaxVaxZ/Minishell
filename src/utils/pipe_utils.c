@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/13 14:47:04 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 15:07:09 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
 	ret = resolve_builtin(env, cmd, exec, True);
 	if (ret == 0)
 		execute(env, cmd, exec);
-	//printf("exiting because execute returned false\n");
 	child_free_and_exit(env, exec, exec->last_status);
 }
 

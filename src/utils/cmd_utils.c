@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 05:23:45 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/18 17:22:24 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 13:44:48 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ t_bool	prep_cmd(t_queue *q, t_cmd **node)
 	params = malloc(sizeof(char *) * (count_words(q) + 1));
 	if (!params)
 		return (False);
-	*node = new_cmd_node(params);
+	*node = new_cmd_node(params, &q);
 	in = 0;
 	out = 0;
 	if (!*node)

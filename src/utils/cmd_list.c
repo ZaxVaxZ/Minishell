@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:13:59 by pipolint          #+#    #+#             */
-/*   Updated: 2024/04/18 15:45:19 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 13:44:27 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 /// @param key Variable name as the key
 /// @param value The value stored for the variable
 /// @return Returns the created node. NULL if a malloc fails
-t_cmd	*new_cmd_node(char **params)
+t_cmd	*new_cmd_node(char **params, t_queue **q)
 {
 	t_cmd	*node;
 
@@ -48,6 +48,7 @@ t_cmd	*new_cmd_node(char **params)
 	node->before = 0;
 	node->after = 0;
 	node->next = NULL;
+	node->parse = q;
 	return (node);
 }
 

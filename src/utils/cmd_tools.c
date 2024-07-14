@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/09 18:53:28 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 13:44:42 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static t_queue	*before_cmd(t_queue *q, t_cmd **cmds)
 		return (NULL);
 	while (q && q->type == Bracket_open)
 	{
-		p = new_cmd_node(NULL);
+		p = new_cmd_node(NULL, &q);
 		if (!p)
 			return (NULL);
 		p->rep = LP;
@@ -59,7 +59,7 @@ static t_queue	*after_cmd(t_queue *q, t_cmd *tmp, t_cmd **cmds)
 	{
 		if (q->type == Bracket_closed)
 		{
-			p = new_cmd_node(NULL);
+			p = new_cmd_node(NULL, &q);
 			if (!p)
 				return (NULL);
 			p->rep = RP;
