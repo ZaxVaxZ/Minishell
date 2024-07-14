@@ -36,3 +36,9 @@ ls | echo hi: process terminating with signal 13 (SIGPIPE) (FIXED)
 	atleast 1 to 2 extra file descriptors opened (FIXED)
 
 sleep 2; echo hi: bad file descriptor
+
+exit status after sigint with any command: always changes the exit status to 1
+after siginting a process besides heredoc, exit should be 130
+sigquit not setting exit status to 131
+builtins not setting the correct exit status
+syntax error should return exit status of 258

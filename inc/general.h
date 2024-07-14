@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/13 15:16:46 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 18:32:58 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,13 @@
 # define SC ';'
 # define DS '$'
 
+# define SUCCESS 0
+# define FAILURE 1
+# define ERR_MEM 2
+# define ERR_DUP 3
+# define ERR_WRT 4
+# define ERR_CLS 5
+
 # include <stdio.h>
 # include <sys/wait.h>
 # include <readline/readline.h>
@@ -77,33 +84,10 @@
 
 /* int	g_signum; */
 
-typedef enum e_bool
-{
-	False,
-	True
-}	t_bool;
-
-typedef struct s_env
-{
-	char			*key;
-	char			*value;
-	t_bool			exported;
-	struct s_env	*next;
-}	t_env;
-
-
-typedef struct s_msh
-{
-	char	*line;
-	char	*cwd;
-	int		status;
-	void	*interrupt;
-	void	*q;
-	t_env	*env;
-}	t_msh;
-
 char	*return_cwd(char *old_cwd);
 void	rl_replace_line (const char *text, int clear_undo);
 char	*get_line(void);
+int		handle_msg(int msg);
+void	free_and_exit(t_main *m, int msg);
 
 #endif

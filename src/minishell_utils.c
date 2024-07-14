@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:44:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/14 13:24:08 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 17:55:46 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	syntax_error_cleanup(t_env **envp, char *cmd_line, int syntax_error)
 	return (1);
 }
 
-int	handle_cmd_line(char *cmd_line, t_env **envp, t_msh *m)
+int	handle_cmd_line(char *cmd_line, t_env **envp, t_main *m)
 {
 	int		ret;
 	char	*tmp;

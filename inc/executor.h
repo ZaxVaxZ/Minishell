@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/12 15:00:13 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 18:04:42 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <sys/wait.h>
 # include "get_next_line.h"
 # include "signals.h"
+# include "structs.h"
 
 # define NON 0
 # define OR_OP 1
@@ -40,45 +41,6 @@
 # define SUCCESS 0
 # define READEND 0
 # define WRITEEND 1
-
-typedef struct s_exec
-{
-	int		ret;
-	int		curr_depth;
-	int		status_depth;
-	int		overall_status;
-	int		last_status;
-	int		last_op;
-	int		*exit_status;
-	int		std_in;
-	int		std_out;
-	int		*fds;
-	t_env	**env;
-	pid_t	last_pid;
-	t_cmd	**cmd_head;
-}	t_exec;
-
-typedef struct s_heredoc
-{
-	t_env 	**env;
-	t_cmd 	*cmd;
-	t_exec 	*exec; 
-	int 	*fds;
-	int		i;
-}	t_heredoc;
-
-typedef struct s_expand
-{
-	char	*res;
-	char	*var;
-	char 	*line; 
-	t_env 	**env;
-	char	*name;
-	char 	**words;
-	int		newline;
-	char	*var_name;
-	char	*delimiter;
-}	t_expand;
 
 t_bool	clean_whitespace(t_queue *q);
 int		resolve_builtin(t_env **env, t_cmd *cmd, t_exec *exec, t_bool child);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/14 14:46:56 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 18:14:54 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 extern int	g_signum;
 
 int		free_up(char *cmd_line, t_queue **q, t_cmd **cmds);
-int		handle_cmd_line(char *cmd_line, t_env **envp, t_msh *m);
+int		handle_cmd_line(char *cmd_line, t_env **envp, t_main *m);
 
 char	*get_line(void)
 {
@@ -68,12 +68,24 @@ t_bool	shllvlhandle(t_env **env)
 	return (True);
 }
 
+static void	init_main_struct(t_main *m)
+{
+	m->line = NULL;
+	m->q = NULL;
+	m->env = NULL;
+	m->cmds = NULL;
+	m->cwd = NULL;
+	m->interrupt = NULL;
+	m->status = 0;
+}
+
 int	main(int ac, char **av, char **env)
 {
-	t_msh		m;
+	t_main		m;
 	int			cmd_ret;
 	char		*zero;
 
+	init_main_struct(&m);
 	g_signum = -1;
 	m.env = to_env_list(env);
 	zero = ft_strdup("0");

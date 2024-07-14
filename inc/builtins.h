@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 13:07:12 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/25 19:39:09 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 17:41:10 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include "env_list.h"
 # include "ft_printf.h"
 # include "executor.h"
+# include "structs.h"
 
 t_bool	cd(t_env **env, char *pwd, char *dir);
 t_bool	unset(t_env **env, char **params);

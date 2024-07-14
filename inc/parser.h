@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:32 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/05/30 16:01:38 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 18:07:43 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include "queues.h"
 # include "env_list.h"
 
-t_queue	*parse(char *s);
+t_queue	*parse(t_main *ms);
 t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs);
 t_bool	parse_double_quote(t_queue **q, char **s);
 t_bool	parse_single_quote(t_queue **q, char **s);

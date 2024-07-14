@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 13:21:55 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/10 18:43:09 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 18:42:41 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,28 +147,29 @@ static t_bool	parse_control(t_queue **q, char **s)
 /// @brief Parse a full line string into a queue
 /// @param s Full line of input
 /// @return Queue of parsed and labeled tokens
-t_queue	*parse(char *s)
+int	parse(t_main *ms)
 {
 	char	*prev_s;
-	t_queue	*q;
+	char	*s;
+	int		ret;
 
-	if (!s)
+	if (!ms->line)
 		return (NULL);
-	q = NULL;
+	s = ms->line;
 	prev_s = NULL;
-	while (prev_s != s)
+	while (prev_s != ms->line)
 	{
-		if (q && queue_end(q)->type != Whitespace)
-			parse_op(&q, &s, SPACE, 1);
+		if (ms->q && queue_end(ms->q)->type != Whitespace)
+			parse_op(&(ms->q), &s, SPACE, 1);
 		while (*s == SPACE || *s == TAB)
 			s++;
-		if (!is_legal_queue_end(q, s))
-			return (q);
+		if (!is_legal_queue_end(ms->q, s))
+			return (ms->q);
 		prev_s = s;
-		if (!parse_single_quote(&q, &s) || !parse_double_quote(&q, &s))
+		if (!parse_single_quote(&(ms->q), &s) || !parse_double_quote(&(ms->q), &s))
 			return (NULL);
-		if (!parse_command(&q, &s) || !parse_control(&q, &s))
+		if (!parse_command(&(ms->q), &s) || !parse_control(&(ms->q), &s))
 			return (NULL);
 	}
-	return (q);
+	return (SUCCESS);
 }

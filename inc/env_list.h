@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_list.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:14:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/05/01 20:49:21 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 17:40:55 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define ENV_LIST_H
 
 # include <stdlib.h>
-# include "general.h"
 # include "libft.h"
+# include "structs.h"
 
 t_env	*new_env_node(char *key, char *value, t_bool exported);
 void	add_env_node(t_env **env, t_env *to_add);

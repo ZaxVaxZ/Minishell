@@ -14,35 +14,8 @@
 # define QUEUES_H
 
 # include <stdlib.h>
-# include "general.h"
 # include "libft.h"
-
-typedef enum e_token
-{
-	Word,
-	Name,
-	Assign,
-	Op_redir,
-	Op_logic,
-	Op_pipe,
-	Variable,
-	Semicolon,
-	Sq_open,
-	Sq_closed,
-	Dq_open,
-	Dq_closed,
-	Bracket_open,
-	Bracket_closed,
-	Whitespace,
-	Illegal
-}	t_token;
-
-typedef struct s_queue
-{
-	char			*s;
-	t_token			type;
-	struct s_queue	*next;
-}	t_queue;
+# include "structs.h"
 
 t_queue	*new_node(char *s);
 char	*dequeue(t_queue **q);
