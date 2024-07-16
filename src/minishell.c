@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/16 14:20:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/16 14:53:33 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,24 +67,35 @@ t_bool	shllvlhandle(t_env **env)
 	return (True);
 }
 
+t_bool	set_default_env(t_main *m, char **env)
+{
+	char	*tmp;
+
+	signal(SIGINT, sig_handle);
+	signal(SIGQUIT, SIG_IGN);
+	m->env = to_env_list(env);
+	if (shllvlhandle(&m->env) == False)
+		return (False);
+	tmp = ft_strdup("0");
+	if (!tmp)
+		return (False);
+	add_var(&m->env, "?", tmp);
+	free(tmp);
+	tmp = ft_strdup("minishell");
+	if (!tmp)
+		return (False);
+	add_var(&m->env, "0", tmp);
+	free(tmp);
+	return (True);
+}
+
 int	main(int ac, char **av, char **env)
 {
 	t_main		m;
 	int			cmd_ret;
-	char		*zero;
 
 	g_signum = -1;
-	m.env = to_env_list(env);
-	zero = ft_strdup("0");
-	add_var(&m.env, "?", zero);
-	free(zero);
-	signal(SIGINT, sig_handle);
-	signal(SIGQUIT, SIG_IGN);
-	if (!shllvlhandle(&m.env))
-	{
-		free_env(&m.env);
-		return (1);
-	}
+	set_default_env(&m, env);
 	m.status = 0;
 	while (True)
 	{
