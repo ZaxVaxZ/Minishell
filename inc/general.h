@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/16 13:56:29 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:57:42 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@
 # define ERR_CLS 5
 # define ERR_FRK 6
 # define ERR_PIP 7
+# define ERR_CWD 8
 
 # include <stdio.h>
 # include <sys/wait.h>
@@ -87,10 +88,12 @@
 
 /* int	g_signum; */
 
-char	*return_cwd(char *old_cwd);
 void	rl_replace_line (const char *text, int clear_undo);
-char	*get_line(void);
+char	*get_line(t_main *m);
 void	handle_msg(int msg);
+int		free_up_cmd_mem(t_main *m);
+void	init_main_struct(t_main *m, char **env);
 void	free_and_exit(t_main *m, int msg);
+int		handle_cmd_line(t_env **envp, t_main *m);
 
 #endif

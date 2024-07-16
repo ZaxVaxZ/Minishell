@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/16 14:35:43 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/16 20:28:59 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,12 +114,21 @@ void	heredoc_child(t_heredoc *h)
 	exit(h->exec->last_status);
 }
 
+void	do_nothing2(int sig)
+{
+	(void)sig;
+}
+
 t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec, t_env **env)
 {
 	int		ex;
 	char	*tmp;
 
+	signal(SIGINT, do_nothing2);
+	signal(SIGQUIT, do_nothing2);
 	waitpid(exec->last_pid, &ex, 0);
+	signal(SIGINT, sig_handle);
+	signal(SIGQUIT, SIG_IGN);
 	if (WIFSIGNALED(ex) && WTERMSIG(ex) == SIGINT)
 	{
 		exec->last_status = 1;

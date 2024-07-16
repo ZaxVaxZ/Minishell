@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 18:25:51 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/03 21:54:28 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/16 16:37:12 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,11 @@ t_bool	set_var(t_env **env, char *key, char *value, t_bool exported)
 		return (True);
 	if (value)
 	{
-		free(tmp->value);
+		if (tmp->value)
+			free(tmp->value);
 		tmp->value = ft_strdup(value);
 		if (!tmp->value)
-			return (free_env(env));
+			return (False);
 	}
 	tmp->exported = exported;
 	return (True);
@@ -70,7 +71,7 @@ t_bool	add_var(t_env **env, char *key, char *value)
 		return (set_var(env, key, value, False));
 	tmp = new_env_node(key, value, False);
 	if (!tmp)
-		return (free_env(env));
+		return (False);
 	add_env_node(env, tmp);
 	return (True);
 }
@@ -138,14 +139,14 @@ t_bool	export_var(t_env **e, char *str)
 	{
 		key = ft_substr(str, 0, eq - str);
 		if (!key)
-			return (free_env(e));
+			return (False);
 		val = ft_substr(str, eq - str + 1, ft_strlen(eq + 1));
 		issue = (!val || !add_var(e, key, val) || !set_var(e, key, NULL, True));
 		free(key);
 		if (val)
 			free(val);
 		if (issue)
-			return (free_env(e));
+			return (False);
 		return (True);
 	}
 	else if (get_var(*e, str))

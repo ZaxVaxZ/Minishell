@@ -5,13 +5,16 @@ heredoc issues:
 
 valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp --trace-children=yes --track-fds=yes ./bin/minishell
 
-echo hi (<<a ls) ->prints hi and then proceeds to heredoc. after that, it then executs the ls command (NOT FIXED)
-parenthesis right after a command are not being treated as illegal
 echo hi > $ksjflsdj (redirect to a variable that doesn't exist in the environment) (LOL)
-moving structs to their own header file (DONE)
+command followed by open paranthesis -> allows execution when it should give illegal syntax error
 
 sleep 2; echo hi: bad file descriptor
-heredoc sigint segfaulting
-heredoc piped with another heredoc: when interupting, pointer being fered was not allocated
+heredoc followed by or/and: bad file descriptor
 
 when ctrl + c with a line in the prompt, the history sometimes bugs and doesn't scroll up
+
+parenthesis right after a command are not being treated as illegal (FIXED)
+echo hi (<<a ls) ->prints hi and then proceeds to heredoc. after that, it then executs the ls command (FIXED)
+heredoc sigint segfaulting (FIXED)
+heredoc piped with another heredoc: when interupting, pointer being fered was not allocated (FIXED)
+moving structs to their own header file (FIXED)

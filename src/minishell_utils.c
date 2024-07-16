@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:44:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/16 13:59:10 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/16 16:58:50 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,6 @@
 #include "./../tmp/tmp_utils.h"
 #include <readline/readline.h>
 #include <readline/history.h>
-
-int	free_up(char *cmd_line, t_queue **q, t_cmd **cmds)
-{
-	if (cmd_line)
-	{
-		free(cmd_line);
-		cmd_line = NULL;
-	}
-	if (q)
-		free_queue(q);
-	if (cmds)
-		free_cmd(cmds);
-	return (0);
-}
 
 int	add_to_history(char *cmd_line, t_queue *q)
 {
@@ -82,7 +68,7 @@ int	handle_cmd_line(t_env **envp, t_main *m)
 	int		p_cleanup;
 
 	if (!m->line || !*m->line || m->line[0] == NL)
-		return (free_up(m->line, NULL, NULL));
+		return (free_up_cmd_mem(m));
 	cmds = NULL;
 	q = parse(m->line);
 	if (add_to_history(m->line, q) == -1)
@@ -117,10 +103,10 @@ int	handle_cmd_line(t_env **envp, t_main *m)
 	{
 		if (!m->status && ft_strncmp(get_var(*envp, "?"), "0", -1))
 		{
-			free_up(m->line, &q, &cmds);
+			free_up_cmd_mem(m);
 			exit(ft_atoi(get_var(*envp, "?")));
 		}
-		free_up(m->line, &q, &cmds);
+		free_up_cmd_mem(m);
 		return (ret);
 	}
 	tmp = ft_itoa(m->status);
@@ -132,6 +118,6 @@ int	handle_cmd_line(t_env **envp, t_main *m)
 	}
 	else
 		ret = -2;
-	free_up(m->line, &q, &cmds);
+	free_up_cmd_mem(m);
 	return (ret);
 }
