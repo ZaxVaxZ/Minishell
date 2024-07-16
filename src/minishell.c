@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/14 16:34:51 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/16 13:06:04 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ int	main(int ac, char **av, char **env)
 	zero = ft_strdup("0");
 	add_var(&m.env, "?", zero);
 	free(zero);
-	m.interrupt = signal(SIGINT, sig_handle);
-	m.q = signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, sig_handle);
+	signal(SIGQUIT, SIG_IGN);
 	if (!shllvlhandle(&m.env))
 	{
 		free_env(&m.env);

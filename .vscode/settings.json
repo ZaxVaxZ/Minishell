@@ -6,6 +6,8 @@
 		"typeinfo": "c",
 		"signals.h": "c",
 		"parser.h": "c",
-		"general.h": "c"
+		"general.h": "c",
+		"stdlib.h": "c",
+		"fcntl.h": "c"
 	}
 }

@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   general.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/14 16:41:37 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/16 12:52:28 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GENERAL_H
 # define GENERAL_H
 
-# define BLACK(str)   "\e[0;30m"str"\x1b[0m" // Black - Regular
+# define BLACK   "\e[0;30m" // Black - Regular
 # define RED     "\e[0;31m" // Red
 # define GREEN   "\e[0;32m" // Green
 # define YELLOW  "\e[0;33m" // Yellow
@@ -74,36 +74,9 @@
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <structs.h>
 
 /* int	g_signum; */
-
-typedef enum e_bool
-{
-	False,
-	True
-}	t_bool;
-
-typedef struct s_env
-{
-	char			*key;
-	char			*value;
-	t_bool			exported;
-	struct s_env	*next;
-}	t_env;
-
-
-typedef struct s_msh
-{
-	char	*line;
-	char	*cwd;
-	int		status;
-	void	*interrupt;
-	t_queue	*q;
-	t_cmd	*cmds;
-	//void	*q;
-	//void	*cmds;
-	t_env	*env;
-}	t_msh;
 
 char	*return_cwd(char *old_cwd);
 void	rl_replace_line (const char *text, int clear_undo);
