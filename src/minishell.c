@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/14 14:46:56 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 16:34:51 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 extern int	g_signum;
 
 int		free_up(char *cmd_line, t_queue **q, t_cmd **cmds);
-int		handle_cmd_line(char *cmd_line, t_env **envp, t_msh *m);
+int		handle_cmd_line(t_env **envp, t_msh *m);
 
 char	*get_line(void)
 {
@@ -96,7 +96,7 @@ int	main(int ac, char **av, char **env)
 			break ;
 		if (!m.line)
 			break ;
-		cmd_ret = handle_cmd_line(m.line, &m.env, &m);
+		cmd_ret = handle_cmd_line(&m.env, &m);
 		if (cmd_ret == -2 || cmd_ret == -5)
 			break ;
 	}

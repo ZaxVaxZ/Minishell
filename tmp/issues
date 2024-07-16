@@ -10,19 +10,13 @@ ls | <<>file1					> > > > > > > > >file1: command not found
 fix heredoc delimiter parsing (FIXED)
 don't allow parse tokens after illegal (FIXED)
 heredoc taking input from duped pipe (FIXED)
-echo hi > $ksjflsdj (redirect to a variable that doesn't exist in the environment) (LOL)
 capitalization of commands (use strcasecmp to strcmp the commands rather than strncmp) (DOESNT MATTER)
 ls && <<a cat | <<b cat SEGV on unknown address (FIXED)
 echo hi <<a ls (should heredoc but not heredoc-ing) (FIXED)
 ls && (echo hi) | (echo hello) -> quitting the program for some reason (FIXED)
 ls && echo hi | echo hello -> command with and followed by piped command suddenly exits (FIXED)
-echo hi (<<a ls) ->prints hi and then proceeds to heredoc. after that, it then executs the ls command ()
-parenthesis right after a command are not being treated as illegal
-when ctrl + c with a line in the prompt, the history sometimes bugs and doesn't scroll up
 redirecting TO invalid file gives bad file descriptor (FIXED)
 using an invalid file as infile causes permission denied to be printed twice (FIXED)
-
-heredoc with an outfile
 
 when infile cant be opened and the next command is OR'd, the next command won't execute (FIXED)
 ls (echo hi) -> syntax error near unexpected token: echo (token after LP should be considered the error)
@@ -34,5 +28,3 @@ ls | echo hi: process terminating with signal 13 (SIGPIPE) (FIXED)
 
 <<a ls | <<b ls
 	atleast 1 to 2 extra file descriptors opened (FIXED)
-
-sleep 2; echo hi: bad file descriptor

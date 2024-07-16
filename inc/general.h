@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/13 15:16:46 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 16:41:37 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,10 @@ typedef struct s_msh
 	char	*cwd;
 	int		status;
 	void	*interrupt;
-	void	*q;
+	t_queue	*q;
+	t_cmd	*cmds;
+	//void	*q;
+	//void	*cmds;
 	t_env	*env;
 }	t_msh;
 

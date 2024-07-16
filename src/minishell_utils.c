@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:44:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/14 13:24:08 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/14 16:33:49 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	syntax_error_cleanup(t_env **envp, char *cmd_line, int syntax_error)
 	return (1);
 }
 
-int	handle_cmd_line(char *cmd_line, t_env **envp, t_msh *m)
+int	handle_cmd_line(t_env **envp, t_msh *m)
 {
 	int		ret;
 	char	*tmp;
@@ -82,16 +82,16 @@ int	handle_cmd_line(char *cmd_line, t_env **envp, t_msh *m)
 	t_cmd	*cmds;
 	int		p_cleanup;
 
-	if (!cmd_line || !*cmd_line || cmd_line[0] == NL)
-		return (free_up(cmd_line, NULL, NULL));
+	if (!m->line || !*m->line || m->line[0] == NL)
+		return (free_up(m->line, NULL, NULL));
 	cmds = NULL;
-	q = parse(cmd_line);
-	if (add_to_history(cmd_line, q) == -1)
+	q = parse(m->line);
+	if (add_to_history(m->line, q) == -1)
 		return (-1);
 	p_cleanup = parse_clean_up(&q, *envp);
 	if (p_cleanup == -2)
 		return (0);
-	if (syntax_error_cleanup(envp, cmd_line, p_cleanup == 1) <= 0)
+	if (syntax_error_cleanup(envp, m->line, p_cleanup == 1) <= 0)
 		return (1);
 	clean_whitespace(q);
 	//print_queue(q);
@@ -118,10 +118,10 @@ int	handle_cmd_line(char *cmd_line, t_env **envp, t_msh *m)
 	{
 		if (!m->status && ft_strncmp(get_var(*envp, "?"), "0", -1))
 		{
-			free_up(cmd_line, &q, &cmds);
+			free_up(m->line, &q, &cmds);
 			exit(ft_atoi(get_var(*envp, "?")));
 		}
-		free_up(cmd_line, &q, &cmds);
+		free_up(m->line, &q, &cmds);
 		return (ret);
 	}
 	tmp = ft_itoa(m->status);
@@ -133,7 +133,7 @@ int	handle_cmd_line(char *cmd_line, t_env **envp, t_msh *m)
 	}
 	else
 		ret = -2;
-	free_up(cmd_line, &q, &cmds);
+	free_up(m->line, &q, &cmds);
 	printf("done\n");
 	return (ret);
 }
