@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/16 13:47:59 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/16 14:20:06 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,8 @@ char	*get_line(void)
 {
 	char	*new;
 	char	*cmd;
-	char	*buf;
 
-	cmd = readline("minishell > ");
+	cmd = readline("minishell$ ");
 	new = NULL;
 	if (!cmd)
 		return (NULL);

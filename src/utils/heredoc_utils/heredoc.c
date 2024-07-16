@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/13 12:25:09 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/16 14:35:43 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void	heredoc_child(t_heredoc *h)
 	int			j;
 	char		*line;
 	char		*var;
-	int			temp_in;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, heredoc_sigquit);

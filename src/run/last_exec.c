@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/14 14:56:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/16 14:17:31 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,6 @@ t_bool	exec_cmd(t_env **env, t_cmd **cmd, t_exec *exec, int *fds)
 	
 	signal(SIGINT, do_nothing);
 	signal(SIGQUIT, do_nothing);
-	if (heredoc_loop(*cmd, exec, env) == False)
-		return (True);
 	proc_id = fork();
 	if (proc_id < 0)
 	{
@@ -101,11 +99,12 @@ t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec)
 		return (True);
 	if ((*cmd)->before == PIPE_OP || (*cmd)->after == PIPE_OP)
 	{
-		printf("opening pipes for cmd %s in handle_cmds\n", (*cmd)->params[0]);
 		if (pipe_and_check(fds, exec) == -1)
 			return (False);
 		exec->fds = fds;
 	}
+	if (heredoc_loop(*cmd, exec, env) == False)
+		return (True);
 	exec->ret = resolve_builtin(env, *cmd, exec, False);
 	if (exec->ret == -5)
 		return (False);

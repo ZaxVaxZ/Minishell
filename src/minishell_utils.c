@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:44:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/16 13:47:59 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/16 13:59:10 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int	free_up(char *cmd_line, t_queue **q, t_cmd **cmds)
 		free_queue(q);
 	if (cmds)
 		free_cmd(cmds);
-	printf("freed\n");
 	return (0);
 }
 
@@ -134,6 +133,5 @@ int	handle_cmd_line(t_env **envp, t_main *m)
 	else
 		ret = -2;
 	free_up(m->line, &q, &cmds);
-	printf("done\n");
 	return (ret);
 }

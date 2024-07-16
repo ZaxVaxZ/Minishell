@@ -11,6 +11,7 @@ echo hi > $ksjflsdj (redirect to a variable that doesn't exist in the environmen
 moving structs to their own header file (DONE)
 
 sleep 2; echo hi: bad file descriptor
-heredoc with an outfile
+heredoc sigint segfaulting
+heredoc piped with another heredoc: when interupting, pointer being fered was not allocated
 
 when ctrl + c with a line in the prompt, the history sometimes bugs and doesn't scroll up
