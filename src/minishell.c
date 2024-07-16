@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/16 13:06:04 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/16 13:47:59 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 extern int	g_signum;
 
 int		free_up(char *cmd_line, t_queue **q, t_cmd **cmds);
-int		handle_cmd_line(t_env **envp, t_msh *m);
+int		handle_cmd_line(t_env **envp, t_main *m);
 
 char	*get_line(void)
 {
@@ -70,7 +70,7 @@ t_bool	shllvlhandle(t_env **env)
 
 int	main(int ac, char **av, char **env)
 {
-	t_msh		m;
+	t_main		m;
 	int			cmd_ret;
 	char		*zero;
 

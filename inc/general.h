@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/16 12:52:28 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/16 13:56:29 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,16 +70,27 @@
 # define SC ';'
 # define DS '$'
 
+# define SUCCESS 0
+# define FAILURE 1
+# define ERR_MEM 2
+# define ERR_DUP 3
+# define ERR_WRT 4
+# define ERR_CLS 5
+# define ERR_FRK 6
+# define ERR_PIP 7
+
 # include <stdio.h>
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <structs.h>
+# include "structs.h"
 
 /* int	g_signum; */
 
 char	*return_cwd(char *old_cwd);
 void	rl_replace_line (const char *text, int clear_undo);
 char	*get_line(void);
+void	handle_msg(int msg);
+void	free_and_exit(t_main *m, int msg);
 
 #endif

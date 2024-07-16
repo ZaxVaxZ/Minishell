@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 16:41:40 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/16 13:02:58 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/16 13:48:14 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-typedef struct s_msh
+typedef struct s_main
 {
 	char	*line;
 	char	*cwd;
@@ -86,6 +86,6 @@ typedef struct s_msh
 	t_queue	*q;
 	t_cmd	*cmds;
 	t_env	*env;
-}	t_msh;
+}	t_main;
 
 #endif

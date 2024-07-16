@@ -10,8 +10,11 @@ UTL		=	$(SFD)/utils
 LFT		=	$(UTL)/libft
 GNL		=	$(UTL)/get_next_line
 PRF		=	$(UTL)/printf
+PRS		=	$(UTL)/parser
+CMD		=	$(UTL)/cmd_utils
+ENV		=	$(UTL)/env_utils
+HRD		=	$(UTL)/heredoc_utils
 BIF		=	$(SFD)/built-ins
-PRS		=	$(SFD)/parser
 EXE		=	$(SFD)/run
 
 ### []+--------={ Source Files }=--------+[] ###
@@ -26,15 +29,15 @@ SRCS	=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c		\
 			$(PRF)/ft_printuint.c $(PRF)/ft_printint.c						\
 			$(BIF)/unset.c $(BIF)/pwd.c $(BIF)/echo.c $(BIF)/export.c		\
 			$(BIF)/exit.c $(BIF)/env.c $(BIF)/cd.c							\
-			$(UTL)/queues.c $(UTL)/env_list.c $(UTL)/env_tools.c			\
-			$(UTL)/env_utils.c $(UTL)/cmd_list.c $(UTL)/cmd_tools.c			\
-			$(UTL)/cmd_utils.c	$(UTL)/pipe_utils.c							\
+			$(UTL)/queues.c $(ENV)/env_list.c $(ENV)/env_tools.c			\
+			$(ENV)/env_utils.c $(CMD)/cmd_list.c $(CMD)/cmd_tools.c			\
+			$(CMD)/cmd_utils.c	$(HRD)/pipe_utils.c							\
 			$(PRS)/parser.c $(PRS)/parser_utils.c $(PRS)/parser_extras.c	\
 			$(PRS)/parser_checkers.c $(PRS)/parser_cleanup.c 				\
 			$(EXE)/run_builtins.c $(EXE)/run_utils.c						\
 			$(SFD)/minishell.c	./../tmp/tmp_utils.c						\
-			$(UTL)/heredoc.c $(UTL)/pipe_checks.c $(EXE)/last_exec.c		\
-			$(UTL)/heredoc_expand.c $(UTL)/signals.c
+			$(HRD)/heredoc.c $(HRD)/pipe_checks.c $(EXE)/last_exec.c		\
+			$(HRD)/heredoc_expand.c $(UTL)/signals.c $(UTL)/free_and_exit.c
 
 ### []+--------={ Object files and Program name }=--------+[] ###
 OBJS	=	$(SRCS:.c=.o)
