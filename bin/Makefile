@@ -1,7 +1,7 @@
 ### []+--------={ Commands and Flags }=--------+[] ###
 CC		=	cc
-CFLAGS	=	-Wall -Wextra -Werror -O3
-CFLAGS	+=	-fsanitize=address,undefined -g3
+#CFLAGS	=	-Wall -Wextra -Werror -O3
+#CFLAGS	+=	-fsanitize=address,undefined -g3
 
 ### []+--------={ Directories }=--------+[] ###
 INC		=	./../inc
@@ -37,7 +37,7 @@ SRCS	=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c		\
 			$(EXE)/run_builtins.c $(EXE)/run_utils.c						\
 			$(SFD)/minishell.c	./../tmp/tmp_utils.c						\
 			$(HRD)/heredoc.c $(HRD)/pipe_checks.c $(EXE)/last_exec.c		\
-			$(HRD)/heredoc_expand.c $(UTL)/signals.c $(UTL)/free_and_exit.c
+			$(UTL)/signals.c $(UTL)/free_and_exit.c
 
 ### []+--------={ Object files and Program name }=--------+[] ###
 OBJS	=	$(SRCS:.c=.o)

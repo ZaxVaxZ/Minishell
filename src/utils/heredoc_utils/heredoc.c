@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/16 20:28:59 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/17 20:44:10 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,8 @@ void	heredoc_child(t_heredoc *h)
 		close(h->exec->fds[READEND]);
 		close(h->exec->fds[WRITEEND]);
 	}
-	exit(h->exec->last_status);
+	free_and_exit(h->m, -1);
+	//exit(h->exec->last_status);
 }
 
 void	do_nothing2(int sig)
@@ -119,7 +120,7 @@ void	do_nothing2(int sig)
 	(void)sig;
 }
 
-t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec, t_env **env)
+t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec)
 {
 	int		ex;
 	char	*tmp;
@@ -137,7 +138,7 @@ t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec, t_env **env)
 		tmp = ft_itoa(1);
 		if (!tmp)
 			return (False);
-		set_var(env, "?", tmp, False);
+		set_var(&m->env, "?", tmp, False);
 		free(tmp);
 		close(fds[WRITEEND]);
 		close(fds[READEND]);
@@ -153,12 +154,13 @@ t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec, t_env **env)
 	return (True);
 }
 
-t_bool	heredoc_loop(t_cmd *cmd, t_exec *exec, t_env **env)
+t_bool	heredoc_loop(t_main *m, t_cmd *cmd, t_exec *exec, t_env **env)
 {
 	t_heredoc	h;
 	int			heredoc_fds[2];
 
 	h.i = -1;
+	h.m = m;
 	h.cmd = cmd;
 	h.exec = exec;
 	h.env = env;
@@ -197,5 +199,5 @@ t_bool	heredoc(t_heredoc *h)
 	h->exec->last_pid = p;
 	if (p == 0)
 		heredoc_child(h);
-	return (heredoc_parent(&h->cmd, h->fds, h->exec, h->env));
+	return (heredoc_parent(h->m, &h->cmd, h->fds, h->exec));
 }

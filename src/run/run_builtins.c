@@ -6,18 +6,18 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/16 14:09:59 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/17 20:47:19 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-t_bool	clean_whitespace(t_queue *q)
+t_bool	clean_whitespace(t_main *m)
 {
 	char	*tmp;
-	t_queue	*head;
-
-	head = q;
+	t_queue	*q;
+	
+	q = m->q;
 	while (q && q->next)
 	{
 		if ((q->type == Assign || q->type == Op_redir)
@@ -29,7 +29,7 @@ t_bool	clean_whitespace(t_queue *q)
 			q->s = ft_substr(q->s, 0, ft_strlen(q->s) - 1);
 			free(tmp);
 			if (!q->s)
-				return (free_queue(&head));
+				return (free_queue(&m->q));
 		}
 		if (q->next->type == Whitespace)
 			delete_next(&q);
@@ -38,7 +38,7 @@ t_bool	clean_whitespace(t_queue *q)
 	return (True);
 }
 
-static int	resolve_builtin_helper(t_env **env, t_cmd *cmd, t_exec *exec)
+static int	resolve_builtin_helper(t_main *m, t_env **env, t_cmd *cmd, t_exec *exec)
 {
 	char	*cwd;
 
@@ -60,7 +60,7 @@ static int	resolve_builtin_helper(t_env **env, t_cmd *cmd, t_exec *exec)
 	}
 	else if (!ft_strncmp(cmd->params[0], "exit", -1))
 	{
-		if (exiting(cmd, cmd->params + 1, exec) == -2)
+		if (exiting(m, cmd, cmd->params + 1, exec) == -2)
 			return (-1);
 		return (-5);
 	}
@@ -69,7 +69,7 @@ static int	resolve_builtin_helper(t_env **env, t_cmd *cmd, t_exec *exec)
 	return (1);
 }
 
-int	resolve_builtin(t_env **env, t_cmd *cmd, t_exec *exec, t_bool child)
+int	resolve_builtin(t_main *m, t_cmd *cmd, t_exec *exec, t_bool child)
 {
 	int	ret;
 
@@ -94,25 +94,25 @@ int	resolve_builtin(t_env **env, t_cmd *cmd, t_exec *exec, t_bool child)
 		close(exec->fds[WRITEEND]);
 		close(exec->fds[READEND]);
 	}
-	ret = resolve_builtin_helper(env, cmd, exec);
+	ret = resolve_builtin_helper(m, &m->env, cmd, exec);
 	if (ret == 1 || ret < 0 || ret == -5)
 		return (ret);
 	ret = 1;
 	if (!ft_strncmp(cmd->params[0], "unset", -1))
-		unset(env, cmd->params + 1);
+		unset(&m->env, cmd->params + 1);
 	else if (!ft_strncmp(cmd->params[0], "export", -1))
 	{
-		if (!export_cmd(env, cmd->params + 1))
+		if (!export_cmd(&m->env, cmd->params + 1))
 			ret = -1;
 	}
 	else if (!ft_strncmp(cmd->params[0], "env", -1))
 	{
-		if (!print_env(*env))
+		if (!print_env(m->env))
 			ret = -1;
 	}
 	else if (!ft_strncmp(cmd->params[0], "pwd", -1))
 	{
-		if (ft_printf("%s\n", get_var(*env, "PWD")) == -1)
+		if (ft_printf("%s\n", get_var(m->env, "PWD")) == -1)
 			ret = -1;
 	}
 	else

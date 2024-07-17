@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:44:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/16 16:58:50 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/17 20:46:26 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-int	add_to_history(char *cmd_line, t_queue *q)
+int	add_to_history(t_main *m)
 {
 	char	*trimmed_str;
 
-	if (q)
+	if (m->q)
 	{
-		trimmed_str = ft_strtrim(cmd_line, "\n");
+		trimmed_str = ft_strtrim(m->line, "\n");
 		if (!trimmed_str)
 			return (-1);
 		add_history(trimmed_str);
@@ -42,17 +42,17 @@ int	add_to_history(char *cmd_line, t_queue *q)
 	return (1);
 }
 
-int	syntax_error_cleanup(t_env **envp, char *cmd_line, int syntax_error)
+int	syntax_error_cleanup(t_main *m, int syntax_error)
 {
 	char	*tmp;
 
 	if (syntax_error)
 	{
 		tmp = ft_itoa(258);
-		free(cmd_line);
+		free(m->line);
 		if (!tmp)
 			return (-1);
-		set_var(envp, "?", tmp, False);
+		set_var(&m->env, "?", tmp, False);
 		free(tmp);
 		return (0);
 	}
@@ -70,35 +70,18 @@ int	handle_cmd_line(t_env **envp, t_main *m)
 	if (!m->line || !*m->line || m->line[0] == NL)
 		return (free_up_cmd_mem(m));
 	cmds = NULL;
-	q = parse(m->line);
-	if (add_to_history(m->line, q) == -1)
+	m->q = parse(m->line);
+	if (add_to_history(m) == -1)
 		return (-1);
-	p_cleanup = parse_clean_up(&q, *envp);
+	p_cleanup = parse_clean_up(m, &m->q);
 	if (p_cleanup == -2)
 		return (0);
-	if (syntax_error_cleanup(envp, m->line, p_cleanup == 1) <= 0)
+	if (syntax_error_cleanup(m, p_cleanup == 1) <= 0)
 		return (1);
-	clean_whitespace(q);
-	//print_queue(q);
-	if (!build_commands(&q, &cmds, envp))
+	clean_whitespace(m);
+	if (!build_commands(m))
 		return (1);
-	//for (t_cmd *t = cmds; t; t = t->next)
-	//{
-	//	const char *strs[] = {[AND_OP]= "and",
-	//					[OR_OP]= "or",
-	//					[PIPE_OP] = "pipe",
-	//					[SEMICOLON] = "semicolon"};
-	//	if (t->params)
-	//		printf("command: %s Before: %s After: %s\n", t->params[0], strs[t->before], strs[t->after]);
-	//	else
-	//	{
-	//		if (t->rep == LP)
-	//			printf("LP\n");
-	//		else if (t->rep == RP)
-	//			printf("RP\n");
-	//	}
-	//}
-	ret = execute_commands(envp, cmds, &m->status);
+	ret = execute_commands(m);
 	if (ret == -5)
 	{
 		if (!m->status && ft_strncmp(get_var(*envp, "?"), "0", -1))

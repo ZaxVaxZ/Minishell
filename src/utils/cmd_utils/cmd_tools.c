@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/14 13:44:42 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/17 20:47:02 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,27 +143,28 @@ static t_bool	queue_node_to_cmd(t_queue **q, t_cmd *cmd, t_env **env)
 /// @param cmds the cmd list
 /// @param env the shell env
 /// @return false if any malloc fails, true otherwise
-t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
+//t_bool	build_commands(t_queue **queue, t_cmd **cmds, t_env **env)
+t_bool	build_commands(t_main *m)
 {
 	t_cmd	*tmp;
 	t_queue	*q;
 	int		tmp_before;
 
 	tmp_before = NON;
-	q = *queue;
+	q = m->q;
 	while (q)
 	{
-		q = before_cmd(q, cmds);
+		q = before_cmd(q, &m->cmds);
 		if (!prep_cmd(q, &tmp))
-			return (free_and_return(queue, env, cmds, tmp));
+			return (free_and_return(&m->q, &m->env, &m->cmds, tmp));
 		tmp->before = tmp_before;
 		while (q && !is_separator(q))
 		{
-			if (!queue_node_to_cmd(&q, tmp, env))
-				return (free_and_return(queue, env, cmds, tmp));
+			if (!queue_node_to_cmd(&q, tmp, &m->env))
+				return (free_and_return(&m->q, &m->env, &m->cmds, tmp));
 			q = q->next;
 		}
-		q = after_cmd(q, tmp, cmds);
+		q = after_cmd(q, tmp, &m->cmds);
 		if (tmp->after)
 			tmp_before = tmp->after;
 	}

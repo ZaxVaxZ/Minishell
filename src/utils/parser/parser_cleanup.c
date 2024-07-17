@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 04:46:55 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/10 19:08:17 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/17 15:01:57 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,8 @@ static int	unpack_vars(t_queue **h, t_queue *q, int *open, t_env *env)
 /// @brief Cleans up the queue post-parsing for an easier execution run
 /// @param h The top node of the queue
 /// @return 1 if there's a parsing issue, -1 if a malloc fails, 0 otherwise
-int	parse_clean_up(t_queue **h, t_env *envp)
+//int	parse_clean_up(t_queue **h, t_env *envp)
+int	parse_clean_up(t_main *m, t_queue **h)
 {
 	int		open[3];
 	int		ret;
@@ -186,7 +187,7 @@ int	parse_clean_up(t_queue **h, t_env *envp)
 		open[2] += (q->type == Bracket_open) - (q->type == Bracket_closed);
 		q = q->next;
 	}
-	ret = unpack_vars(h, *h, open, envp);
+	ret = unpack_vars(h, *h, open, m->env);
 	if (!join_words(h))
 		return (-1);
 	return (ret);

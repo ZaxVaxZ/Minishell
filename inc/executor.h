@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/16 13:03:13 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/17 20:47:42 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,38 +61,24 @@ typedef struct s_exec
 
 typedef struct s_heredoc
 {
+	t_main	*m;
 	t_env 	**env;
 	t_cmd 	*cmd;
-	t_exec 	*exec; 
+	t_exec 	*exec;
 	int 	*fds;
 	int		i;
 }	t_heredoc;
 
-typedef struct s_expand
-{
-	char	*res;
-	char	*var;
-	char 	*line; 
-	t_env 	**env;
-	char	*name;
-	char 	**words;
-	int		newline;
-	char	*var_name;
-	char	*delimiter;
-}	t_expand;
-
-t_bool	clean_whitespace(t_queue *q);
-int		resolve_builtin(t_env **env, t_cmd *cmd, t_exec *exec, t_bool child);
-int		execute_commands(t_env **env, t_cmd *cmd, int *status);
-t_bool	clean_whitespace(t_queue *q);
+t_bool	clean_whitespace(t_main *m);
+int		resolve_builtin(t_main *m, t_cmd *cmd, t_exec *exec, t_bool child);
+int		execute_commands(t_main *m);
 int		exec_type(t_exec *exec, t_cmd **cmd);
 char	*search_path(t_env **env, t_cmd *cmd);
 t_bool	should_exec(t_exec *exec, t_cmd *cmd);
 int		wait_for_children(t_exec *exec, t_cmd *cmds);
 
-t_bool	handle_cmds(t_env **env, t_cmd **cmd, t_exec *exec);
-t_bool	execute(t_env **env, t_cmd *cmd, t_exec *exec);
-int		execute_cmds(t_env **env, t_cmd **cmds, int *status);
+t_bool	handle_cmds(t_main *m, t_cmd **cmd, t_exec *exec);
+t_bool	execute(t_main *m, t_cmd *cmd, t_exec *exec);
 
 int		dup_and_check(int fd1, int fd2, t_exec *exec);
 int		pipe_and_check(int *fds, t_exec *exec);
@@ -101,19 +87,14 @@ int		open_and_check(int *fd, char *filename, int mode, t_exec *exec);
 
 int		open_infiles(t_env **env, t_cmd *cmd, t_exec *exec, int *fds);
 int		open_outfiles(t_cmd *cmd, t_exec *exec);
-void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds);
+void	child_process(t_main *m, t_cmd *cmd, t_exec *exec, int *fds);
 int		parent_process(t_cmd *cmd, t_exec *exec, int *fds);
-//t_bool	heredoc(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env);
 t_bool	heredoc(t_heredoc *h);
-//char	*expand_variable(char *line, t_env **env, char **words, int *i, char *delim);
-char	*expand_variable(t_expand *exp);
-t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec, t_env **env);
-t_bool	heredoc_loop(t_cmd *cmd, t_exec *exec, t_env **env);
-//void	heredoc_child(t_cmd *cmd, t_exec *exec, int *fds, int i, t_env **env);
+t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec);
+t_bool	heredoc_loop(t_main *m, t_cmd *cmd, t_exec *exec, t_env **env);
 void	heredoc_child(t_heredoc *h);
 int		open_outs_and_in(t_cmd *cmd, t_exec *exec);
 
-int		init_expand(t_expand *exp, char *line, t_env **env, char *delimiter);
-int		exiting(t_cmd *cmd, char **params, t_exec *exec);
+int		exiting(t_main *m, t_cmd *cmd, char **params, t_exec *exec);
 
 #endif

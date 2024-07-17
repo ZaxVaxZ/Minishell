@@ -9,10 +9,13 @@ echo hi > $ksjflsdj (redirect to a variable that doesn't exist in the environmen
 command followed by open paranthesis -> allows execution when it should give illegal syntax error
 
 sleep 2; echo hi: bad file descriptor
-heredoc followed by or/and: bad file descriptor
+heredoc followed by or/and and then siginterrupted: bad file descriptor
+<<a ls <setup.sh: bad file descriptor
+<<a echo hi: not heredocing
 
 when ctrl + c with a line in the prompt, the history sometimes bugs and doesn't scroll up
 
+cat | ls: cat doesn't close properly (FIXED)
 parenthesis right after a command are not being treated as illegal (FIXED)
 echo hi (<<a ls) ->prints hi and then proceeds to heredoc. after that, it then executs the ls command (FIXED)
 heredoc sigint segfaulting (FIXED)

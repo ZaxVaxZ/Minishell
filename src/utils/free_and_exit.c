@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_and_exit.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 18:14:42 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/16 19:42:35 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/17 16:22:05 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,9 @@ void	handle_msg(int msg)
 	int	ret;
 
 	ret = 0;
-	if (msg == SUCCESS)
+	if (msg == -1)
+		return ;
+	else if (msg == SUCCESS)
 		ret = ft_printf("exit\n");
 	else if(msg == FAILURE)
 		ret = write(2, "Unexpected Error.\n", 18);
