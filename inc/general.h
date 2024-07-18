@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/16 21:00:20 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/18 14:39:25 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,6 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "structs.h"
-
-/* int	g_signum; */
 
 void	rl_replace_line (const char *text, int clear_undo);
 char	*get_line(t_main *m);

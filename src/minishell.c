@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/17 09:20:50 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/18 14:39:20 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@
 #include "./../tmp/tmp_utils.h"
 #include <readline/readline.h>
 #include <readline/history.h>
-
-extern int	g_signum;
 
 char	*get_line(t_main *m)
 {

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 20:19:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/16 20:23:16 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/18 14:39:37 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "signals.h"
 
-extern int	g_signum;
+int	g_signum;
 
 void	sig_handle(int sig)
 {

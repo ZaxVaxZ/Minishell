@@ -3,18 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/17 20:44:10 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/18 14:39:43 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "get_next_line.h"
 #include "general.h"
-
-extern int	g_signum;
 
 int	check_and_write(t_heredoc *h, char **ret, char **line)
 {
