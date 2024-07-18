@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_builtins.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/17 20:47:19 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/18 19:09:47 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,7 @@ static int	resolve_builtin_helper(t_main *m, t_env **env, t_cmd *cmd, t_exec *ex
 	}
 	else if (!ft_strncmp(cmd->params[0], "echo", -1))
 	{
-		if (!echo(cmd->params + 1, (cmd->params[1]
-					&& !ft_strncmp(cmd->params[1], "-n", 2))))
+		if (!echo(cmd->params + 1))
 			return (-1);
 	}
 	else if (!ft_strncmp(cmd->params[0], "exit", -1))

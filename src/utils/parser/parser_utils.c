@@ -119,6 +119,7 @@ t_bool	add_str_to_queue(t_queue **q, char *str)
 {
 	t_bool	illegal;
 	t_queue	*tmp;
+	t_queue *lst;
 
 	if (!q)
 		return (False);
@@ -129,13 +130,24 @@ t_bool	add_str_to_queue(t_queue **q, char *str)
 		return (True);
 	}
 	illegal = !is_legal_control_op(str, *q);
+	lst = NULL;
+	tmp = *q;
+	while (tmp && tmp->next)
+	{
+		if (tmp->type != Whitespace)
+			lst = tmp;
+		tmp = tmp->next;
+	}
+	if (tmp && tmp->type != Whitespace)
+		lst = tmp;
 	tmp = new_node(str);
 	if (!tmp)
 		free_queue(q);
 	else
 	{
 		tmp->type = token_type(tmp->s);
-		if (illegal)
+		if (illegal || (lst && lst->type == Bracket_closed
+				&& tmp->type == Word))
 			tmp->type = Illegal;
 		queue(q, tmp);
 	}

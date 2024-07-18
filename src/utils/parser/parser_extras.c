@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_extras.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:35 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/03/15 13:13:59 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/18 16:59:40 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,8 +151,8 @@ t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
 		return (False);
 	if (var_name && wlen)
 		queue_end(*q)->type = Name;
-	else if (wlen)
-		queue_end(*q)->type = Word;
+	// else if (wlen)
+	// 	queue_end(*q)->type = Word;
 	*s += wlen;
 	return (True);
 }
