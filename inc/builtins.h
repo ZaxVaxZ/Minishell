@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 13:07:12 by pipolint          #+#    #+#             */
-/*   Updated: 2024/06/25 19:39:09 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/18 23:41:55 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_bool	cd(t_env **env, char *pwd, char *dir);
 t_bool	unset(t_env **env, char **params);
 t_bool	pwd(void);
 t_bool	print_env(t_env *env);
-t_bool	echo(char **str, t_bool n);
+t_bool	echo(char **str);
 t_bool	export_cmd(t_env **env, char **variable);
 t_bool	valid_identifier(char *id);
 

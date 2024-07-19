@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 13:31:22 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/08 13:01:47 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/17 09:42:49 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ t_bool	cd(t_env **env, char *pwd, char *dir)
 	if (set_var(env, "OLDPWD", pwd, True) == False)
 		return (False);
 	tmp = getcwd(NULL, 0);
-	if (tmp == NULL)
-		write(2, "uwu\n", 4);
+	if (!tmp)
+		return (False);
 	ret = set_var(env, "PWD", tmp, True);
 	free(tmp);
 	return (ret);

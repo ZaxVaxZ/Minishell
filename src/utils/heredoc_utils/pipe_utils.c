@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/11 20:53:09 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/19 21:02:32 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,32 +86,43 @@ void	child_sig(int sig)
 /// @param exec the exec struct
 /// @param fds the piped fds
 /// @return will exit depending on whether the commaned succeeded or failed
-void	child_process(t_env **env, t_cmd *cmd, t_exec *exec, int *fds)
+void	child_process(t_main *m, t_cmd *cmd, t_exec *exec, int *fds)
 {
 	int	ret;
 
 	close(exec->std_in);
 	close(exec->std_out);
 	if (open_outs_and_in(cmd, exec) == -1)
-		child_free_and_exit(env, exec, exec->last_status);
-	dups_and_closes(cmd, exec, env, fds);
-	ret = resolve_builtin(env, cmd, exec, True);
+		child_free_and_exit(&m->env, exec, exec->last_status);
+	dups_and_closes(cmd, exec, &m->env, fds);
+	ret = resolve_builtin(m, cmd, exec, True);
 	if (ret == 0)
-		execute(env, cmd, exec);
-	child_free_and_exit(env, exec, exec->last_status);
+		execute(m, cmd, exec);
+	if (close_and_check(STDIN_FILENO, exec) == -1)
+		free_and_exit(m, ERR_CLS);
+	if (close_and_check(STDOUT_FILENO, exec) == -1)
+		free_and_exit(m, ERR_CLS);
+	free_queue(&m->q);
+	free_cmd(&m->cmds);
+	free_env(&m->env);
+	free(m->line);
+	exit(exec->last_status);
 }
 
 int	parent_process(t_cmd *cmd, t_exec *exec, int *fds)
 {
+	if (cmd->infile_cnt && cmd->in_fd)
+	{
+		if (close_and_check(cmd->in_fd, exec) == -1)
+			return (-1);
+	}
 	if (cmd->before == PIPE_OP || cmd->after == PIPE_OP)
 	{
-		//if (cmd->heredoc)
-		//	return (1);
-		if (close_and_check(fds[1], exec) == -1)
+		if (close_and_check(fds[WRITEEND], exec) == -1)
 			return (-1);
-		if (dup_and_check(fds[0], STDIN_FILENO, exec) == -1)
+		if (dup_and_check(fds[READEND], STDIN_FILENO, exec) == -1)
 			return (-1);
-		if (close_and_check(fds[0], exec) == -1)
+		if (close_and_check(fds[READEND], exec) == -1)
 			return (-1);
 	}
 	return (1);

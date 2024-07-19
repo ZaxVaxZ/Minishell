@@ -1,0 +1,7 @@
+things to fix:
+
+exit status after sigint with any command: always changes the exit status to 1 FIXED
+after siginting a process besides heredoc, exit should be 130 FIXED
+sigquit not setting exit status to 131 FIXED
+builtins not setting the correct exit status FIXED
+syntax error should return exit status of 258 FIxED

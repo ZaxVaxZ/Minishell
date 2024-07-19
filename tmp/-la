@@ -1,0 +1,22 @@
+total 112
+-rw-r--r--   1 pipolint  2023_abu-dhabi      0 Jul 14 14:41 -la
+drwxr-xr-x  21 pipolint  2023_abu-dhabi    714 Jul 14 14:41 .
+drwxr-xr-x   5 pipolint  2023_abu-dhabi    170 Jun 24 12:06 ..
+drwxr-xr-x  15 pipolint  2023_abu-dhabi    510 Jul 13 19:42 .git
+-rw-r--r--   1 pipolint  2023_abu-dhabi  16384 Jun 24 12:06 .test.txt.swp
+drwxr-xr-x   3 pipolint  2023_abu-dhabi    102 Jun 24 12:06 .vscode
+drwxr-xr-x   4 pipolint  2023_abu-dhabi    136 Jul 14 14:30 bin
+-rw-r--r--   1 pipolint  2023_abu-dhabi     76 Jun 24 12:06 delete.sh
+-rw-r--r--   1 pipolint  2023_abu-dhabi   1359 Jul 14 14:40 file1
+drwxr-xr-x  13 pipolint  2023_abu-dhabi    442 Jun 24 12:06 inc
+-rw-r--r--   1 pipolint  2023_abu-dhabi   1862 Jul 13 18:00 issues
+-rw-r--r--   1 pipolint  2023_abu-dhabi    325 Jul  8 21:58 issues.txt
+-rw-r--r--   1 pipolint  2023_abu-dhabi     35 Jul 13 11:45 prints
+-rw-r--r--   1 pipolint  2023_abu-dhabi    143 Jul  8 21:56 readline.supp
+-rwxr-xr-x   1 pipolint  2023_abu-dhabi    159 Jul 14 11:39 setup.sh
+drwxr-xr-x   8 pipolint  2023_abu-dhabi    272 Jul 14 14:30 src
+drwxr-xr-x   9 pipolint  2023_abu-dhabi    306 Jun 24 12:06 test
+-rw-r--r--   1 pipolint  2023_abu-dhabi    286 Jun 24 12:06 test.txt
+-rwxr-xr-x   1 pipolint  2023_abu-dhabi    158 Jun 24 12:06 tester.sh
+drwxr-xr-x   8 pipolint  2023_abu-dhabi    272 Jul 14 14:30 tmp
+-rw-r--r--   1 pipolint  2023_abu-dhabi     92 Jun 24 12:06 win_setup.sh

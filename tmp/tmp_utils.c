@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 22:25:25 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/02 14:05:12 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/13 14:38:57 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,11 @@
 
 t_bool	write_error(char *str)
 {
-	write(2, str, ft_strlen(str));
+	if (str)
+	{
+		if (write(2, str, ft_strlen(str)) == -1)
+			return (False);
+	}
 	return (False);
 }
 

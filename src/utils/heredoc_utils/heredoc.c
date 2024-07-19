@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/10 21:06:32 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/19 17:57:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void	heredoc_child(t_heredoc *h)
 	int			j;
 	char		*line;
 	char		*var;
-	int			temp_in;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, heredoc_sigquit);
@@ -59,8 +58,10 @@ void	heredoc_child(t_heredoc *h)
 	g_signum = -1;
 	if (h->cmd->before == PIPE_OP)
 	{
-		temp_in = dup(h->exec->std_in);
-		dup2(temp_in, STDIN_FILENO);
+		if (dup_and_check(h->exec->std_in, STDIN_FILENO, h->exec) == -1)
+			return ;
+		if (close_and_check(h->exec->std_in, h->exec) == -1)
+			return ;
 	}
 	while (1)
 	{
@@ -103,15 +104,31 @@ void	heredoc_child(t_heredoc *h)
 	close(h->fds[WRITEEND]);
 	if (line)
 		free(line);
-	exit(h->exec->last_status);
+	close(h->exec->std_in);
+	close(h->exec->std_out);
+	if (h->cmd->after == PIPE_OP || h->cmd->before == PIPE_OP)
+	{
+		close(h->exec->fds[READEND]);
+		close(h->exec->fds[WRITEEND]);
+	}
+	free_and_exit(h->m, -1);
 }
 
-t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec, t_env **env)
+void	do_nothing2(int sig)
+{
+	(void)sig;
+}
+
+t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec)
 {
 	int		ex;
 	char	*tmp;
 
+	signal(SIGINT, do_nothing2);
+	signal(SIGQUIT, do_nothing2);
 	waitpid(exec->last_pid, &ex, 0);
+	signal(SIGINT, sig_handle);
+	signal(SIGQUIT, SIG_IGN);
 	if (WIFSIGNALED(ex) && WTERMSIG(ex) == SIGINT)
 	{
 		exec->last_status = 1;
@@ -120,8 +137,13 @@ t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec, t_env **env)
 		tmp = ft_itoa(1);
 		if (!tmp)
 			return (False);
-		set_var(env, "?", tmp, False);
+		set_var(&m->env, "?", tmp, False);
 		free(tmp);
+		if (!(*cmd)->next || ((*cmd)->next && !(*cmd)->next->heredoc))
+		{
+			close(fds[WRITEEND]);
+			close(fds[READEND]);
+		}
 		return (False);
 	}
 	close(fds[WRITEEND]);
@@ -134,12 +156,13 @@ t_bool	heredoc_parent(t_cmd **cmd, int *fds, t_exec *exec, t_env **env)
 	return (True);
 }
 
-t_bool	heredoc_loop(t_cmd *cmd, t_exec *exec, t_env **env)
+t_bool	heredoc_loop(t_main *m, t_cmd *cmd, t_exec *exec, t_env **env)
 {
 	t_heredoc	h;
 	int			heredoc_fds[2];
 
 	h.i = -1;
+	h.m = m;
 	h.cmd = cmd;
 	h.exec = exec;
 	h.env = env;
@@ -178,5 +201,5 @@ t_bool	heredoc(t_heredoc *h)
 	h->exec->last_pid = p;
 	if (p == 0)
 		heredoc_child(h);
-	return (heredoc_parent(&h->cmd, h->fds, h->exec, h->env));
+	return (heredoc_parent(h->m, &h->cmd, h->fds, h->exec));
 }

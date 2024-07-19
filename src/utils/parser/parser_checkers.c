@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 17:05:39 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/10 18:38:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:25:46 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,18 +99,29 @@ t_bool	is_legal_queue_end(t_queue *q, char *s)
 t_bool	is_legal_control_op(char *s, t_queue *q)
 {
 	int		opened;
+	int		word;
 	t_queue	*q_end;
 
 	opened = 0;
+	word = 0;
 	q_end = NULL;
 	while (q)
 	{
 		opened += (q->type == Bracket_open);
 		opened -= (q->type == Bracket_closed);
+		if (!is_meta_char(q->s, True) && q->type != Bracket_open)
+		{
+			if (q->type != Whitespace)
+				word++;
+		}
+		else if (is_meta_char(q->s, True))
+			word = 0;
 		if (q->type != Whitespace)
 			q_end = q;
 		q = q->next;
 	}
+	if (word && s[0] == LP)
+		return (False);
 	if ((!q_end && is_meta_char(s, True) && s[0] != LP)
 		|| (s[0] == RP && !opened))
 		return (False);

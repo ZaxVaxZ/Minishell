@@ -4,3 +4,26 @@ heredoc issues:
 --track-fds=yes --tool=memcheck --leak-check=full --show-leak-kinds=all --track-children=yes
 
 valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp --trace-children=yes --track-fds=yes ./bin/minishell
+
+<<a ls <setup.sh: bad file descriptor (FIXED)
+sleep 2; echo hi: bad file descriptor (FIXED)
+heredoc with &&/|| gets bad file descriptor when SIGINT (FIXED)
+
+<setup.sh cat <<a ls:
+	infile followed by heredoc leads to bad file descriptors
+potential issue:
+	when doing <<a cat; if you sigquit while there is a line, the line will be deleted
+<<a uwu | <<b cat:
+	the arrow is printing alongside the message saying the command is not found
+
+
+<<a echo hi: not heredocing (FIXED)
+when ctrl + c with a line in the prompt, the history sometimes bugs and doesn't scroll up (FIXED)
+echo hi > $ksjflsdj (redirect to a variable that doesn't exist in the environment) (LOL) (unimportant)
+command followed by open paranthesis -> allows execution when it should give illegal syntax error (FIXED)
+cat | ls: cat doesn't close properly (FIXED)
+parenthesis right after a command are not being treated as illegal (FIXED)
+echo hi (<<a ls) ->prints hi and then proceeds to heredoc. after that, it then executs the ls command (FIXED)
+heredoc sigint segfaulting (FIXED)
+heredoc piped with another heredoc: when interupting, pointer being fered was not allocated (FIXED)
+moving structs to their own header file (FIXED)

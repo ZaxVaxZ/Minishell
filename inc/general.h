@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   general.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/08 12:04:10 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/18 14:39:25 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GENERAL_H
 # define GENERAL_H
 
-# define BLACK(str)   "\e[0;30m"str"\x1b[0m" // Black - Regular
+# define BLACK   "\e[0;30m" // Black - Regular
 # define RED     "\e[0;31m" // Red
 # define GREEN   "\e[0;32m" // Green
 # define YELLOW  "\e[0;33m" // Yellow
@@ -70,40 +70,28 @@
 # define SC ';'
 # define DS '$'
 
+# define SUCCESS 0
+# define FAILURE 1
+# define ERR_MEM 2
+# define ERR_DUP 3
+# define ERR_WRT 4
+# define ERR_CLS 5
+# define ERR_FRK 6
+# define ERR_PIP 7
+# define ERR_CWD 8
+
 # include <stdio.h>
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include "structs.h"
 
-/* int	g_signum; */
-
-typedef enum e_bool
-{
-	False,
-	True
-}	t_bool;
-
-typedef struct s_env
-{
-	char			*key;
-	char			*value;
-	t_bool			exported;
-	struct s_env	*next;
-}	t_env;
-
-
-typedef struct s_msh
-{
-	char	*line;
-	char	*cwd;
-	int		status;
-	void	*interrupt;
-	void	*q;
-	t_env	*env;
-}	t_msh;
-
-char	*return_cwd(char *old_cwd);
 void	rl_replace_line (const char *text, int clear_undo);
-char	*get_line(char *cwd);
+char	*get_line(t_main *m);
+void	handle_msg(int msg);
+int		free_up_cmd_mem(t_main *m);
+void	init_main_struct(t_main *m, char **env);
+void	free_and_exit(t_main *m, int msg);
+int		handle_cmd_line(t_env **envp, t_main *m);
 
 #endif

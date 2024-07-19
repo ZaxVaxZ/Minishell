@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:32 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/05/30 16:01:38 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/17 15:02:26 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ int		op_occur(char c, char *s);
 t_bool	found_in(char c, char *s);
 t_bool	add_str_to_queue(t_queue **q, char *str);
 t_bool	parse_word(t_queue **q, char **s, t_bool var_name);
-int		parse_clean_up(t_queue **h, t_env *env);
+//int		parse_clean_up(t_queue **h, t_env *env);
+int		parse_clean_up(t_main *m, t_queue **h);
 int		syntax_error(t_queue **q, char *token, t_bool missing, t_bool at_end);
 void	delete_next(t_queue **q);
 
