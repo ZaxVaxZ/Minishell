@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/18 14:39:43 by marvin           ###   ########.fr       */
+/*   Updated: 2024/07/19 17:57:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "get_next_line.h"
 #include "general.h"
+
+extern int	g_signum;
 
 int	check_and_write(t_heredoc *h, char **ret, char **line)
 {
@@ -110,7 +112,6 @@ void	heredoc_child(t_heredoc *h)
 		close(h->exec->fds[WRITEEND]);
 	}
 	free_and_exit(h->m, -1);
-	//exit(h->exec->last_status);
 }
 
 void	do_nothing2(int sig)
@@ -138,8 +139,11 @@ t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec)
 			return (False);
 		set_var(&m->env, "?", tmp, False);
 		free(tmp);
-		close(fds[WRITEEND]);
-		close(fds[READEND]);
+		if (!(*cmd)->next || ((*cmd)->next && !(*cmd)->next->heredoc))
+		{
+			close(fds[WRITEEND]);
+			close(fds[READEND]);
+		}
 		return (False);
 	}
 	close(fds[WRITEEND]);

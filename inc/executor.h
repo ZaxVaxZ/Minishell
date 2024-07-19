@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/17 20:47:42 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/19 10:20:25 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int		execute_commands(t_main *m);
 int		exec_type(t_exec *exec, t_cmd **cmd);
 char	*search_path(t_env **env, t_cmd *cmd);
 t_bool	should_exec(t_exec *exec, t_cmd *cmd);
-int		wait_for_children(t_exec *exec, t_cmd *cmds);
+int		wait_for_children(t_exec *exec);
 
 t_bool	handle_cmds(t_main *m, t_cmd **cmd, t_exec *exec);
 t_bool	execute(t_main *m, t_cmd *cmd, t_exec *exec);

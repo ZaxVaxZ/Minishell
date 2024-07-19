@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/17 20:46:46 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/19 19:36:37 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,6 @@ t_bool	exec_cmd(t_main *m, t_cmd **cmd, t_exec *exec, int *fds)
 	
 	signal(SIGINT, do_nothing);
 	signal(SIGQUIT, do_nothing);
-	if (heredoc_loop(m, *cmd, exec, &m->env) == False)
-		return (True);
 	proc_id = fork();
 	if (proc_id < 0)
 	{
@@ -105,6 +103,8 @@ t_bool	handle_cmds(t_main *m, t_cmd **cmd, t_exec *exec)
 			return (False);
 		exec->fds = fds;
 	}
+	if (heredoc_loop(m, *cmd, exec, &m->env) == False)
+		return (True);
 	exec->ret = resolve_builtin(m, *cmd, exec, False);
 	if (exec->ret == -5)
 		return (False);
@@ -120,14 +120,13 @@ t_bool	handle_cmds(t_main *m, t_cmd **cmd, t_exec *exec)
 	}
 	else if (exec->ret == 1)
 	{
-		if (close_and_check((*cmd)->in_fd, exec) == -1)
-			return (-1);
+		if ((*cmd)->in_fd)
+			if (close_and_check((*cmd)->in_fd, exec) == -1)
+				return (-1);
 		exec->last_status = SUCCESS;
 		exec->last_op = (*cmd)->after;
 		exec->status_depth = exec->curr_depth;
 	}
-	//else if (exec_cmd(&m->env, cmd, exec, fds) == False)
-	//	return (False);
 	else if (exec_cmd(m, cmd, exec, fds) == False)
 		return (False);
 	return (True);
@@ -157,7 +156,7 @@ int	execute_commands(t_main *m)
 		if (cmd)
 			cmd = cmd->next;
 	}
-	if (wait_for_children(&exec, cmd) == -1)
+	if (wait_for_children(&exec) == -1)
 		return (-1);
 	if (exec.ret != -5)
 		m->status = exec.last_status;

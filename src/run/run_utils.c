@@ -6,13 +6,13 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/16 21:22:15 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/19 20:26:16 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-int	wait_for_children(t_exec *exec, t_cmd *cmds)
+int	wait_for_children(t_exec *exec)
 {
 	int		status;
 	pid_t	child;
@@ -33,7 +33,7 @@ int	wait_for_children(t_exec *exec, t_cmd *cmds)
 	}
 	signal(SIGINT, sig_handle);
 	signal(SIGQUIT, SIG_IGN);
-	if (exec->last_op != AND_OP && exec->last_op != OR_OP)
+	if (exec->last_op != AND_OP && exec->last_op != OR_OP && exec->last_op != SEMICOLON)
 	{
 		if (dup_and_check(exec->std_in, STDIN_FILENO, exec) == -1)
 			return (-1);
@@ -44,7 +44,6 @@ int	wait_for_children(t_exec *exec, t_cmd *cmds)
 		if (close_and_check(exec->std_out, exec) == -1)
 			return (-1);
 	}
-	(void)cmds;
 	return (1);
 }
 
@@ -114,8 +113,9 @@ int	exec_type(t_exec *exec, t_cmd **cmd)
 		return (DO_NOT_EXECUTE);
 	while ((*cmd)->rep == LP)
 		(*cmd) = (*cmd)->next;
-	if ((*cmd)->before == OR_OP || (*cmd)->before == AND_OP || (*cmd)->before == SEMICOLON)
-		wait_for_children(exec, *cmd);
+	//if ((*cmd)->before == OR_OP || (*cmd)->before == AND_OP || (*cmd)->before == SEMICOLON)
+	if (((*cmd)->before == OR_OP || (*cmd)->before == AND_OP || (*cmd)->before == SEMICOLON) && (exec->last_status != EXIT_FAILURE))
+		wait_for_children(exec);
 	while (*cmd)
 	{
 		exec->curr_depth += ((*cmd)->rep == LP);
