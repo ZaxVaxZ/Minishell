@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/20 15:41:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/20 17:34:15 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ char	*get_line(t_main *m);
 void	handle_msg(int msg);
 int		free_up_cmd_mem(t_main *m);
 //void	init_main_struct(t_main *m, char **env);
-void	heredoc_exit(t_heredoc *h);
+void	heredoc_exit(t_heredoc *h, int close_pipes);
 void	free_and_exit(t_main *m, int msg);
 int		handle_cmd_line(t_env **envp, t_main *m);
 

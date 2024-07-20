@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:44:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/18 15:23:43 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/20 21:20:52 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,10 @@ int	handle_cmd_line(t_env **envp, t_main *m)
 {
 	int		ret;
 	char	*tmp;
-	t_queue	*q;
-	t_cmd	*cmds;
 	int		p_cleanup;
 
 	if (!m->line || !*m->line || m->line[0] == NL)
 		return (free_up_cmd_mem(m));
-	cmds = NULL;
 	m->q = parse(m->line);
 	if (add_to_history(m) == -1)
 		return (-1);

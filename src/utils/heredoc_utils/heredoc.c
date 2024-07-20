@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/20 16:50:43 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/20 22:14:11 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	heredoc_child(t_heredoc *h)
 	{
 		line = readline("> ");
 		if (g_signum == SIGINT)
-			heredoc_exit(h);
+			heredoc_exit(h, h->cmd->before == PIPE_OP);
 		tmp = line;
 		line = ft_strjoin_chr(line, '\n', "");
 		free(tmp);
@@ -142,7 +142,12 @@ t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec)
 	signal(SIGINT, sig_handle);
 	signal(SIGQUIT, SIG_IGN);
 	if (WEXITSTATUS(ex) == 252)
+	{
+		exec->last_status = 252;
+		close(fds[WRITEEND]);
+		close(fds[READEND]);
 		return (False);
+	}
 	if (WIFSIGNALED(ex) && WTERMSIG(ex) == SIGINT)
 	{
 		exec->last_status = 1;
