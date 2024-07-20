@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 16:41:40 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/16 13:48:14 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/20 15:36:42 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,33 @@ typedef struct s_main
 	t_cmd	*cmds;
 	t_env	*env;
 }	t_main;
+
+typedef struct s_exec
+{
+	int		ret;
+	int		curr_depth;
+	int		status_depth;
+	int		overall_status;
+	int		last_status;
+	int		last_op;
+	int		*exit_status;
+	int		std_in;
+	int		std_out;
+	int		*fds;
+	t_env	**env;
+	pid_t	last_pid;
+	t_cmd	**cmd_head;
+}	t_exec;
+
+typedef struct s_heredoc
+{
+	t_main	*m;
+	t_env 	**env;
+	t_cmd 	*cmd;
+	t_exec 	*exec;
+	int 	*fds;
+	int		i;
+}	t_heredoc;
+
 
 #endif

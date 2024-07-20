@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/18 14:39:20 by marvin           ###   ########.fr       */
+/*   Updated: 2024/07/20 15:35:55 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,47 @@ char	*get_line(t_main *m)
 	if (cmd)
 		free(cmd);
 	return (new);
+}
+
+void	env_handle(t_main *m)
+{
+	char	*tmp;
+
+	if (!get_var(m->env, "SHLVL"))
+		tmp = ft_itoa(1);
+	else
+		tmp = ft_itoa(ft_atoi(get_var(m->env, "SHLVL")) + 1);
+	if (!tmp || !set_var(&(m->env), "SHLVL", tmp, True))
+		free_and_exit(m, ERR_MEM);
+	free(tmp);
+	tmp = ft_strdup("0");
+	if (!tmp || !add_var(&(m->env), "?", tmp))
+		free_and_exit(m, ERR_MEM);
+	free(tmp);
+	tmp = ft_strdup("JesterShell");
+	if (!tmp || !add_var(&(m->env), "0", tmp)
+		|| !set_var(&(m->env), "SHELL", tmp, True))
+		free_and_exit(m, ERR_MEM);
+	free(tmp);
+	tmp = getcwd(NULL, 0);
+	if (!tmp)
+		free_and_exit(m, ERR_CWD);
+	if (!set_var(&(m->env), "PWD", tmp, True))
+		free_and_exit(m, ERR_MEM);
+	free(tmp);
+}
+
+void	init_main_struct(t_main *m, char **env)
+{
+	signal(SIGINT, sig_handle);
+	signal(SIGQUIT, SIG_IGN);
+	m->cmds = NULL;
+	m->line = NULL;
+	m->cwd = NULL;
+	m->q = NULL;
+	m->status = SUCCESS;
+	m->env = to_env_list(env);
+	env_handle(m);
 }
 
 int	main(int ac, char **av, char **env)

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/19 21:02:32 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/20 12:35:01 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ int	open_outs_and_in(t_cmd *cmd, t_exec *exec)
 		{
 			if (!cmd->in_flags[i] && (open_and_check(&cmd->in_fd, cmd->infiles[i], 0, exec) == -1))
 					return (-1);
-			if (i != cmd->infile_cnt - 1 && !cmd->in_flags[i] && close_and_check(cmd->in_fd, exec) == -1)
-				return (-1);
+			//if (i != cmd->infile_cnt - 1 && !cmd->in_flags[i] && close_and_check(cmd->in_fd, exec) == -1)
+			//	return (-1);
 		}
 	}
 	if (cmd->outfile_cnt)

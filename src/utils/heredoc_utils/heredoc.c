@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/19 17:57:59 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:50:43 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,22 @@ void	heredoc_sigquit(int sig)
 	write(1, "\b\b  \b\b", 6);
 }
 
+void	heredoc_sigint(int sig)
+{
+	g_signum = SIGINT;
+	write(1, "\n", 1);
+	close(STDIN_FILENO);
+}
+
 void	heredoc_child(t_heredoc *h)
 {
 	int			i;
 	int			j;
 	char		*line;
 	char		*var;
+	char		*tmp;
 
-	signal(SIGINT, SIG_DFL);
+	signal(SIGINT, heredoc_sigint);
 	signal(SIGQUIT, heredoc_sigquit);
 	close(h->fds[READEND]);
 	g_signum = -1;
@@ -65,8 +73,12 @@ void	heredoc_child(t_heredoc *h)
 	}
 	while (1)
 	{
-		write(1, "> ", 2);
-		line = get_next_line(STDIN_FILENO);
+		line = readline("> ");
+		if (g_signum == SIGINT)
+			heredoc_exit(h);
+		tmp = line;
+		line = ft_strjoin_chr(line, '\n', "");
+		free(tmp);
 		if (!line || (!ft_strncmp(line, h->cmd->infiles[h->i], ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n'))
 			&& ft_strlen(h->cmd->infiles[h->i]) == ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n')))
 			break ;
@@ -114,7 +126,7 @@ void	heredoc_child(t_heredoc *h)
 	free_and_exit(h->m, -1);
 }
 
-void	do_nothing2(int sig)
+void	nothing(int sig)
 {
 	(void)sig;
 }
@@ -124,11 +136,13 @@ t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec)
 	int		ex;
 	char	*tmp;
 
-	signal(SIGINT, do_nothing2);
-	signal(SIGQUIT, do_nothing2);
+	signal(SIGINT, nothing);
+	signal(SIGQUIT, nothing);
 	waitpid(exec->last_pid, &ex, 0);
 	signal(SIGINT, sig_handle);
 	signal(SIGQUIT, SIG_IGN);
+	if (WEXITSTATUS(ex) == 252)
+		return (False);
 	if (WIFSIGNALED(ex) && WTERMSIG(ex) == SIGINT)
 	{
 		exec->last_status = 1;

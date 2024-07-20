@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 18:14:42 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/17 16:22:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:50:35 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,45 +17,55 @@
 #include "cmd_list.h"
 #include "signals.h"
 
-void	env_handle(t_main *m)
-{
-	char	*tmp;
+//void	env_handle(t_main *m)
+//{
+//	char	*tmp;
 
-	if (!get_var(m->env, "SHLVL"))
-		tmp = ft_itoa(1);
-	else
-		tmp = ft_itoa(ft_atoi(get_var(m->env, "SHLVL")) + 1);
-	if (!tmp || !set_var(&(m->env), "SHLVL", tmp, True))
-		free_and_exit(m, ERR_MEM);
-	free(tmp);
-	tmp = ft_strdup("0");
-	if (!tmp || !add_var(&(m->env), "?", tmp))
-		free_and_exit(m, ERR_MEM);
-	free(tmp);
-	tmp = ft_strdup("JesterShell");
-	if (!tmp || !add_var(&(m->env), "0", tmp)
-		|| !set_var(&(m->env), "SHELL", tmp, True))
-		free_and_exit(m, ERR_MEM);
-	free(tmp);
-	tmp = getcwd(NULL, 0);
-	if (!tmp)
-		free_and_exit(m, ERR_CWD);
-	if (!set_var(&(m->env), "PWD", tmp, True))
-		free_and_exit(m, ERR_MEM);
-	free(tmp);
-}
+//	if (!get_var(m->env, "SHLVL"))
+//		tmp = ft_itoa(1);
+//	else
+//		tmp = ft_itoa(ft_atoi(get_var(m->env, "SHLVL")) + 1);
+//	if (!tmp || !set_var(&(m->env), "SHLVL", tmp, True))
+//		free_and_exit(m, ERR_MEM);
+//	free(tmp);
+//	tmp = ft_strdup("0");
+//	if (!tmp || !add_var(&(m->env), "?", tmp))
+//		free_and_exit(m, ERR_MEM);
+//	free(tmp);
+//	tmp = ft_strdup("JesterShell");
+//	if (!tmp || !add_var(&(m->env), "0", tmp)
+//		|| !set_var(&(m->env), "SHELL", tmp, True))
+//		free_and_exit(m, ERR_MEM);
+//	free(tmp);
+//	tmp = getcwd(NULL, 0);
+//	if (!tmp)
+//		free_and_exit(m, ERR_CWD);
+//	if (!set_var(&(m->env), "PWD", tmp, True))
+//		free_and_exit(m, ERR_MEM);
+//	free(tmp);
+//}
 
-void	init_main_struct(t_main *m, char **env)
+//void	init_main_struct(t_main *m, char **env)
+//{
+//	signal(SIGINT, sig_handle);
+//	signal(SIGQUIT, SIG_IGN);
+//	m->cmds = NULL;
+//	m->line = NULL;
+//	m->cwd = NULL;
+//	m->q = NULL;
+//	m->status = SUCCESS;
+//	m->env = to_env_list(env);
+//	env_handle(m);
+//}
+
+void	heredoc_exit(t_heredoc *h)
 {
-	signal(SIGINT, sig_handle);
-	signal(SIGQUIT, SIG_IGN);
-	m->cmds = NULL;
-	m->line = NULL;
-	m->cwd = NULL;
-	m->q = NULL;
-	m->status = SUCCESS;
-	m->env = to_env_list(env);
-	env_handle(m);
+	free_and_return(&h->m->q, &h->m->env, &h->m->cmds, NULL);
+	free(h->m->line);
+	close(h->fds[WRITEEND]);
+	close(h->exec->std_in);
+	close(h->exec->std_out);
+	exit(252);
 }
 
 void	handle_msg(int msg)

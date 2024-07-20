@@ -1,21 +1,25 @@
 heredoc issues:
 	$$USER expected behaviour: print the result of the variable $$ and then print USER
 
---track-fds=yes --tool=memcheck --leak-check=full --show-leak-kinds=all --track-children=yes
-
 valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp --trace-children=yes --track-fds=yes ./bin/minishell
+
+<<a cat | <<b ls: some open file descriptors when interrupting the first command
+	2 open fds:
+		at : pipe (syscall-template.S:78)
+		by: pipe_and_check (in /home/vscode/src/bin/minishell)
+		by: handle_cmds (in /home/vscode/src/bin/minishell)
+		by: execute_commands (in /home/vscode/src/bin/minishell)
+		by: handle_cmd_line (in /home/vscode/src/bin/minishell)
+		by: main (in /home/vscode/src/bin/minishell)
+
+<<a ls: not setting the right exit value when interrupted
 
 <<a ls <setup.sh: bad file descriptor (FIXED)
 sleep 2; echo hi: bad file descriptor (FIXED)
 heredoc with &&/|| gets bad file descriptor when SIGINT (FIXED)
-
-<setup.sh cat <<a ls:
-	infile followed by heredoc leads to bad file descriptors
-potential issue:
-	when doing <<a cat; if you sigquit while there is a line, the line will be deleted
-<<a uwu | <<b cat:
-	the arrow is printing alongside the message saying the command is not found
-
+<setup.sh cat <<a ls: infile followed by heredoc leads to bad file descriptors (FIXED)
+when doing <<a cat; if you sigquit while there is a line, the line will be deleted (FIXED)
+<<a uwu | <<b cat: the arrow is printing alongside the message saying the command is not found (FIXED)
 
 <<a echo hi: not heredocing (FIXED)
 when ctrl + c with a line in the prompt, the history sometimes bugs and doesn't scroll up (FIXED)

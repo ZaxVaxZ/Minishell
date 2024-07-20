@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/19 10:20:25 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/20 15:38:35 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,35 +39,8 @@
 # define IMMEDIATE_EXEC 2
 # define CHILD_PROCESS 0
 # define SUCCESS 0
-# define READEND 0
-# define WRITEEND 1
-
-typedef struct s_exec
-{
-	int		ret;
-	int		curr_depth;
-	int		status_depth;
-	int		overall_status;
-	int		last_status;
-	int		last_op;
-	int		*exit_status;
-	int		std_in;
-	int		std_out;
-	int		*fds;
-	t_env	**env;
-	pid_t	last_pid;
-	t_cmd	**cmd_head;
-}	t_exec;
-
-typedef struct s_heredoc
-{
-	t_main	*m;
-	t_env 	**env;
-	t_cmd 	*cmd;
-	t_exec 	*exec;
-	int 	*fds;
-	int		i;
-}	t_heredoc;
+//# define READEND 0
+//# define WRITEEND 1
 
 t_bool	clean_whitespace(t_main *m);
 int		resolve_builtin(t_main *m, t_cmd *cmd, t_exec *exec, t_bool child);

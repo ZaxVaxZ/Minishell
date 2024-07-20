@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/18 14:39:25 by marvin           ###   ########.fr       */
+/*   Updated: 2024/07/20 15:41:05 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,9 @@
 # define SC ';'
 # define DS '$'
 
+
+# define READEND 0
+# define WRITEEND 1
 # define SUCCESS 0
 # define FAILURE 1
 # define ERR_MEM 2
@@ -90,7 +93,8 @@ void	rl_replace_line (const char *text, int clear_undo);
 char	*get_line(t_main *m);
 void	handle_msg(int msg);
 int		free_up_cmd_mem(t_main *m);
-void	init_main_struct(t_main *m, char **env);
+//void	init_main_struct(t_main *m, char **env);
+void	heredoc_exit(t_heredoc *h);
 void	free_and_exit(t_main *m, int msg);
 int		handle_cmd_line(t_env **envp, t_main *m);
 
