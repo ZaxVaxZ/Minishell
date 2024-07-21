@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/19 19:33:49 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/21 21:32:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,21 @@ int	resolve_builtin(t_main *m, t_cmd *cmd, t_exec *exec, t_bool child)
 		|| (child && cmd->before != PIPE_OP && cmd->after != PIPE_OP)
 		|| (!cmd || !cmd->params || !cmd->params[0]))
 		return (0);
+	for (int i = 0; cmd->params[i]; i++)
+	{
+		printf("%s\n", cmd->params[i]);
+	}
 	if (cmd->infile_cnt || cmd->outfile_cnt)
 	{
-		if (open_outs_and_in(cmd, exec) == -1)
-			return (2);
+		if (open_outs_and_in(m, cmd, exec) == -1)
+		{
+			fprintf(stderr, "should exit\n");
+			close(exec->fds[READEND]);
+			close(exec->fds[WRITEEND]);
+			//free_and_return(&m->q, &m->env, &m->cmds, cmd);
+			free_and_exit(m, -1);
+			//return (2);
+		}
 	}
 	if (cmd->outfile_cnt)
 	{
@@ -103,6 +114,7 @@ int	resolve_builtin(t_main *m, t_cmd *cmd, t_exec *exec, t_bool child)
 	{
 		if (!export_cmd(&m->env, cmd->params + 1))
 			ret = -1;
+		printf("ret %d\n", ret);
 	}
 	else if (!ft_strncmp(cmd->params[0], "env", -1))
 	{
@@ -116,5 +128,6 @@ int	resolve_builtin(t_main *m, t_cmd *cmd, t_exec *exec, t_bool child)
 	}
 	else
 		return (0);
+	//close(0);
 	return (ret);
 }

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/20 22:16:36 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/21 21:04:11 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,16 +95,32 @@ t_bool	handle_cmds(t_main *m, t_cmd **cmd, t_exec *exec)
 	int	handle;
 
 	handle = exec_type(exec, cmd);
+	fds[READEND] = -1;
+	fds[WRITEEND] = -1;
 	if (!*cmd || handle == DO_NOT_EXECUTE)
 		return (True);
 	if ((*cmd)->before == PIPE_OP || (*cmd)->after == PIPE_OP)
 	{
 		if (pipe_and_check(fds, exec) == -1)
 			return (False);
+		fprintf(stderr, "READEND: %d\n", fds[READEND]);
+		fprintf(stderr, "WRITEEND: %d\n", fds[WRITEEND]);
 		exec->fds = fds;
 	}
 	if (heredoc_loop(m, *cmd, exec, &m->env) == False)
-		return (True);
+	{
+		if (fds[READEND] > 0)
+		{
+			fprintf(stderr, "Closing readend due to heredoc returning fail\n");
+			close_and_check(fds[READEND], exec);
+		}
+		if (fds[WRITEEND] > 0)
+		{
+			fprintf(stderr, "Closing writeend due to writeend returning fail\n");
+			close_and_check(fds[WRITEEND], exec);
+		}
+		return (False);
+	}
 	exec->ret = resolve_builtin(m, *cmd, exec, False);
 	if (exec->ret == -5)
 		return (False);
@@ -156,6 +172,14 @@ int	execute_commands(t_main *m)
 		if (cmd)
 			cmd = cmd->next;
 	}
+	if (dup_and_check(exec.std_in, STDIN_FILENO, &exec) == -1)
+			return (-1);
+	if (dup_and_check(exec.std_out, STDOUT_FILENO, &exec) == -1)
+		return (-1);
+	if (close_and_check(exec.std_in, &exec) == -1)
+		return (-1);
+	if (close_and_check(exec.std_out, &exec) == -1)
+		return (-1);
 	if (wait_for_children(&exec) == -1)
 		return (-1);
 	if (exec.ret != -5)

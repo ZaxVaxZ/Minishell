@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:44:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/20 21:20:52 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/21 21:36:28 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,10 @@ int	handle_cmd_line(t_env **envp, t_main *m)
 	clean_whitespace(m);
 	if (!build_commands(m))
 		return (1);
+	for (int i = 0; m->cmds->params[i]; i++)
+	{
+		printf("param %d: %s\n", i + 1, m->cmds->params[i]);
+	}
 	ret = execute_commands(m);
 	if (ret == -5)
 	{

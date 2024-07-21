@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/20 22:14:11 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:09:36 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,26 +143,20 @@ t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec)
 	signal(SIGQUIT, SIG_IGN);
 	if (WEXITSTATUS(ex) == 252)
 	{
-		exec->last_status = 252;
 		close(fds[WRITEEND]);
 		close(fds[READEND]);
-		return (False);
-	}
-	if (WIFSIGNALED(ex) && WTERMSIG(ex) == SIGINT)
-	{
 		exec->last_status = 1;
 		(*cmd)->status = exec->last_status;
-		write(1, "\n", 1);
 		tmp = ft_itoa(1);
 		if (!tmp)
 			return (False);
 		set_var(&m->env, "?", tmp, False);
 		free(tmp);
-		if (!(*cmd)->next || ((*cmd)->next && !(*cmd)->next->heredoc))
-		{
-			close(fds[WRITEEND]);
-			close(fds[READEND]);
-		}
+		//if (!(*cmd)->next || ((*cmd)->next && !(*cmd)->next->heredoc))
+		//{
+		//	close(fds[WRITEEND]);
+		//	close(fds[READEND]);
+		//}
 		return (False);
 	}
 	close(fds[WRITEEND]);

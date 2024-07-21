@@ -6,13 +6,13 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/20 22:05:51 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/21 18:01:14 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-int	open_outs_and_in(t_cmd *cmd, t_exec *exec)
+int	open_outs_and_in(t_main *m, t_cmd *cmd, t_exec *exec)
 {
 	int	i;
 
@@ -22,7 +22,15 @@ int	open_outs_and_in(t_cmd *cmd, t_exec *exec)
 		while (++i < cmd->infile_cnt)
 		{
 			if (!cmd->in_flags[i] && (open_and_check(&cmd->in_fd, cmd->infiles[i], 0, exec) == -1))
-					return (-1);
+			{
+				m->status = 1;
+				if (cmd->before == PIPE_OP)
+				{
+					close(exec->fds[READEND]);
+					close(exec->fds[WRITEEND]);
+				}
+				free_and_exit(m, -1);
+			}
 			//if (i != cmd->infile_cnt - 1 && !cmd->in_flags[i] && close_and_check(cmd->in_fd, exec) == -1)
 			//	return (-1);
 		}
@@ -92,8 +100,9 @@ void	child_process(t_main *m, t_cmd *cmd, t_exec *exec, int *fds)
 
 	close(exec->std_in);
 	close(exec->std_out);
-	if (open_outs_and_in(cmd, exec) == -1)
-		child_free_and_exit(&m->env, exec, exec->last_status);
+	if (open_outs_and_in(m, cmd, exec) == -1)
+		free_and_exit(m, -1);
+		//child_free_and_exit(&m->env, exec, exec->last_status);
 	dups_and_closes(cmd, exec, &m->env, fds);
 	ret = resolve_builtin(m, cmd, exec, True);
 	if (ret == 0)

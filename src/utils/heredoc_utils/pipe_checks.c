@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:58:04 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/19 19:40:54 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/21 15:07:36 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	open_and_check(int *fd, char *filename, int mode, t_exec *exec)
 	if (*fd == -1)
 	{
 		if (exec)
-			exec->last_status = 127;
+			exec->last_status = EXIT_FAILURE;
 		perror(filename);
 		return (-1);
 	}
