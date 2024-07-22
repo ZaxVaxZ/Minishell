@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 03:34:49 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/17 20:47:02 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/22 12:26:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ static t_bool	queue_node_to_cmd(t_queue **q, t_cmd *cmd, t_env **env)
 {
 	if ((*q) && (*q)->type == Assign && (*q)->next)
 	{
-		if ((*q)->next->type == Name)
+		if ((*q)->next && (*q)->next->type == Name)
 		{
 			if (!add_var(env, (*q)->s, (*q)->next->s))
 				return (free_cmd_node(cmd));
@@ -126,7 +126,7 @@ static t_bool	queue_node_to_cmd(t_queue **q, t_cmd *cmd, t_env **env)
 		else if (!add_var(env, (*q)->s, ""))
 			return (free_cmd_node(cmd));
 	}
-	else if ((*q) && (*q)->type == Word)
+	if ((*q) && (*q)->type == Word)
 	{
 		cmd->params[cmd->params_cnt] = ft_strdup((*q)->s);
 		if (!cmd->params[cmd->params_cnt++])

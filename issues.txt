@@ -14,6 +14,7 @@ valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp --
 	pipes never close even though i did close them in parent and in child process
 
 <kfjsdlkf: a file thats not found; not freeing
+assign not being put into the commands
 when opening a file fails, needs to free
 <flkdjsf | ls: open fds in pipe
 
