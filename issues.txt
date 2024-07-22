@@ -13,10 +13,12 @@ valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp --
 		by: main (in /home/vscode/src/bin/minishell)
 	pipes never close even though i did close them in parent and in child process
 
-<kfjsdlkf: a file thats not found; not freeing
-assign not being put into the commands
-when opening a file fails, needs to free
-<flkdjsf | ls: open fds in pipe
+<kfjsdlkf: a file thats not found; not freeing (FIXED)
+assign not being put into the commands (FIXED)
+when opening a file fails, needs to free (FIXED)
+<flkdjsf | ls: open fds in pipe (FIXED)
+
+ <file1 ls | echo hi > file1 || <<a ls
 
 <<a ls: not setting the right exit value when interrupted
 

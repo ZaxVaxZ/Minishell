@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/22 12:59:47 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/22 18:08:27 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,12 @@ int	resolve_builtin(t_main *m, t_cmd *cmd, t_exec *exec, t_bool child)
 	{
 		if (open_outs_and_in(m, cmd, exec) == -1)
 		{
-			fprintf(stderr, "should exit\n");
-			close(exec->fds[READEND]);
-			close(exec->fds[WRITEEND]);
-			//free_and_return(&m->q, &m->env, &m->cmds, cmd);
-			free_and_exit(m, -1);
-			//return (2);
+			if (cmd->before == PIPE_OP || cmd->after == PIPE_OP)
+			{
+				close(exec->fds[READEND]);
+				close(exec->fds[WRITEEND]);
+			}
+			return (2);
 		}
 	}
 	if (cmd->outfile_cnt)

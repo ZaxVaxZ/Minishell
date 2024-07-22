@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/21 21:04:11 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/22 20:12:43 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,27 +103,19 @@ t_bool	handle_cmds(t_main *m, t_cmd **cmd, t_exec *exec)
 	{
 		if (pipe_and_check(fds, exec) == -1)
 			return (False);
-		fprintf(stderr, "READEND: %d\n", fds[READEND]);
-		fprintf(stderr, "WRITEEND: %d\n", fds[WRITEEND]);
 		exec->fds = fds;
 	}
 	if (heredoc_loop(m, *cmd, exec, &m->env) == False)
 	{
 		if (fds[READEND] > 0)
-		{
-			fprintf(stderr, "Closing readend due to heredoc returning fail\n");
 			close_and_check(fds[READEND], exec);
-		}
 		if (fds[WRITEEND] > 0)
-		{
-			fprintf(stderr, "Closing writeend due to writeend returning fail\n");
 			close_and_check(fds[WRITEEND], exec);
-		}
 		return (False);
 	}
 	exec->ret = resolve_builtin(m, *cmd, exec, False);
 	if (exec->ret == -5)
-		return (False);
+		return (True);
 	else if (exec->ret == 2)
 	{
 		exec->last_status = EXIT_FAILURE;

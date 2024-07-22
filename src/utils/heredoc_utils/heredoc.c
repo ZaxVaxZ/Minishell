@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/21 17:09:36 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/22 18:48:29 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ int	check_and_write(t_heredoc *h, char **ret, char **line)
 void	heredoc_sigquit(int sig)
 {
 	(void)sig;
-	write(1, "\b\b  \b\b", 6);
+	rl_on_new_line();
+	rl_redisplay();
+	write(1, "  \b\b", 4);
+	//write(1, "\b\b  \b\b", 6);
 }
 
 void	heredoc_sigint(int sig)
@@ -61,7 +64,7 @@ void	heredoc_child(t_heredoc *h)
 	char		*tmp;
 
 	signal(SIGINT, heredoc_sigint);
-	signal(SIGQUIT, heredoc_sigquit);
+	signal(SIGQUIT, SIG_IGN);
 	close(h->fds[READEND]);
 	g_signum = -1;
 	if (h->cmd->before == PIPE_OP)
@@ -75,7 +78,7 @@ void	heredoc_child(t_heredoc *h)
 	{
 		line = readline("> ");
 		if (g_signum == SIGINT)
-			heredoc_exit(h, h->cmd->before == PIPE_OP);
+			heredoc_exit(h, h->cmd->after == PIPE_OP || h->cmd->before == PIPE_OP);
 		tmp = line;
 		line = ft_strjoin_chr(line, '\n', "");
 		free(tmp);

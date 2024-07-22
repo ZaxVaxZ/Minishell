@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:44:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/22 13:09:12 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/22 14:34:55 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,12 @@ int	handle_cmd_line(t_env **envp, t_main *m)
 	m->q = parse(m->line);
 	if (add_to_history(m) == -1)
 		return (-1);
-	print_queue(m->q);
 	p_cleanup = parse_clean_up(m, &m->q);
 	if (p_cleanup == -2)
 		return (0);
 	if (syntax_error_cleanup(m, p_cleanup == 1) <= 0)
 		return (1);
 	clean_whitespace(m);
-	print_queue(m->q);
 	if (!build_commands(m))
 		return (1);
 	ret = execute_commands(m);

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:35 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/22 13:15:59 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/22 14:34:40 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ t_bool	parse_single_quote(t_queue **q, char **s)
 		return (False);
 	return (True);
 }
-#include <stdio.h>
+
 /// @brief Parse non-meta characters up to a space or tab
 /// @param q The currently built parse queue
 /// @param s What's left unparsed of the string
@@ -136,7 +136,6 @@ t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
 	int		wlen;
 	t_bool	valid_name;
 
-	printf("%s\n", *s);
 	wlen = 0;
 	valid_name = !found_in((*s)[0], DIGIT);
 	while (is_allowed_in_word(*s + wlen, valid_name, var_name))
