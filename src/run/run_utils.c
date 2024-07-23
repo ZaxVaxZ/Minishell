@@ -6,11 +6,23 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/21 13:51:14 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/23 14:36:28 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+
+int	close_pipes(t_main *m, t_exec *exec, t_cmd *cmd, int *fds)
+{
+	if (cmd->before == PIPE_OP || cmd->after == PIPE_OP)
+	{
+		if (close_and_check(fds[READEND], exec) == -1)
+			return (-1);
+		if (close_and_check(fds[WRITEEND], exec) == -1)
+			return (-1);
+	}
+	return (2);
+}
 
 int	wait_for_children(t_exec *exec)
 {

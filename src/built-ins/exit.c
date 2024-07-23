@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 21:48:00 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/17 18:44:20 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/23 14:30:06 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	exit_free(t_main *m, int code)
 int	exiting(t_main *m, t_cmd *cmd, char **params, t_exec *exec)
 {
 	int	code;
+	int	sign;
 	int	i;
 
 	if (!params)
@@ -55,6 +56,11 @@ int	exiting(t_main *m, t_cmd *cmd, char **params, t_exec *exec)
 	if (!*params)
 		return (1);
 	i = 0;
+	sign = 1;
+	if ((*params)[i] == '-')
+		sign *= -1;
+	if ((*params)[i] == '+' || (*params)[i] == '-')
+		i++;
 	while ((*params)[i])
 	{
 		if ((*params)[i] >= '0' && (*params)[i] <= '9')
@@ -66,7 +72,7 @@ int	exiting(t_main *m, t_cmd *cmd, char **params, t_exec *exec)
 		return (write_num_error(cmd, *params, exec, 1));
 	code = ft_atoi(*params);
 	if (cmd->before == PIPE_OP)
-		exit_free(m, code);
+		exit_free(m, code * sign);
 	(*exec->exit_status) = code;
 	return (1);
 }

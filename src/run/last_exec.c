@@ -6,17 +6,11 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/22 20:12:43 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/23 14:23:06 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-
-void	do_nothing(int sig)
-{
-	if (sig == SIGINT)
-		return ;
-}
 
 t_bool	execute(t_main *m, t_cmd *cmd, t_exec *exec)
 {
@@ -71,7 +65,7 @@ int	init_exec(t_exec *exec, t_cmd **cmds)
 t_bool	exec_cmd(t_main *m, t_cmd **cmd, t_exec *exec, int *fds)
 {
 	pid_t	proc_id;
-	
+
 	signal(SIGINT, do_nothing);
 	signal(SIGQUIT, do_nothing);
 	proc_id = fork();
@@ -94,50 +88,43 @@ t_bool	handle_cmds(t_main *m, t_cmd **cmd, t_exec *exec)
 	int	fds[2];
 	int	handle;
 
+	//if ((*cmd) && (*cmd)->rep == RP)
+	//{
+	//	(*cmd) = (*cmd)->next;
+	//	return (True);
+	//}
 	handle = exec_type(exec, cmd);
 	fds[READEND] = -1;
 	fds[WRITEEND] = -1;
 	if (!*cmd || handle == DO_NOT_EXECUTE)
 		return (True);
-	if ((*cmd)->before == PIPE_OP || (*cmd)->after == PIPE_OP)
-	{
-		if (pipe_and_check(fds, exec) == -1)
-			return (False);
-		exec->fds = fds;
-	}
-	if (heredoc_loop(m, *cmd, exec, &m->env) == False)
-	{
-		if (fds[READEND] > 0)
-			close_and_check(fds[READEND], exec);
-		if (fds[WRITEEND] > 0)
-			close_and_check(fds[WRITEEND], exec);
+	if (!pipe_and_set_fds(exec, fds, cmd))
 		return (False);
-	}
+	if ((*cmd)->heredoc && (*cmd)->heredoc_passed == 0)
+		return (close_heredoc_failed(m, cmd, exec, fds));
 	exec->ret = resolve_builtin(m, *cmd, exec, False);
-	if (exec->ret == -5)
-		return (True);
-	else if (exec->ret == 2)
-	{
-		exec->last_status = EXIT_FAILURE;
-		return (True);
-	}
-	if (exec->ret < 0)
-	{
-		exec->last_status = EXIT_FAILURE;
-		return (False);
-	}
-	else if (exec->ret == 1)
-	{
-		if ((*cmd)->in_fd)
-			if (close_and_check((*cmd)->in_fd, exec) == -1)
-				return (-1);
-		exec->last_status = SUCCESS;
-		exec->last_op = (*cmd)->after;
-		exec->status_depth = exec->curr_depth;
-	}
-	else if (exec_cmd(m, cmd, exec, fds) == False)
-		return (False);
-	return (True);
+	return (deal_with_ret(m, cmd, exec, fds));
+	//if (exec->ret == -5)
+	//	return (True);
+	//else if (exec->ret == 2 || exec->ret < 0)
+	//{
+	//	exec->last_status = EXIT_FAILURE;
+	//	if (exec->ret < 0)
+	//		return (False);
+	//	return (True);
+	//}
+	//else if (exec->ret == 1)
+	//{
+	//	if ((*cmd)->in_fd)
+	//		if (close_and_check((*cmd)->in_fd, exec) == -1)
+	//			return (-1);
+	//	exec->last_status = SUCCESS;
+	//	exec->last_op = (*cmd)->after;
+	//	exec->status_depth = exec->curr_depth;
+	//}
+	//else if (exec_cmd(m, cmd, exec, fds) == False)
+	//	return (False);
+	//return (True);
 }
 
 int	execute_commands(t_main *m)
@@ -150,32 +137,19 @@ int	execute_commands(t_main *m)
 		return (-1);
 	exec.env = &m->env;
 	exec.exit_status = &m->status;
+	if (open_heredocs(m, &exec, cmd) == False)
+		return (False);
 	while (cmd)
 	{
 		exec.curr_depth -= (cmd->rep == RP);
 		exec.status_depth -= (exec.curr_depth < exec.status_depth);
-		if (cmd->rep != RP)
-		{
-			if (!handle_cmds(m, &cmd, &exec))
-				break ;
-			if (cmd && cmd->rep == RP)
-				continue ;
-		}
+		if (!handle_cmds(m, &cmd, &exec))
+			break ;
 		if (cmd)
 			cmd = cmd->next;
 	}
-	if (dup_and_check(exec.std_in, STDIN_FILENO, &exec) == -1)
-			return (-1);
-	if (dup_and_check(exec.std_out, STDOUT_FILENO, &exec) == -1)
+	if (post_command(m, &exec) == -1)
 		return (-1);
-	if (close_and_check(exec.std_in, &exec) == -1)
-		return (-1);
-	if (close_and_check(exec.std_out, &exec) == -1)
-		return (-1);
-	if (wait_for_children(&exec) == -1)
-		return (-1);
-	if (exec.ret != -5)
-		m->status = exec.last_status;
 	return (exec.ret);
 }
 

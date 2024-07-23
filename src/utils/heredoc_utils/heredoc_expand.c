@@ -1,0 +1,65 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_expand.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/23 14:59:06 by pipolint          #+#    #+#             */
+/*   Updated: 2024/07/23 15:41:48 by pipolint         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "executor.h"
+#include "general.h"
+
+static int	get_and_write_var(t_heredoc *h, char *line, int i)
+{
+	int		j;
+	char	*var;
+	size_t	var_len;
+
+	j = i + 1;
+	while (is_valid_var_char(line[j]))
+		j++;
+	var = ft_substr(line, i, j - i);
+	if (!var)
+		free_and_exit(h->m, ERR_MEM);
+	if (get_var(*(h->env), var))
+	{
+		var_len = ft_strlen(get_var(*(h->env), var));
+		if (write(h->fds[WRITEEND], get_var(*(h->env), var), var_len) == -1)
+			free_and_exit(h->m, ERR_WRT);
+	}
+	if (var)
+		free(var);
+	return (j);
+}
+
+void	write_exp_str(t_heredoc *h, char *line)
+{
+	int		i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] != DS)
+			write(h->fds[WRITEEND], line + i, 1);
+		else
+		{
+			if (!is_valid_var_char(line[i + 1]))
+			{
+				if (write(h->fds[WRITEEND], line + i++, 1) == -1)
+					free_and_exit(h->m, ERR_WRT);
+				continue ;
+			}
+			else if (found_in(line[i + 1], DIGIT))
+			{
+				i += 2;
+				continue ;
+			}
+			i = get_and_write_var(h, line, ++i) - 1;
+		}
+		i++;
+	}
+}

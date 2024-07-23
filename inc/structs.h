@@ -6,12 +6,12 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 16:41:40 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/20 15:36:42 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/23 09:52:32 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
-# define STRUCTS_H
+# define STRUCTS_H 
 
 typedef enum e_bool
 {
@@ -55,6 +55,7 @@ typedef struct s_cmd
 	int				params_cnt;
 	int				infile_cnt;
 	int				outfile_cnt;
+	int				heredoc_passed;
 	char			rep;
 	char			**infiles;
 	int				*in_flags;

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:13:59 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/14 13:44:27 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/23 09:54:10 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ t_cmd	*new_cmd_node(char **params, t_queue **q)
 	node->after = 0;
 	node->next = NULL;
 	node->parse = q;
+	node->heredoc_passed = 1;
 	return (node);
 }
 

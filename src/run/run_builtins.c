@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/22 18:08:27 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/23 14:46:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_bool	clean_whitespace(t_main *m)
 {
 	char	*tmp;
 	t_queue	*q;
-	
+
 	q = m->q;
 	while (q && q->next)
 	{
@@ -38,7 +38,7 @@ t_bool	clean_whitespace(t_main *m)
 	return (True);
 }
 
-static int	resolve_builtin_helper(t_main *m, t_env **env, t_cmd *cmd, t_exec *exec)
+static int	builtin_helper(t_main *m, t_env **env, t_cmd *cmd, t_exec *exec)
 {
 	char	*cwd;
 
@@ -68,41 +68,10 @@ static int	resolve_builtin_helper(t_main *m, t_env **env, t_cmd *cmd, t_exec *ex
 	return (1);
 }
 
-int	resolve_builtin(t_main *m, t_cmd *cmd, t_exec *exec, t_bool child)
+int	builtin_helper_v2(t_main *m, t_env **env, t_cmd *cmd, t_exec *exec)
 {
 	int	ret;
 
-	if ((!child && (cmd->before == PIPE_OP || cmd->after == PIPE_OP))
-		|| (child && cmd->before != PIPE_OP && cmd->after != PIPE_OP)
-		|| (!cmd || !cmd->params || !cmd->params[0]))
-		return (0);
-	if (cmd->infile_cnt || cmd->outfile_cnt)
-	{
-		if (open_outs_and_in(m, cmd, exec) == -1)
-		{
-			if (cmd->before == PIPE_OP || cmd->after == PIPE_OP)
-			{
-				close(exec->fds[READEND]);
-				close(exec->fds[WRITEEND]);
-			}
-			return (2);
-		}
-	}
-	if (cmd->outfile_cnt)
-	{
-		if (dup_and_check(cmd->out_fd, STDOUT_FILENO, exec) == -1)
-			return (-1);
-		if (close_and_check(cmd->out_fd, exec) == -1)
-			return (-1);
-	}
-	if (cmd->before == PIPE_OP)
-	{
-		close(exec->fds[WRITEEND]);
-		close(exec->fds[READEND]);
-	}
-	ret = resolve_builtin_helper(m, &m->env, cmd, exec);
-	if (ret == 1 || ret < 0 || ret == -5)
-		return (ret);
 	ret = 1;
 	if (!ft_strncmp(cmd->params[0], "unset", -1))
 		unset(&m->env, cmd->params + 1);
@@ -124,4 +93,32 @@ int	resolve_builtin(t_main *m, t_cmd *cmd, t_exec *exec, t_bool child)
 	else
 		return (0);
 	return (ret);
+}
+
+int	resolve_builtin(t_main *m, t_cmd *cmd, t_exec *exec, t_bool child)
+{
+	int	ret;
+
+	if ((!child && (cmd->before == PIPE_OP || cmd->after == PIPE_OP))
+		|| (child && cmd->before != PIPE_OP && cmd->after != PIPE_OP)
+		|| (!cmd || !cmd->params || !cmd->params[0]))
+		return (0);
+	if (cmd->infile_cnt || cmd->outfile_cnt)
+	{
+		if (open_outs_and_in(m, cmd, exec) == -1)
+			return (close_pipes(m, exec, cmd, exec->fds));
+	}
+	if (cmd->outfile_cnt)
+	{
+		if (dup_and_check(cmd->out_fd, STDOUT_FILENO, exec) == -1)
+			return (-1);
+		if (close_and_check(cmd->out_fd, exec) == -1)
+			return (-1);
+	}
+	if (cmd->before == PIPE_OP)
+		close_pipes(m, exec, cmd, exec->fds);
+	ret = builtin_helper(m, &m->env, cmd, exec);
+	if (ret == 1 || ret < 0 || ret == -5)
+		return (ret);
+	return (builtin_helper_v2(m, &m->env, cmd, exec));
 }

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 20:23:38 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/20 15:08:22 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/23 13:26:40 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,6 @@ extern int	g_signum;
 void	sig_handle(int signal);
 t_bool	set_sig(t_main *m);
 void	sig_heredoc(int signal);
+void	do_nothing(int sig);
 
 #endif
