@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 05:23:45 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/23 14:57:15 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:21:18 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ t_bool	prep_cmd(t_queue *q, t_cmd **node)
 	params[0] = NULL;
 	if (!count_redirs(q, &in, &out))
 		return (True);
-	if (in_out_mallocs(q, node, in, out) == False)
+	if (in_out_mallocs(node, in, out) == False)
 		return (False);
 	return (True);
 }

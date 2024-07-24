@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 13:06:15 by pipolint          #+#    #+#             */
-/*   Updated: 2024/03/13 20:52:17 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:33:17 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ void	cd(t_builtins *b, char *dir)
 	printf("Current PWD: %s\n", b->pwd);
 }
 
-t_bool	echo(char *str, t_bool n)
+t_bool	echo(t_main *m, char *str, t_bool n)
 {
 	if (write(1, str, ft_strlen(str)) == -1)
-		return (False);
+		return (free_and_exit(m, ERR_WRT));
 	if (n && write(1, "\n", 1) == -1)
-		return (False);
+		return (free_and_exit(m, ERR_WRT));
 	return (True);
 }
 

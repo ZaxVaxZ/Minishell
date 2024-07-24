@@ -6,37 +6,38 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 13:31:22 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/17 09:42:49 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 21:24:12 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-t_bool	cd_home(t_env **env, char *pwd)
+t_bool	cd_home(t_main *m, char *pwd)
 {
-	if (get_var(*env, "HOME"))
+	if (get_var(m->env, "HOME"))
 	{
-		if (set_var(env, "OLDPWD", pwd, True) == False)
-			return (False);
-		chdir(get_var(*env, "HOME"));
-		if (set_var(env, "PWD", get_var(*env, "HOME"), True) == False)
-			return (False);
+		if (set_var(&m->env, "OLDPWD", pwd, True) == False)
+			free_and_exit(m, ERR_CLS);
+		chdir(get_var(m->env, "HOME"));
+		if (set_var(&m->env, "PWD", get_var(m->env, "HOME"), True) == False)
+			free_and_exit(m, ERR_CLS);
 	}
 	else
 	{
-		write(2, "cd: HOME not set\n", 17);
+		if (write(2, "cd: HOME not set\n", 17) == -1)
+			free_and_exit(m, ERR_WRT);
 		return (False);
 	}
 	return (True);
 }
 
-t_bool	cd(t_env **env, char *pwd, char *dir)
+t_bool	cd(t_main *m, char *pwd, char *dir)
 {
 	char	*tmp;
 	t_bool	ret;
 
 	if (!dir)
-		return (cd_home(env, pwd));
+		return (cd_home(m, pwd));
 	if (dir[0] == '/')
 		tmp = ft_strdup(dir);
 	else
@@ -49,12 +50,12 @@ t_bool	cd(t_env **env, char *pwd, char *dir)
 		perror(dir);
 		return (False);
 	}
-	if (set_var(env, "OLDPWD", pwd, True) == False)
+	if (set_var(&m->env, "OLDPWD", pwd, True) == False)
 		return (False);
 	tmp = getcwd(NULL, 0);
 	if (!tmp)
 		return (False);
-	ret = set_var(env, "PWD", tmp, True);
+	ret = set_var(&m->env, "PWD", tmp, True);
 	free(tmp);
 	return (ret);
 }

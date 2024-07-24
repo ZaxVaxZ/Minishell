@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/20 15:35:55 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:18:25 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	main(int ac, char **av, char **env)
 			break ;
 		if (!m.line)
 			break ;
-		cmd_ret = handle_cmd_line(&m.env, &m);
+		cmd_ret = handle_cmd_line(&m);
 		if (cmd_ret == -2 || cmd_ret == -5)
 			break ;
 	}

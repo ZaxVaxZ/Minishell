@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 13:28:10 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/24 17:00:01 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:20:21 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,17 @@ t_bool	close_heredoc_failed(t_main *m, t_cmd **cmd, t_exec *exec, int *fds)
 		if ((*cmd)->in_fd > 0)
 		{
 			if (close_and_check((*cmd)->in_fd, exec) == False)
-				return (False);
+				free_and_exit(m, ERR_CLS);
 		}
 		if (fds[READEND] > 0)
 		{
 			if (close_and_check(fds[READEND], exec) == False)
-				return (False);
+				free_and_exit(m, ERR_CLS);
 		}
 		if (fds[WRITEEND] > 0)
 		{
 			if (close_and_check(fds[WRITEEND], exec) == False)
-				return (False);	
+				free_and_exit(m, ERR_CLS);	
 		}
 	}
 	return (False);

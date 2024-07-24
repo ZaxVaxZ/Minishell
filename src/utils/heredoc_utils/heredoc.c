@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/24 14:56:18 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:19:27 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,14 @@ int	check_and_write(t_heredoc *h, char **ret, char **line)
 
 void	heredoc_sigint(int sig)
 {
-	g_signum = SIGINT;
+	g_signum = sig;
 	write(1, "\n", 1);
 	close(STDIN_FILENO);
 }
 
 void	heredoc_child(t_heredoc *h)
 {
-	int			i;
-	int			j;
 	char		*line;
-	char		*var;
 	char		*tmp;
 
 	signal(SIGINT, heredoc_sigint);
@@ -62,16 +59,13 @@ void	heredoc_child(t_heredoc *h)
 	{
 		line = readline("> ");
 		if (g_signum == SIGINT)
-			heredoc_exit(h, h->cmd->after == PIPE_OP || h->cmd->before == PIPE_OP);
+			heredoc_exit(h);
 		tmp = line;
 		line = ft_strjoin_chr(line, '\n', "");
 		if (tmp)
 			free(tmp);
 		if (should_break_heredoc(h, line))
 			break ;
-		//if (!line || (!ft_strncmp(line, h->cmd->infiles[h->i], ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n'))
-		//	&& ft_strlen(h->cmd->infiles[h->i]) == ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n')))
-		//	break ;
 		write_exp_str(h, line);
 		free(line);
 	}

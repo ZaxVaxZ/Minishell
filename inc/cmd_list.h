@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 05:47:46 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/23 14:57:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:21:27 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_bool	is_separator(t_queue *node);
 t_bool	free_and_return(t_queue **q, t_env **env, t_cmd **cmds, t_cmd *cmd);
 t_bool	build_commands(t_main *m);
 t_bool	prep_cmd(t_queue *q, t_cmd **node);
-t_bool	in_out_mallocs(t_queue *q, t_cmd **node, int in, int out);
+t_bool	in_out_mallocs(t_cmd **node, int in, int out);
 int		count_redirs(t_queue *q, int *in, int *out);
 
 #endif

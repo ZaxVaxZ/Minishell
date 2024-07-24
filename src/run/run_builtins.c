@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_builtins.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/24 16:55:06 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/24 21:30:49 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,20 +38,20 @@ t_bool	clean_whitespace(t_main *m)
 	return (True);
 }
 
-static int	builtin_helper(t_main *m, t_env **env, t_cmd *cmd, t_exec *exec)
+static int	builtin_helper(t_main *m, t_cmd *cmd, t_exec *exec)
 {
 	char	*cwd;
 
 	if (!ft_strncmp(cmd->params[0], "cd", -1))
 	{
 		cwd = getcwd(NULL, 0);
-		if (!cd(env, cwd, cmd->params[1]))
+		if (!cd(m, cwd, cmd->params[1]))
 			return (free(cwd), -1);
 		free(cwd);
 	}
 	else if (!ft_strncmp(cmd->params[0], "echo", -1))
 	{
-		if (!echo(cmd->params + 1))
+		if (!echo(m, cmd->params + 1))
 			return (-1);
 	}
 	else if (!ft_strncmp(cmd->params[0], "exit", -1))
@@ -65,27 +65,27 @@ static int	builtin_helper(t_main *m, t_env **env, t_cmd *cmd, t_exec *exec)
 	return (1);
 }
 
-int	builtin_helper_v2(t_main *m, t_env **env, t_cmd *cmd, t_exec *exec)
+int	builtin_helper_v2(t_main *m, t_cmd *cmd)
 {
 	int	ret;
 
 	ret = 1;
 	if (!ft_strncmp(cmd->params[0], "unset", -1))
-		unset(&m->env, cmd->params + 1);
+		unset(m, cmd->params + 1);
 	else if (!ft_strncmp(cmd->params[0], "export", -1))
 	{
-		if (!export_cmd(&m->env, cmd->params + 1))
+		if (!export_cmd(m, cmd->params + 1))
 			ret = -1;
 	}
 	else if (!ft_strncmp(cmd->params[0], "env", -1))
 	{
-		if (!print_env(m->env))
+		if (!print_env(m))
 			ret = -1;
 	}
 	else if (!ft_strncmp(cmd->params[0], "pwd", -1))
 	{
 		if (ft_printf("%s\n", get_var(m->env, "PWD")) == -1)
-			ret = -1;
+			free_and_exit(m, ERR_WRT);
 	}
 	else
 		return (0);
@@ -115,8 +115,8 @@ int	resolve_builtin(t_main *m, t_cmd *cmd, t_exec *exec, t_bool child)
 		&& (close_and_check(exec->fds[0], exec) == -1
 			|| close_and_check(exec->fds[1], exec) == -1))
 		free_and_exit(m, ERR_CLS);
-	ret = builtin_helper(m, &m->env, cmd, exec);
+	ret = builtin_helper(m, cmd, exec);
 	if (ret == 1 || ret < 0 || ret == -5)
 		return (ret);
-	return (builtin_helper_v2(m, &m->env, cmd, exec));
+	return (builtin_helper_v2(m, cmd));
 }

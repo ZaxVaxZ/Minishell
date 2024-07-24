@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:44:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/23 13:44:35 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:15:11 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	set_status(t_main *m, int *ret)
 		*ret = -2;
 }
 
-int	handle_cmd_line(t_env **envp, t_main *m)
+int	handle_cmd_line(t_main *m)
 {
 	int		ret;
 	int		p_cleanup;

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 18:14:42 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/23 10:18:58 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:09:56 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,11 @@
 //	env_handle(m);
 //}
 
-void	heredoc_exit(t_heredoc *h, int close_pipes)
+void	heredoc_exit(t_heredoc *h)
 {
 	free_and_return(&h->m->q, &h->m->env, &h->m->cmds, NULL);
 	free(h->m->line);
 	close(h->fds[WRITEEND]);
-	//if (close_pipes)
-	//{
-	//	close(h->exec->fds[WRITEEND]);
-	//	close(h->exec->fds[READEND]);
-	//}
 	close(h->exec->std_in);
 	close(h->exec->std_out);
 	exit(252);

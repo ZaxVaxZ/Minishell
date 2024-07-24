@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/24 17:01:51 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:17:56 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ int	close_pipes(t_main *m, t_exec *exec, t_cmd *cmd, int *fds)
 	if (cmd->before == PIPE_OP || cmd->after == PIPE_OP)
 	{
 		if (close_and_check(fds[READEND], exec) == -1)
-			return (-1);
+			free_and_exit(m, ERR_CLS);
 		if (close_and_check(fds[WRITEEND], exec) == -1)
-			return (-1);
+			free_and_exit(m, ERR_CLS);
 	}
 	return (2);
 }

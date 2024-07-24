@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 03:56:02 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/03 16:19:52 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 21:33:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_bool	valid_identifier(char *id)
 	return (True);
 }
 
-t_bool	unset(t_env **env, char **params)
+t_bool	unset(t_main *m, char **params)
 {
 	int		i;
 	t_bool	ret;
@@ -42,13 +42,15 @@ t_bool	unset(t_env **env, char **params)
 	i = 0;
 	while (params[i])
 	{
+		printf("uwu\n");
 		if (!valid_identifier(params[i]))
 		{
 			ret = False;
-			ft_printf("unset: `%s`: not a valid identifier\n", params[i]);
+			if (ft_printf("unset: `%s`: not a valid identifier\n", params[i]) == -1)
+				free_and_exit(m, ERR_WRT);
 		}
 		else
-			delete_var(env, params[i]);
+			delete_var(&m->env, params[i]);
 		i++;
 	}
 	return (ret);

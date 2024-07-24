@@ -6,13 +6,13 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:50:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/23 14:56:41 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:20:54 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cmd_list.h"
 
-t_bool	in_out_mallocs(t_queue *q, t_cmd **node, int in, int out)
+t_bool	in_out_mallocs(t_cmd **node, int in, int out)
 {
 	if (in)
 	{

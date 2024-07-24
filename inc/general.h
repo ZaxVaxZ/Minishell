@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/24 16:26:43 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:15:18 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ void	rl_replace_line(const char *text, int clear_undo);
 char	*get_line(t_main *m);
 void	handle_msg(int msg);
 int		free_up_cmd_mem(t_main *m);
-void	heredoc_exit(t_heredoc *h, int close_pipes);
+void	heredoc_exit(t_heredoc *h);
 void	free_and_exit(t_main *m, int msg);
-int		handle_cmd_line(t_env **envp, t_main *m);
+int		handle_cmd_line(t_main *m);
 
 #endif
