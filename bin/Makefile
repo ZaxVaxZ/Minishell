@@ -37,7 +37,8 @@ SRCS	=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c		\
 			$(EXE)/run_builtins.c $(EXE)/run_utils.c						\
 			$(SFD)/minishell.c	./../tmp/tmp_utils.c						\
 			$(HRD)/heredoc.c $(HRD)/pipe_checks.c $(EXE)/last_exec.c		\
-			$(UTL)/signals.c $(UTL)/free_and_exit.c
+			$(UTL)/signals.c $(UTL)/free_and_exit.c $(EXE)/exec_utils.c		\
+			$(CMD)/cmd_in_out.c $(HRD)/heredoc_expand.c
 
 ### []+--------={ Object files and Program name }=--------+[] ###
 OBJS	=	$(SRCS:.c=.o)

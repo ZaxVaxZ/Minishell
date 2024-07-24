@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/22 18:48:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 12:58:19 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,6 @@ int	check_and_write(t_heredoc *h, char **ret, char **line)
 	return (1);
 }
 
-void	heredoc_sigquit(int sig)
-{
-	(void)sig;
-	rl_on_new_line();
-	rl_redisplay();
-	write(1, "  \b\b", 4);
-	//write(1, "\b\b  \b\b", 6);
-}
-
 void	heredoc_sigint(int sig)
 {
 	g_signum = SIGINT;
@@ -67,13 +58,13 @@ void	heredoc_child(t_heredoc *h)
 	signal(SIGQUIT, SIG_IGN);
 	close(h->fds[READEND]);
 	g_signum = -1;
-	if (h->cmd->before == PIPE_OP)
-	{
-		if (dup_and_check(h->exec->std_in, STDIN_FILENO, h->exec) == -1)
-			return ;
-		if (close_and_check(h->exec->std_in, h->exec) == -1)
-			return ;
-	}
+	//if (h->cmd->before == PIPE_OP)
+	//{
+	//	if (dup_and_check(h->exec->std_in, STDIN_FILENO, h->exec) == -1)
+	//		return ;
+	//	if (close_and_check(h->exec->std_in, h->exec) == -1)
+	//		return ;
+	//}
 	while (1)
 	{
 		line = readline("> ");
@@ -85,35 +76,7 @@ void	heredoc_child(t_heredoc *h)
 		if (!line || (!ft_strncmp(line, h->cmd->infiles[h->i], ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n'))
 			&& ft_strlen(h->cmd->infiles[h->i]) == ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n')))
 			break ;
-		i = 0;
-		while (line[i])
-		{
-			if (line[i] != DS)
-				write(h->fds[WRITEEND], line + i, 1);
-			else
-			{
-				if (!is_valid_var_char(line[i + 1]))
-				{
-					write(h->fds[WRITEEND], line + i++, 1);
-					continue ;
-				}
-				else if (found_in(line[i + 1], DIGIT))
-				{
-					i += 2;
-					continue ;
-				}
-				j = ++i;
-				while (is_valid_var_char(line[j]))
-					j++;
-				var = ft_substr(line, i, j - i);
-				if (var && get_var(*(h->env), var))
-					write(h->fds[WRITEEND], get_var(*(h->env), var), ft_strlen(get_var(*(h->env), var)));
-				if (var)
-					free(var);
-				i = j - 1;
-			}
-			i++;
-		}
+		write_exp_str(h, line);
 		free(line);
 	}
 	close(h->fds[WRITEEND]);
@@ -121,11 +84,6 @@ void	heredoc_child(t_heredoc *h)
 		free(line);
 	close(h->exec->std_in);
 	close(h->exec->std_out);
-	if (h->cmd->after == PIPE_OP || h->cmd->before == PIPE_OP)
-	{
-		close(h->exec->fds[READEND]);
-		close(h->exec->fds[WRITEEND]);
-	}
 	free_and_exit(h->m, -1);
 }
 
@@ -139,6 +97,7 @@ t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec)
 	int		ex;
 	char	*tmp;
 
+	close(fds[WRITEEND]);
 	signal(SIGINT, nothing);
 	signal(SIGQUIT, nothing);
 	waitpid(exec->last_pid, &ex, 0);
@@ -154,18 +113,14 @@ t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec)
 		if (!tmp)
 			return (False);
 		set_var(&m->env, "?", tmp, False);
+		(*cmd)->heredoc_passed = 0;
 		free(tmp);
-		//if (!(*cmd)->next || ((*cmd)->next && !(*cmd)->next->heredoc))
-		//{
-		//	close(fds[WRITEEND]);
-		//	close(fds[READEND]);
-		//}
 		return (False);
 	}
-	close(fds[WRITEEND]);
 	(*cmd)->in_fd = dup(fds[READEND]);
 	if ((*cmd)->in_fd == -1)
 		return (False);
+	fprintf(stderr, "in fd %d\n", (*cmd)->in_fd);
 	close(fds[READEND]);
 	if (ex == EXIT_FAILURE)
 		return (False);
@@ -183,20 +138,17 @@ t_bool	heredoc_loop(t_main *m, t_cmd *cmd, t_exec *exec, t_env **env)
 	h.exec = exec;
 	h.env = env;
 	h.fds = heredoc_fds;
-	if (cmd->heredoc)
+	while (++h.i < cmd->infile_cnt)
 	{
-		while (++h.i < cmd->infile_cnt)
+		if (cmd->in_flags[h.i])
 		{
-			if (cmd->in_flags[h.i])
-			{
-				if (heredoc(&h) == False)
-					return (False);
-			}
-			if (cmd->in_flags[h.i] && h.i != cmd->infile_cnt - 1)
-			{
-				if (close_and_check(cmd->in_fd, exec) == -1)
-					return (False);
-			}
+			if (heredoc(&h) == False)
+				return (False);
+		}
+		if (cmd->in_flags[h.i] && h.i != cmd->infile_cnt - 1)
+		{
+			if (close_and_check(cmd->in_fd, exec) == -1)
+				return (False);
 		}
 	}
 	return (True);
@@ -208,6 +160,8 @@ t_bool	heredoc(t_heredoc *h)
 
 	if (pipe_and_check(h->fds, h->exec) == -1)
 		return (False);
+	fprintf(stderr, "readend pid: %d\n", h->fds[READEND]);
+	fprintf(stderr, "writeend pid: %d\n", h->fds[WRITEEND]);
 	p = fork();
 	if (p < 0)
 	{

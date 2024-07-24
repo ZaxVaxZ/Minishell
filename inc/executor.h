@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/21 17:36:03 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/23 15:25:26 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,17 @@ t_bool	heredoc(t_heredoc *h);
 t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec);
 t_bool	heredoc_loop(t_main *m, t_cmd *cmd, t_exec *exec, t_env **env);
 void	heredoc_child(t_heredoc *h);
+void	write_exp_str(t_heredoc *h, char *line);
 int		open_outs_and_in(t_main *m, t_cmd *cmd, t_exec *exec);
 
 int		exiting(t_main *m, t_cmd *cmd, char **params, t_exec *exec);
+
+t_bool	exec_cmd(t_main *m, t_cmd **cmd, t_exec *exec, int *fds);
+t_bool	close_heredoc_failed(t_main *m, t_cmd **cmd, t_exec *exec, int *fds);
+int		pipe_and_set_fds(t_exec *exec, int *fds, t_cmd **cmd);
+t_bool	deal_with_ret(t_main *m, t_cmd **cmd, t_exec *exec, int *fds);
+t_bool	open_heredocs(t_main *m, t_exec *exec, t_cmd *heredoc);
+int		post_command(t_main *m, t_exec *exec);
+int		close_pipes(t_main *m, t_exec *exec, t_cmd *cmd, int *fds);
 
 #endif

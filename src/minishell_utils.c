@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:44:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/22 14:34:55 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/23 13:44:35 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,35 @@ int	syntax_error_cleanup(t_main *m, int syntax_error)
 	return (1);
 }
 
+int	execute_exit(t_main *m, int ret)
+{
+	if (!m->status && ft_strncmp(get_var(m->env, "?"), "0", -1))
+	{
+		free_up_cmd_mem(m);
+		exit(ft_atoi(get_var(m->env, "?")));
+	}
+	free_up_cmd_mem(m);
+	return (ret);
+}
+
+void	set_status(t_main *m, int *ret)
+{
+	char	*stat;
+
+	stat = ft_itoa(m->status);
+	if (stat)
+	{
+		if (!set_var(&m->env, "?", stat, False))
+			*ret = -2;
+		free(stat);
+	}
+	else
+		*ret = -2;
+}
+
 int	handle_cmd_line(t_env **envp, t_main *m)
 {
 	int		ret;
-	char	*tmp;
 	int		p_cleanup;
 
 	if (!m->line || !*m->line || m->line[0] == NL)
@@ -80,24 +105,8 @@ int	handle_cmd_line(t_env **envp, t_main *m)
 		return (1);
 	ret = execute_commands(m);
 	if (ret == -5)
-	{
-		if (!m->status && ft_strncmp(get_var(*envp, "?"), "0", -1))
-		{
-			free_up_cmd_mem(m);
-			exit(ft_atoi(get_var(*envp, "?")));
-		}
-		free_up_cmd_mem(m);
-		return (ret);
-	}
-	tmp = ft_itoa(m->status);
-	if (tmp)
-	{
-		if (!set_var(envp, "?", tmp, False))
-			ret = -2;
-		free(tmp);
-	}
-	else
-		ret = -2;
+		return (execute_exit(m, ret));
+	set_status(m, &ret);
 	free_up_cmd_mem(m);
 	return (ret);
 }

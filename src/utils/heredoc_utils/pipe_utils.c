@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/22 15:10:21 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 11:26:42 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int	open_outs_and_in(t_main *m, t_cmd *cmd, t_exec *exec)
 				}
 				return (-1);
 			}
+			//if (i != cmd->infile_cnt - 1 && close_and_check(cmd->in_fd, exec) == -1)
+			//	return (-1);
 		}
 	}
 	if (cmd->outfile_cnt)
@@ -108,7 +110,6 @@ void	child_process(t_main *m, t_cmd *cmd, t_exec *exec, int *fds)
 		}
 		free_and_exit(m, -1);
 	}
-		//child_free_and_exit(&m->env, exec, exec->last_status);
 	dups_and_closes(cmd, exec, &m->env, fds);
 	ret = resolve_builtin(m, cmd, exec, True);
 	if (ret == 0)
@@ -126,7 +127,7 @@ void	child_process(t_main *m, t_cmd *cmd, t_exec *exec, int *fds)
 
 int	parent_process(t_cmd *cmd, t_exec *exec, int *fds)
 {
-	if (cmd->infile_cnt && cmd->in_fd)
+	if (cmd->infile_cnt && cmd->in_fd > 0)
 	{
 		if (close_and_check(cmd->in_fd, exec) == -1)
 			return (-1);

@@ -3,16 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 20:19:48 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/18 14:39:37 by marvin           ###   ########.fr       */
+/*   Updated: 2024/07/23 13:26:30 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "signals.h"
 
 int	g_signum;
+
+void	do_nothing(int sig)
+{
+	if (sig == SIGINT)
+		return ;
+}
 
 void	sig_handle(int sig)
 {

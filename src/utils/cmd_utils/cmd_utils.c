@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 05:23:45 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/20 15:26:44 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/23 14:57:15 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
  *   count_words()
  *   free_and_return()
  *   is_separator()
- * 	 count_out_redirs()
  *   prep_cmd()
  * -----------------------*/
 
@@ -38,34 +37,6 @@ static int	count_words(t_queue *q)
 		q = q->next;
 	}
 	return (count);
-}
-/// @brief counts the infile and outfile redirs and sets their counters accordingly
-/// @param q the queue to traverse
-/// @param in the pointer to the in count
-/// @param out the pointer to the out count
-/// @return returns 0 if no infile or outfile; 1 for infile; 2 for out; 3 for both
-int	count_redirs(t_queue *q, int *in, int *out)
-{
-	int	has_inf;
-	int	has_outf;
-
-	has_inf = 0;
-	has_outf = 0;
-	while (q && !is_separator(q))
-	{
-		if (q->type == Op_redir && q->s[0] == '>' && q->next)
-		{
-			(*out)++;
-			has_outf = 2;
-		}
-		else if (q->type == Op_redir && q->s[0] == '<' && q->next)
-		{
-			(*in)++;
-			has_inf = 1;
-		}
-		q = q->next;
-	}
-	return (has_inf + has_outf);
 }
 
 t_bool	free_and_return(t_queue **q, t_env **env, t_cmd **cmds, t_cmd *cmd)
@@ -97,24 +68,8 @@ t_bool	prep_cmd(t_queue *q, t_cmd **node)
 	params[0] = NULL;
 	if (!count_redirs(q, &in, &out))
 		return (True);
-	if (in)
-	{
-		(*node)->in_flags = malloc(sizeof(int) * in);
-		if (!(*node)->in_flags)
-			return (free_cmd_node(*node));
-		(*node)->infiles = malloc(sizeof(char *) * (in + 1));
-		if (!(*node)->infiles)
-			return (free_cmd_node(*node));
-	}
-	if (out)
-	{
-		(*node)->out_flags = malloc(sizeof(int) * out);
-		if (!(*node)->out_flags)
-			return (free_cmd_node(*node));
-		(*node)->outfiles = malloc(sizeof(char *) * (out + 1));
-		if (!(*node)->outfiles)
-			return (free_cmd_node(*node));
-	}
+	if (in_out_mallocs(q, node, in, out) == False)
+		return (False);
 	return (True);
 }
 
