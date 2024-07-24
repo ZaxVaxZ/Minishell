@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 13:28:10 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/24 08:32:30 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 16:48:39 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_bool	close_heredoc_failed(t_main *m, t_cmd **cmd, t_exec *exec, int *fds)
 		if (fds[WRITEEND] > 0)
 		{
 			if (close_and_check(fds[WRITEEND], exec) == False)
-				return (False);	
+				return (False);
 		}
 	}
 	return (False);
@@ -93,7 +93,7 @@ t_bool	open_heredocs(t_main *m, t_exec *exec, t_cmd *heredoc)
 int	post_command(t_main *m, t_exec *exec)
 {
 	if (dup_and_check(exec->std_in, STDIN_FILENO, exec) == -1)
-			return (-1);
+		return (-1);
 	if (dup_and_check(exec->std_out, STDOUT_FILENO, exec) == -1)
 		return (-1);
 	if (close_and_check(exec->std_in, exec) == -1)

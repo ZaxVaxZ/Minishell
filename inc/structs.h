@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 16:41:40 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/23 09:52:32 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 16:26:20 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,11 @@ typedef struct s_exec
 typedef struct s_heredoc
 {
 	t_main	*m;
-	t_env 	**env;
-	t_cmd 	*cmd;
-	t_exec 	*exec;
-	int 	*fds;
+	t_env	**env;
+	t_cmd	*cmd;
+	t_exec	*exec;
+	int		*fds;
 	int		i;
 }	t_heredoc;
-
 
 #endif
