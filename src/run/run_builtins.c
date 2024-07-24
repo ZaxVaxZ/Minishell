@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_builtins.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/24 12:18:14 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 16:55:06 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,7 @@ static int	builtin_helper(t_main *m, t_env **env, t_cmd *cmd, t_exec *exec)
 	{
 		cwd = getcwd(NULL, 0);
 		if (!cd(env, cwd, cmd->params[1]))
-		{
-			free(cwd);
-			return (-1);
-		}
+			return (free(cwd), -1);
 		free(cwd);
 	}
 	else if (!ft_strncmp(cmd->params[0], "echo", -1))
@@ -110,12 +107,13 @@ int	resolve_builtin(t_main *m, t_cmd *cmd, t_exec *exec, t_bool child)
 	}
 	if (cmd->outfile_cnt)
 	{
-		if (dup_and_check(cmd->out_fd, STDOUT_FILENO, exec) == -1)
-			return (-1);
-		if (close_and_check(cmd->out_fd, exec) == -1)
+		if (dup_and_check(cmd->out_fd, STDOUT_FILENO, exec) == -1
+			|| close_and_check(cmd->out_fd, exec) == -1)
 			return (-1);
 	}
-	if (cmd->before == PIPE_OP && cmd->after != PIPE_OP && (close_and_check(exec->fds[0], exec) == -1 || close_and_check(exec->fds[1], exec) == -1))
+	if (cmd->before == PIPE_OP && cmd->after != PIPE_OP
+		&& (close_and_check(exec->fds[0], exec) == -1
+			|| close_and_check(exec->fds[1], exec) == -1))
 		free_and_exit(m, ERR_CLS);
 	ret = builtin_helper(m, &m->env, cmd, exec);
 	if (ret == 1 || ret < 0 || ret == -5)

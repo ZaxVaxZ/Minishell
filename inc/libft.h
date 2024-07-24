@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 13:40:03 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/06/01 15:47:12 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/24 16:26:29 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*ft_strjoin_chr(char *s1, char c, char *s2);
 size_t	ft_strlen(const char *s);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
-char    *ft_strtrim(char const *s1, char const *set);
+char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_strchr(const char *s, int c);
 char	**ft_split(char *s, char sep);
 int		ft_atoi(const char *str);

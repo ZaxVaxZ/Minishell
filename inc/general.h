@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/20 17:34:15 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 16:26:43 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@
 # define SC ';'
 # define DS '$'
 
-
 # define READEND 0
 # define WRITEEND 1
 # define SUCCESS 0
@@ -89,11 +88,10 @@
 # include <readline/history.h>
 # include "structs.h"
 
-void	rl_replace_line (const char *text, int clear_undo);
+void	rl_replace_line(const char *text, int clear_undo);
 char	*get_line(t_main *m);
 void	handle_msg(int msg);
 int		free_up_cmd_mem(t_main *m);
-//void	init_main_struct(t_main *m, char **env);
 void	heredoc_exit(t_heredoc *h, int close_pipes);
 void	free_and_exit(t_main *m, int msg);
 int		handle_cmd_line(t_env **envp, t_main *m);
