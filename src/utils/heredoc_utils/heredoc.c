@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/23 15:42:31 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 12:58:19 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,13 @@ void	heredoc_child(t_heredoc *h)
 	signal(SIGQUIT, SIG_IGN);
 	close(h->fds[READEND]);
 	g_signum = -1;
-	if (h->cmd->before == PIPE_OP)
-	{
-		if (dup_and_check(h->exec->std_in, STDIN_FILENO, h->exec) == -1)
-			return ;
-		if (close_and_check(h->exec->std_in, h->exec) == -1)
-			return ;
-	}
+	//if (h->cmd->before == PIPE_OP)
+	//{
+	//	if (dup_and_check(h->exec->std_in, STDIN_FILENO, h->exec) == -1)
+	//		return ;
+	//	if (close_and_check(h->exec->std_in, h->exec) == -1)
+	//		return ;
+	//}
 	while (1)
 	{
 		line = readline("> ");
@@ -97,6 +97,7 @@ t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec)
 	int		ex;
 	char	*tmp;
 
+	close(fds[WRITEEND]);
 	signal(SIGINT, nothing);
 	signal(SIGQUIT, nothing);
 	waitpid(exec->last_pid, &ex, 0);
@@ -116,11 +117,10 @@ t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec)
 		free(tmp);
 		return (False);
 	}
-	close(fds[WRITEEND]);
 	(*cmd)->in_fd = dup(fds[READEND]);
 	if ((*cmd)->in_fd == -1)
 		return (False);
-	fprintf(stderr, "heredoc fd is %d\n", (*cmd)->in_fd);
+	fprintf(stderr, "in fd %d\n", (*cmd)->in_fd);
 	close(fds[READEND]);
 	if (ex == EXIT_FAILURE)
 		return (False);
@@ -160,6 +160,8 @@ t_bool	heredoc(t_heredoc *h)
 
 	if (pipe_and_check(h->fds, h->exec) == -1)
 		return (False);
+	fprintf(stderr, "readend pid: %d\n", h->fds[READEND]);
+	fprintf(stderr, "writeend pid: %d\n", h->fds[WRITEEND]);
 	p = fork();
 	if (p < 0)
 	{

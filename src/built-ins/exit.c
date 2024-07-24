@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 21:48:00 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/23 14:30:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 08:06:46 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,7 @@ int	exiting(t_main *m, t_cmd *cmd, char **params, t_exec *exec)
 	int	sign;
 	int	i;
 
-	if (!params)
-		return (1);
-	if (!*params)
+	if (!params || !*params)
 		return (1);
 	i = 0;
 	sign = 1;

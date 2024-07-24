@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 02:36:00 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/23 20:36:57 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 12:18:14 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,9 +115,8 @@ int	resolve_builtin(t_main *m, t_cmd *cmd, t_exec *exec, t_bool child)
 		if (close_and_check(cmd->out_fd, exec) == -1)
 			return (-1);
 	}
-	if (cmd->before == PIPE_OP && close_and_check(exec->fds[0], exec) != -1)
-		if (close_and_check(exec->fds[1], exec) == -1)
-			return (-1);
+	if (cmd->before == PIPE_OP && cmd->after != PIPE_OP && (close_and_check(exec->fds[0], exec) == -1 || close_and_check(exec->fds[1], exec) == -1))
+		free_and_exit(m, ERR_CLS);
 	ret = builtin_helper(m, &m->env, cmd, exec);
 	if (ret == 1 || ret < 0 || ret == -5)
 		return (ret);

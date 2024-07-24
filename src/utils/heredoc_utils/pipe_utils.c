@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/23 11:57:42 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 11:26:42 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int	open_outs_and_in(t_main *m, t_cmd *cmd, t_exec *exec)
 				}
 				return (-1);
 			}
+			//if (i != cmd->infile_cnt - 1 && close_and_check(cmd->in_fd, exec) == -1)
+			//	return (-1);
 		}
 	}
 	if (cmd->outfile_cnt)

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 13:37:53 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/08 22:00:03 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 12:22:29 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strjoin_chr(char *s1, char c, char *s2)
 	size_t	j;
 	char	*ret;
 
+	if (!s1)
+		return (NULL);
 	ret = malloc((ft_strlen(s1) + ft_strlen(s2) + 2) * sizeof(char));
 	if (!ret)
 		return (NULL);
