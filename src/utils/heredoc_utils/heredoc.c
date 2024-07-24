@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/24 12:58:19 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 14:56:18 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,6 @@ void	heredoc_child(t_heredoc *h)
 	signal(SIGQUIT, SIG_IGN);
 	close(h->fds[READEND]);
 	g_signum = -1;
-	//if (h->cmd->before == PIPE_OP)
-	//{
-	//	if (dup_and_check(h->exec->std_in, STDIN_FILENO, h->exec) == -1)
-	//		return ;
-	//	if (close_and_check(h->exec->std_in, h->exec) == -1)
-	//		return ;
-	//}
 	while (1)
 	{
 		line = readline("> ");
@@ -72,10 +65,13 @@ void	heredoc_child(t_heredoc *h)
 			heredoc_exit(h, h->cmd->after == PIPE_OP || h->cmd->before == PIPE_OP);
 		tmp = line;
 		line = ft_strjoin_chr(line, '\n', "");
-		free(tmp);
-		if (!line || (!ft_strncmp(line, h->cmd->infiles[h->i], ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n'))
-			&& ft_strlen(h->cmd->infiles[h->i]) == ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n')))
+		if (tmp)
+			free(tmp);
+		if (should_break_heredoc(h, line))
 			break ;
+		//if (!line || (!ft_strncmp(line, h->cmd->infiles[h->i], ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n'))
+		//	&& ft_strlen(h->cmd->infiles[h->i]) == ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n')))
+		//	break ;
 		write_exp_str(h, line);
 		free(line);
 	}

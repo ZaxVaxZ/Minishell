@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc_expand.c                                   :+:      :+:    :+:   */
+/*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:59:06 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/23 15:41:48 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 14:55:42 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,14 @@ void	write_exp_str(t_heredoc *h, char *line)
 		}
 		i++;
 	}
+}
+
+int	should_break_heredoc(t_heredoc *h, char *line)
+{
+	if (!line || (!ft_strncmp(line, h->cmd->infiles[h->i],
+				ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n'))
+			&& ft_strlen(h->cmd->infiles[h->i]) == ft_strlen(line)
+			- (line[ft_strlen(line) - 1] == '\n')))
+		return (1);
+	return (0);
 }

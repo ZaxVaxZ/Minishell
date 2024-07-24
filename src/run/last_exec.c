@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/23 14:23:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 13:41:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,6 @@ t_bool	handle_cmds(t_main *m, t_cmd **cmd, t_exec *exec)
 	int	fds[2];
 	int	handle;
 
-	//if ((*cmd) && (*cmd)->rep == RP)
-	//{
-	//	(*cmd) = (*cmd)->next;
-	//	return (True);
-	//}
 	handle = exec_type(exec, cmd);
 	fds[READEND] = -1;
 	fds[WRITEEND] = -1;
@@ -104,27 +99,6 @@ t_bool	handle_cmds(t_main *m, t_cmd **cmd, t_exec *exec)
 		return (close_heredoc_failed(m, cmd, exec, fds));
 	exec->ret = resolve_builtin(m, *cmd, exec, False);
 	return (deal_with_ret(m, cmd, exec, fds));
-	//if (exec->ret == -5)
-	//	return (True);
-	//else if (exec->ret == 2 || exec->ret < 0)
-	//{
-	//	exec->last_status = EXIT_FAILURE;
-	//	if (exec->ret < 0)
-	//		return (False);
-	//	return (True);
-	//}
-	//else if (exec->ret == 1)
-	//{
-	//	if ((*cmd)->in_fd)
-	//		if (close_and_check((*cmd)->in_fd, exec) == -1)
-	//			return (-1);
-	//	exec->last_status = SUCCESS;
-	//	exec->last_op = (*cmd)->after;
-	//	exec->status_depth = exec->curr_depth;
-	//}
-	//else if (exec_cmd(m, cmd, exec, fds) == False)
-	//	return (False);
-	//return (True);
 }
 
 int	execute_commands(t_main *m)
@@ -152,14 +126,3 @@ int	execute_commands(t_main *m)
 		return (-1);
 	return (exec.ret);
 }
-
-/*
-end of beginning - djo
-tears in the rain - song
-blame it on me - post malone live
-take what you want - post malone
-sirens - travis scott
-
-movie clip:
-parasyte: the grey
-*/

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/23 20:34:52 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/24 13:42:22 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,6 @@ int	wait_for_children(t_exec *exec)
 	}
 	signal(SIGINT, sig_handle);
 	signal(SIGQUIT, SIG_IGN);
-	//if (exec->last_op != AND_OP && exec->last_op != OR_OP && exec->last_op != SEMICOLON)
-	//{
-		//if (dup_and_check(exec->std_in, STDIN_FILENO, exec) == -1)
-		//	return (-1);
-		//if (dup_and_check(exec->std_out, STDOUT_FILENO, exec) == -1)
-		//	return (-1);
-		//if (close_and_check(exec->std_in, exec) == -1)
-		//	return (-1);
-		//if (close_and_check(exec->std_out, exec) == -1)
-		//	return (-1);
-	//}
 	return (1);
 }
 
@@ -125,7 +114,6 @@ int	exec_type(t_exec *exec, t_cmd **cmd)
 		return (DO_NOT_EXECUTE);
 	while ((*cmd)->rep == LP)
 		(*cmd) = (*cmd)->next;
-	//if ((*cmd)->before == OR_OP || (*cmd)->before == AND_OP || (*cmd)->before == SEMICOLON)
 	if (((*cmd)->before == OR_OP || (*cmd)->before == AND_OP || (*cmd)->before == SEMICOLON) && (exec->last_status != EXIT_FAILURE))
 		wait_for_children(exec);
 	while (*cmd)
