@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/24 17:15:18 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:29:22 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,6 @@ int		free_up_cmd_mem(t_main *m);
 void	heredoc_exit(t_heredoc *h);
 void	free_and_exit(t_main *m, int msg);
 int		handle_cmd_line(t_main *m);
+void	child_free_and_exit(t_env **env, t_exec *exec, int status);
 
 #endif

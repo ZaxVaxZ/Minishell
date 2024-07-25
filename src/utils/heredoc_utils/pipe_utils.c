@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/25 12:27:28 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:29:07 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,6 @@ int	open_outs_and_in(t_main *m, t_cmd *cmd, t_exec *exec)
 	return (1);
 }
 
-static void	child_free_and_exit(t_env **env, t_exec *exec, int status)
-{
-	free_env(env);
-	free_cmd(exec->cmd_head);
-	exit(status);
-}
-
 static void	dups_and_closes(t_cmd *cmd, t_exec *exec, t_env **env, int *fds)
 {
 	if (cmd->infile_cnt)
@@ -96,8 +89,6 @@ static void	dups_and_closes(t_cmd *cmd, t_exec *exec, t_env **env, int *fds)
 
 void	child_process(t_main *m, t_cmd *cmd, t_exec *exec, int *fds)
 {
-	int	ret;
-
 	close(exec->std_in);
 	close(exec->std_out);
 	if (open_outs_and_in(m, cmd, exec) == -1)
@@ -110,8 +101,7 @@ void	child_process(t_main *m, t_cmd *cmd, t_exec *exec, int *fds)
 		free_and_exit(m, -1);
 	}
 	dups_and_closes(cmd, exec, &m->env, fds);
-	ret = resolve_builtin(m, cmd, exec, True);
-	if (ret == 0)
+	if (resolve_builtin(m, cmd, exec, True) == 0)
 		execute(m, cmd, exec);
 	if (close_and_check(STDIN_FILENO, exec) == -1)
 		free_and_exit(m, ERR_CLS);

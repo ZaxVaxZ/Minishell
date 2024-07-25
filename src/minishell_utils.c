@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:44:13 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/24 17:15:11 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:22:57 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "./../tmp/tmp_utils.h"
+//#include "./../tmp/tmp_utils.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 

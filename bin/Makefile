@@ -35,7 +35,7 @@ SRCS	=	$(LFT)/ft_strlen.c $(LFT)/ft_strdup.c $(LFT)/ft_strncmp.c		\
 			$(PRS)/parser.c $(PRS)/parser_utils.c $(PRS)/parser_extras.c	\
 			$(PRS)/parser_checkers.c $(PRS)/parser_cleanup.c 				\
 			$(EXE)/run_builtins.c $(EXE)/run_utils.c						\
-			$(SFD)/minishell.c	./../tmp/tmp_utils.c						\
+			$(SFD)/minishell.c	$(PRS)/parser_utils2.c						\
 			$(HRD)/heredoc.c $(HRD)/pipe_checks.c $(EXE)/last_exec.c		\
 			$(UTL)/signals.c $(UTL)/free_and_exit.c $(EXE)/exec_utils.c		\
 			$(CMD)/cmd_in_out.c $(HRD)/heredoc_utils.c

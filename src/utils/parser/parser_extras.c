@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:35 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/22 14:34:40 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 17:19:55 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,8 +151,8 @@ t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
 		return (False);
 	if (var_name && wlen)
 		queue_end(*q)->type = Name;
-	 else if (wlen && queue_end(*q)->type != Illegal)
-	 	queue_end(*q)->type = Word;
+	else if (wlen && queue_end(*q)->type != Illegal)
+		queue_end(*q)->type = Word;
 	*s += wlen;
 	return (True);
 }
