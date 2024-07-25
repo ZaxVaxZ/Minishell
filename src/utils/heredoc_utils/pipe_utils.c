@@ -6,13 +6,13 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/24 11:26:42 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 12:27:28 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-int	open_outs_and_in(t_main *m, t_cmd *cmd, t_exec *exec)
+static int	open_ins(t_main *m, t_cmd *cmd, t_exec *exec)
 {
 	int	i;
 
@@ -21,29 +21,39 @@ int	open_outs_and_in(t_main *m, t_cmd *cmd, t_exec *exec)
 		i = -1;
 		while (++i < cmd->infile_cnt)
 		{
-			if (!cmd->in_flags[i] && (open_and_check(&cmd->in_fd, cmd->infiles[i], 0, exec) == -1))
+			if (!cmd->in_flags[i]
+				&& (open_and_check(&cmd->in_fd, cmd->infiles[i],
+						0, exec) == -1))
 			{
 				m->status = 1;
 				if (cmd->before == PIPE_OP || cmd->after == PIPE_OP)
 				{
-					close(exec->fds[READEND]);
-					close(exec->fds[WRITEEND]);
+					close_pipes(m, exec, cmd, exec->fds);
 					free_and_exit(m, -1);
 				}
 				return (-1);
 			}
-			//if (i != cmd->infile_cnt - 1 && close_and_check(cmd->in_fd, exec) == -1)
-			//	return (-1);
 		}
 	}
+	return (1);
+}
+
+int	open_outs_and_in(t_main *m, t_cmd *cmd, t_exec *exec)
+{
+	int	i;
+
+	if (open_ins(m, cmd, exec) == -1)
+		return (-1);
 	if (cmd->outfile_cnt)
 	{
 		i = -1;
 		while (++i < cmd->outfile_cnt)
 		{
-			if (open_and_check(&cmd->out_fd, cmd->outfiles[i], cmd->out_flags[i] + 1, exec) == -1)
+			if (open_and_check(&cmd->out_fd, cmd->outfiles[i],
+					cmd->out_flags[i] + 1, exec) == -1)
 				return (-1);
-			if (i != cmd->outfile_cnt - 1 && close_and_check(cmd->out_fd, exec) == -1)
+			if (i != cmd->outfile_cnt - 1
+				&& close_and_check(cmd->out_fd, exec) == -1)
 				return (-1);
 		}
 	}
@@ -84,17 +94,6 @@ static void	dups_and_closes(t_cmd *cmd, t_exec *exec, t_env **env, int *fds)
 	}
 }
 
-void	child_sig(int sig)
-{
-	(void)sig;
-	return ;
-}
-
-/// @brief this will execute the command and open/close pipes accordingly
-/// @param cmd the cmd node
-/// @param exec the exec struct
-/// @param fds the piped fds
-/// @return will exit depending on whether the commaned succeeded or failed
 void	child_process(t_main *m, t_cmd *cmd, t_exec *exec, int *fds)
 {
 	int	ret;

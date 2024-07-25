@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 21:48:00 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/24 08:06:46 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 11:05:51 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ int	write_num_error(t_cmd *cmd, char *param, t_exec *exec, int reason)
 	}
 	else if (reason == 1)
 	{
-		write(2, "exit: too many arguments\n", 25);
+		if (write(2, "exit: too many arguments\n", 25) == -1)
+			return (-1);
 		if (cmd->before == PIPE_OP)
 			exit(1);
 		return (-2);
@@ -61,10 +62,9 @@ int	exiting(t_main *m, t_cmd *cmd, char **params, t_exec *exec)
 		i++;
 	while ((*params)[i])
 	{
-		if ((*params)[i] >= '0' && (*params)[i] <= '9')
-			i++;
-		else
+		if (!((*params)[i] >= '0' && (*params)[i] <= '9'))
 			return (write_num_error(cmd, *params, exec, 0));
+		i++;
 	}
 	if (*(params + 1))
 		return (write_num_error(cmd, *params, exec, 1));

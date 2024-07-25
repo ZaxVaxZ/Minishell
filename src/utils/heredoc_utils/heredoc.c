@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/24 17:19:27 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 10:31:18 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,6 @@ int	check_and_write(t_heredoc *h, char **ret, char **line)
 	return (1);
 }
 
-void	heredoc_sigint(int sig)
-{
-	g_signum = sig;
-	write(1, "\n", 1);
-	close(STDIN_FILENO);
-}
-
 void	heredoc_child(t_heredoc *h)
 {
 	char		*line;
@@ -61,25 +54,18 @@ void	heredoc_child(t_heredoc *h)
 		if (g_signum == SIGINT)
 			heredoc_exit(h);
 		tmp = line;
-		line = ft_strjoin_chr(line, '\n', "");
-		if (tmp)
-			free(tmp);
 		if (should_break_heredoc(h, line))
 			break ;
+		line = ft_strjoin_chr(line, '\n', "");
+		free(tmp);
 		write_exp_str(h, line);
 		free(line);
 	}
-	close(h->fds[WRITEEND]);
 	if (line)
 		free(line);
 	close(h->exec->std_in);
 	close(h->exec->std_out);
 	free_and_exit(h->m, -1);
-}
-
-void	nothing(int sig)
-{
-	(void)sig;
 }
 
 t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec)
@@ -88,29 +74,16 @@ t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec)
 	char	*tmp;
 
 	close(fds[WRITEEND]);
-	signal(SIGINT, nothing);
-	signal(SIGQUIT, nothing);
+	signal(SIGINT, do_nothing);
+	signal(SIGQUIT, do_nothing);
 	waitpid(exec->last_pid, &ex, 0);
 	signal(SIGINT, sig_handle);
 	signal(SIGQUIT, SIG_IGN);
 	if (WEXITSTATUS(ex) == 252)
-	{
-		close(fds[WRITEEND]);
-		close(fds[READEND]);
-		exec->last_status = 1;
-		(*cmd)->status = exec->last_status;
-		tmp = ft_itoa(1);
-		if (!tmp)
-			return (False);
-		set_var(&m->env, "?", tmp, False);
-		(*cmd)->heredoc_passed = 0;
-		free(tmp);
-		return (False);
-	}
+		return (handle_heredoc_sigint(m, cmd, fds, exec));
 	(*cmd)->in_fd = dup(fds[READEND]);
 	if ((*cmd)->in_fd == -1)
 		return (False);
-	fprintf(stderr, "in fd %d\n", (*cmd)->in_fd);
 	close(fds[READEND]);
 	if (ex == EXIT_FAILURE)
 		return (False);
@@ -150,8 +123,6 @@ t_bool	heredoc(t_heredoc *h)
 
 	if (pipe_and_check(h->fds, h->exec) == -1)
 		return (False);
-	fprintf(stderr, "readend pid: %d\n", h->fds[READEND]);
-	fprintf(stderr, "writeend pid: %d\n", h->fds[WRITEEND]);
 	p = fork();
 	if (p < 0)
 	{

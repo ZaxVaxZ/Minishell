@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 03:56:02 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/24 21:33:59 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 09:53:22 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ t_bool	unset(t_main *m, char **params)
 		if (!valid_identifier(params[i]))
 		{
 			ret = False;
-			if (ft_printf("unset: `%s`: not a valid identifier\n", params[i]) == -1)
+			if (ft_printf("unset: `%s`: not a valid identifier\n",
+					params[i]) == -1)
 				free_and_exit(m, ERR_WRT);
 		}
 		else

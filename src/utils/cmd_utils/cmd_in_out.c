@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:50:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/24 17:20:54 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 11:07:07 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,6 @@ t_bool	in_out_mallocs(t_cmd **node, int in, int out)
 	return (True);
 }
 
-/// @brief counts the infile and outfile redirs and sets their counters accordingly
-/// @param q the queue to traverse
-/// @param in the pointer to the in count
-/// @param out the pointer to the out count
-/// @return returns 0 if no infile or outfile; 1 for infile; 2 for out; 3 for both
 int	count_redirs(t_queue *q, int *in, int *out)
 {
 	int	has_inf;

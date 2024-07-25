@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:59:06 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/24 14:55:42 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 11:09:43 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,32 @@ void	write_exp_str(t_heredoc *h, char *line)
 	}
 }
 
+t_bool	handle_heredoc_sigint(t_main *m, t_cmd **cmd, int *fds, t_exec *exec)
+{
+	char	*tmp;
+
+	close(fds[WRITEEND]);
+	close(fds[READEND]);
+	exec->last_status = 1;
+	(*cmd)->status = exec->last_status;
+	tmp = ft_itoa(1);
+	if (!tmp)
+		free_and_exit(m, ERR_MEM);
+	set_var(&m->env, "?", tmp, False);
+	(*cmd)->heredoc_passed = 0;
+	free(tmp);
+	return (False);
+}
+
 int	should_break_heredoc(t_heredoc *h, char *line)
 {
 	if (!line || (!ft_strncmp(line, h->cmd->infiles[h->i],
 				ft_strlen(line) - (line[ft_strlen(line) - 1] == '\n'))
 			&& ft_strlen(h->cmd->infiles[h->i]) == ft_strlen(line)
 			- (line[ft_strlen(line) - 1] == '\n')))
+	{
+		close(h->fds[WRITEEND]);
 		return (1);
+	}
 	return (0);
 }

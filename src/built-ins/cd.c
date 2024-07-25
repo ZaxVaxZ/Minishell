@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 13:31:22 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/24 21:24:12 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 10:20:35 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ t_bool	cd_home(t_main *m, char *pwd)
 	{
 		if (set_var(&m->env, "OLDPWD", pwd, True) == False)
 			free_and_exit(m, ERR_CLS);
-		chdir(get_var(m->env, "HOME"));
+		if (chdir(get_var(m->env, "HOME")))
+			return (False);
 		if (set_var(&m->env, "PWD", get_var(m->env, "HOME"), True) == False)
 			free_and_exit(m, ERR_CLS);
 	}
