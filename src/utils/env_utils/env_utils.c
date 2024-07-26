@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 05:23:38 by marvin            #+#    #+#             */
-/*   Updated: 2024/04/02 16:57:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 19:18:20 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,11 @@ char	**to_char_arr(t_env **env)
 	i = 0;
 	while (tmp && !fail)
 	{
+		if (tmp->exported != 1)
+		{
+			tmp = tmp->next;
+			continue ;
+		}
 		strs[i] = ft_strjoin_chr(tmp->key, '=', tmp->value);
 		if (!strs[i++])
 			fail = !free_env(env);
