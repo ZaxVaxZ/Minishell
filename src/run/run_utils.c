@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/24 17:17:56 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 18:55:15 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int	wait_for_children(t_exec *exec)
 				exec->last_status = 130;
 			if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
 				exec->last_status = 131;
-			exec->status_depth = exec->curr_depth;
 		}
 	}
 	signal(SIGINT, sig_handle);
@@ -112,18 +111,21 @@ int	exec_type(t_exec *exec, t_cmd **cmd)
 {
 	if ((*cmd)->rep == RP)
 		return (DO_NOT_EXECUTE);
-	while ((*cmd)->rep == LP)
-		(*cmd) = (*cmd)->next;
-	if (((*cmd)->before == AND_OP || (*cmd)->before == SEMICOLON
-			|| (*cmd)->before == OR_OP) && (exec->last_status != 1))
-		wait_for_children(exec);
 	while (*cmd)
 	{
 		exec->curr_depth += ((*cmd)->rep == LP);
-		if ((*cmd)->rep == LP || !should_exec(exec, *cmd))
+		if ((*cmd)->rep == LP)
 			(*cmd) = (*cmd)->next;
 		else
-			break ;
+		{
+			if (((*cmd)->before == AND_OP || (*cmd)->before == SEMICOLON
+					|| (*cmd)->before == OR_OP) && (exec->last_status != 1))
+				wait_for_children(exec);
+			if (!should_exec(exec, *cmd))
+				(*cmd) = (*cmd)->next;
+			else
+				break ;
+		}
 	}
 	if (!*cmd || (*cmd)->rep == RP)
 		return (DO_NOT_EXECUTE);
