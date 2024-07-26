@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 16:44:27 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/25 17:42:57 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 13:52:25 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,16 @@ void	set_non_whitespace(t_queue **q, t_queue *last, t_bool ill, char *str)
 	else
 	{
 		tmp->type = token_type(tmp->s);
-		if (illegal || (last && last->type == Bracket_closed
+		if (ill || (last && last->type == Bracket_closed
 				&& tmp->type == Word))
 			tmp->type = Illegal;
 		queue(q, tmp);
 	}
 	free(str);
+}
+
+int	free_queue_and_return(t_queue **q)
+{
+	free_queue(q);
+	return (-1);
 }

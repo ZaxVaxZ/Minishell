@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 17:20:11 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/25 17:42:37 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 10:49:16 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,23 +67,25 @@ int	syntax_error(t_queue **q, char *token, t_bool missing, t_bool at_end)
 	if (missing)
 	{
 		if (write(2, "syntax error due to missing token `", 35) == -1)
-			return (-1);
+			return (free_queue_and_return(q));
 	}
 	else if (!at_end)
 	{
 		if (write(2, "syntax error near unexpected token `", 36) == -1)
-			return (-1);
+			return (free_queue_and_return(q));
 	}
 	else
 	{
 		if (write(2, "syntax error near unexpected token `", 36) == -1)
-			return (-1);
+			return (free_queue_and_return(q));
 	}
-	if (!at_end)
-		write(2, token, ft_strlen(token));
+	if (!at_end && write(2, token, ft_strlen(token)) == -1)
+		return (-1);
 	else
-		write(2, "newline", 7);
-	write(2, "`\n", 2);
+		if (write(2, "newline", 7) == -1)
+			return (free_queue_and_return(q));
+	if (write(2, "`\n", 2) == -1)
+		return (free_queue_and_return(q));
 	free_queue(q);
 	return (1);
 }

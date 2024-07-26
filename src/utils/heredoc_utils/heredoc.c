@@ -6,15 +6,14 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:35 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/25 10:31:18 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 13:53:45 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "get_next_line.h"
 #include "general.h"
-
-extern int	g_signum;
+#include "signals.h"
 
 int	check_and_write(t_heredoc *h, char **ret, char **line)
 {
@@ -71,7 +70,6 @@ void	heredoc_child(t_heredoc *h)
 t_bool	heredoc_parent(t_main *m, t_cmd **cmd, int *fds, t_exec *exec)
 {
 	int		ex;
-	char	*tmp;
 
 	close(fds[WRITEEND]);
 	signal(SIGINT, do_nothing);

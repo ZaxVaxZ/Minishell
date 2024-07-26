@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:32 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/25 17:43:00 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 10:48:53 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	check_parentheses(t_queue *q, t_queue **q_end, int *opened, int *word);
 void	set_zero(void *arr, size_t size);
 void	set_non_whitespace(t_queue **q, t_queue *last, t_bool ill, char *str);
 t_token	token_type(char *s);
+int		free_queue_and_return(t_queue **q);
 
 t_bool	is_meta_char(char *str, t_bool control_op);
 t_bool	is_legal_control_op(char *str, t_queue *q);
