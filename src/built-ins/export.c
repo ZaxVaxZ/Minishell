@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 21:57:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/26 19:05:37 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/26 19:08:35 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ t_bool	export_cmd(t_main *m, char **params)
 		if (!valid_identifier(params[i]))
 		{
 			ret = False;
-			errlog("export: `", params[i], "`: not a valid identifier\n");
+			errlog(m, "export: `", params[i], "`: not a valid identifier\n");
 		}
 		else
 			export_var(&m->env, params[i]);
