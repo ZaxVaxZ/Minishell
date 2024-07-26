@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/25 16:23:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 16:46:00 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,14 @@
 #include <string.h>
 //#include "./../tmp/tmp_utils.h"
 
-char	*get_line(t_main *m)
+char	*get_line(t_main *m, char *str)
 {
 	char	*new;
 	char	*cmd;
 
-	if (write(1, TEXT_RESET, ft_strlen(TEXT_RESET)) == -1)
+	if (isatty(0) && write(1, TEXT_RESET, ft_strlen(TEXT_RESET)) == -1)
 		free_and_exit(m, ERR_WRT);
-	cmd = readline("JesterShell # ");
+	cmd = readline(str);
 	new = NULL;
 	if (!cmd)
 		return (NULL);
@@ -74,6 +74,14 @@ void	env_handle(t_main *m)
 
 void	init_main_struct(t_main *m, char **env)
 {
+	if (!isatty(0))
+	{
+		rl_outstream = stdin;
+		// if (dup2(2, 1024) == -1)
+		// 	free_and_exit(m, ERR_DUP);
+		// if (close(2) == -1)
+		// 	free_and_exit(m, ERR_CLS);
+	}
 	signal(SIGINT, sig_handle);
 	signal(SIGQUIT, SIG_IGN);
 	m->cmds = NULL;
@@ -95,7 +103,9 @@ int	main(int ac, char **av, char **env)
 	while (True)
 	{
 		if (g_signum != SIGINT && isatty(0))
-			m.line = get_line(&m);
+			m.line = get_line(&m, "<=+-{ JesterShell }-+=> ");
+		else
+			m.line = get_line(&m, NULL);
 		if (set_sig(&m) == False)
 			break ;
 		if (!m.line)

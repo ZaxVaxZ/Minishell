@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:43:36 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/25 16:29:22 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 16:42:25 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@
 # include "structs.h"
 
 void	rl_replace_line(const char *text, int clear_undo);
-char	*get_line(t_main *m);
 void	handle_msg(int msg);
 int		free_up_cmd_mem(t_main *m);
 void	heredoc_exit(t_heredoc *h);
