@@ -6,7 +6,7 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/26 16:46:00 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/26 18:11:30 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include "./../tmp/tmp_utils.h"
+// #include "./../.tmp/tmp_utils.h"
 
 char	*get_line(t_main *m, char *str)
 {
@@ -75,13 +75,7 @@ void	env_handle(t_main *m)
 void	init_main_struct(t_main *m, char **env)
 {
 	if (!isatty(0))
-	{
 		rl_outstream = stdin;
-		// if (dup2(2, 1024) == -1)
-		// 	free_and_exit(m, ERR_DUP);
-		// if (close(2) == -1)
-		// 	free_and_exit(m, ERR_CLS);
-	}
 	signal(SIGINT, sig_handle);
 	signal(SIGQUIT, SIG_IGN);
 	m->cmds = NULL;

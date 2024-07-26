@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_checkers.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 17:05:39 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/25 17:03:40 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 18:30:46 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ t_bool	is_legal_control_op(char *s, t_queue *q)
 	word = 0;
 	q_end = NULL;
 	check_parentheses(q, &q_end, &opened, &word);
-	if (word && s[0] == LP)
+	if (s[0] == LP && (word || (q_end && q_end->type == Bracket_closed)))
 		return (False);
 	if ((!q_end && is_meta_char(s, True) && s[0] != LP)
 		|| (s[0] == RP && !opened))

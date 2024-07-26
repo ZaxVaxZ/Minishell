@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_extras.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:35 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/25 17:19:55 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 18:21:33 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ static t_bool	parse_inside_dq(t_queue **q, char **s)
 	wlen = 0;
 	while ((*s)[wlen] && (*s)[wlen] != DQ)
 	{
-		if ((*s)[wlen] == DS && is_valid_var_char((*s)[wlen + 1]))
+		if ((*s)[wlen] == DS && (is_valid_var_char((*s)[wlen + 1])
+				|| (*s)[wlen + 1] == '?'))
 		{
 			if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
 				return (False);
@@ -137,7 +138,7 @@ t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
 	t_bool	valid_name;
 
 	wlen = 0;
-	valid_name = !found_in((*s)[0], DIGIT);
+	valid_name = (!found_in((*s)[0], DIGIT) && (*s)[0] != '?');
 	while (is_allowed_in_word(*s + wlen, valid_name, var_name))
 		valid_name = is_valid_var_char((*s)[++wlen]);
 	while ((*s)[wlen] == DS && !var_name && ((*s)[wlen + 1] == SPACE
@@ -145,7 +146,7 @@ t_bool	parse_word(t_queue **q, char **s, t_bool var_name)
 		wlen++;
 	if (found_in((*s)[wlen], DIGIT))
 		wlen++;
-	if (!wlen && var_name && (*s)[wlen] == '?')
+	if (!wlen && (*s)[wlen] == '?')
 		wlen++;
 	if (!add_str_to_queue(q, ft_substr(*s, 0, wlen)))
 		return (False);
