@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 18:14:42 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/25 11:08:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:29:16 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,11 @@ void	free_and_exit(t_main *m, int msg)
 	if (m->cmds)
 		free_cmd(&(m->cmds));
 	exit(m->status);
+}
+
+void	child_free_and_exit(t_env **env, t_exec *exec, int status)
+{
+	free_env(env);
+	free_cmd(exec->cmd_head);
+	exit(status);
 }

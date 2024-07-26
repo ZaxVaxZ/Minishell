@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 22:53:31 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/25 10:30:57 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:22:44 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include "builtins.h"
 # include "cmd_list.h"
 # include "queues.h"
-# include "../tmp/tmp_utils.h"
+//# include "../tmp/tmp_utils.h"
 # include <unistd.h>
 # include <fcntl.h>
 # include <sys/wait.h>

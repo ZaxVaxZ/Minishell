@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 04:46:55 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/23 12:48:59 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 17:19:18 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,35 +33,6 @@ void	delete_next(t_queue **q)
 	(*q)->next = tmp->next;
 	free(tmp->s);
 	free(tmp);
-}
-
-int	dont_unpack(t_queue *q)
-{
-	char	*tmp;
-	char	*dollar;
-
-	if (q->type == Op_redir && !ft_strncmp("<<", q->s, -1))
-	{
-		if (q->next->type == Whitespace)
-			delete_next(&q);
-		if (q->next->type == Variable)
-		{
-			delete_next(&q);
-			dollar = ft_strdup("$");
-			if (!dollar)
-				return (-1);
-			//if (q->next)
-			//{
-				tmp = ft_strjoin(dollar, q->next->s);
-				if (!tmp)
-					return (-1);
-			//}
-			free(q->next->s);
-			q->next->s = tmp;
-		}
-		return (1);
-	}
-	return (0);
 }
 
 /// @brief Collapse a Double or Single quote sequence into a full string
@@ -172,15 +143,14 @@ int	parse_clean_up(t_main *m, t_queue **h)
 
 	if (!h || !*h)
 		return (-2);
-	open[0] = 0;
-	open[1] = 0;
-	open[2] = 0;
+	set_zero(open, sizeof(int) * 3);
 	q = *h;
 	if (queue_end(q)->type == Illegal)
 		return (syntax_error(h, queue_end(q)->s, False, (!queue_end(q)->s)));
 	while (q)
 	{
-		if (q->type == Op_redir && !ft_strncmp(q->s, "<<", -1) && q->next->type == Illegal)
+		if (q->type == Op_redir && !ft_strncmp(q->s, "<<", -1)
+			&& q->next->type == Illegal)
 			return (syntax_error(h, q->next->s, 0, 0));
 		open[0] += (q->type == Sq_open) - (q->type == Sq_closed);
 		open[1] += (q->type == Dq_open) - (q->type == Dq_closed);

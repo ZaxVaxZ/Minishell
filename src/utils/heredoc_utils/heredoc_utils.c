@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:59:06 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/25 11:09:43 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 13:50:06 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,28 +39,28 @@ static int	get_and_write_var(t_heredoc *h, char *line, int i)
 void	write_exp_str(t_heredoc *h, char *line)
 {
 	int		i;
+	int		ret;
 
-	i = 0;
-	while (line[i])
+	i = -1;
+	while (line[++i])
 	{
 		if (line[i] != DS)
-			write(h->fds[WRITEEND], line + i, 1);
+		{
+			if (write(h->fds[WRITEEND], line + i, 1) == -1)
+				free_and_exit(h->m, ERR_WRT);
+		}
 		else
 		{
 			if (!is_valid_var_char(line[i + 1]))
 			{
 				if (write(h->fds[WRITEEND], line + i++, 1) == -1)
 					free_and_exit(h->m, ERR_WRT);
-				continue ;
 			}
-			else if (found_in(line[i + 1], DIGIT))
-			{
-				i += 2;
-				continue ;
-			}
-			i = get_and_write_var(h, line, ++i) - 1;
+			ret = (found_in(line[i + 1], DIGIT));
+			i += 1 + ret;
+			if (!ret)
+				i = get_and_write_var(h, line, i) - 1;
 		}
-		i++;
 	}
 }
 

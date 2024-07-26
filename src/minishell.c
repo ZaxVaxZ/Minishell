@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 17:43:37 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/25 10:10:41 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:23:29 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "./../tmp/tmp_utils.h"
+//#include "./../tmp/tmp_utils.h"
 
 char	*get_line(t_main *m)
 {

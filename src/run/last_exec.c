@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/24 17:00:21 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:26:06 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@ t_bool	execute(t_main *m, t_cmd *cmd, t_exec *exec)
 			free(com);
 		if (tmp)
 			ft_freeup(tmp);
-		write_error(cmd->params[0]);
-		write_error(": command not found\n");
+		if (write(2, cmd->params[0], ft_strlen(cmd->params[0])) == -1)
+			free_and_exit(m, ERR_WRT);
+		if (write(2, ": command not found\n", 21) == -1)
+			free_and_exit(m, ERR_WRT);
 		exec->last_status = 127;
 	}
 	return (False);
