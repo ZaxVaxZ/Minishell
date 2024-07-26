@@ -6,21 +6,11 @@
 /*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 03:56:02 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/26 19:04:59 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/26 19:09:07 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
-
-void	errlog(t_main *m, char *b4, char *var, char *af)
-{
-	if (write(2, b4, ft_strlen(b4)) == -1)
-		free_and_exit(m, ERR_WRT);
-	if (write(2, var, ft_strlen(var)) == -1)
-		free_and_exit(m, ERR_WRT);
-	if (write(2, af, ft_strlen(af)) == -1)
-		free_and_exit(m, ERR_WRT);
-}
 
 t_bool	valid_identifier(char *id)
 {

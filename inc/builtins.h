@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 13:07:12 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/24 21:20:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 19:09:20 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include "ft_printf.h"
 # include "executor.h"
 
+void	errlog(t_main *m, char *b4, char *var, char *af);
 t_bool	cd(t_main *m, char *pwd, char *dir);
 t_bool	unset(t_main *m, char **params);
 t_bool	pwd(t_main *m);
