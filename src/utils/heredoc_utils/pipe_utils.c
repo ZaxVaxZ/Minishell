@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 15:54:31 by pipolint          #+#    #+#             */
-/*   Updated: 2024/07/26 10:09:21 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 19:27:18 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,16 @@ int	open_outs_and_in(t_main *m, t_cmd *cmd, t_exec *exec)
 		{
 			if (open_and_check(&cmd->out_fd, cmd->outfiles[i],
 					cmd->out_flags[i] + 1, exec) == -1)
+			{
+				m->status = 1;
 				return (-1);
+			}
 			if (i != cmd->outfile_cnt - 1
 				&& close_and_check(cmd->out_fd, exec) == -1)
+			{
+				m->status = 1;
 				return (-1);
+			}
 		}
 	}
 	return (1);
