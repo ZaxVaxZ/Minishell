@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 21:57:20 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/25 09:53:11 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 19:05:37 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
+
+void	errlog(t_main *m, char *b4, char *var, char *af)
+{
+	if (write(2, b4, ft_strlen(b4)) == -1)
+		free_and_exit(m, ERR_WRT);
+	if (write(2, var, ft_strlen(var)) == -1)
+		free_and_exit(m, ERR_WRT);
+	if (write(2, af, ft_strlen(af)) == -1)
+		free_and_exit(m, ERR_WRT);
+}
 
 t_bool	export_cmd(t_main *m, char **params)
 {
@@ -31,9 +41,7 @@ t_bool	export_cmd(t_main *m, char **params)
 		if (!valid_identifier(params[i]))
 		{
 			ret = False;
-			if (ft_printf("export: `%s`: not a valid identifier\n",
-					params[i]) == -1)
-				free_and_exit(m, ERR_WRT);
+			errlog("export: `", params[i], "`: not a valid identifier\n");
 		}
 		else
 			export_var(&m->env, params[i]);

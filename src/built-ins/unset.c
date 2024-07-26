@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 03:56:02 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/25 09:53:22 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/26 19:04:59 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
+
+void	errlog(t_main *m, char *b4, char *var, char *af)
+{
+	if (write(2, b4, ft_strlen(b4)) == -1)
+		free_and_exit(m, ERR_WRT);
+	if (write(2, var, ft_strlen(var)) == -1)
+		free_and_exit(m, ERR_WRT);
+	if (write(2, af, ft_strlen(af)) == -1)
+		free_and_exit(m, ERR_WRT);
+}
 
 t_bool	valid_identifier(char *id)
 {
@@ -42,13 +52,10 @@ t_bool	unset(t_main *m, char **params)
 	i = 0;
 	while (params[i])
 	{
-		printf("uwu\n");
 		if (!valid_identifier(params[i]))
 		{
 			ret = False;
-			if (ft_printf("unset: `%s`: not a valid identifier\n",
-					params[i]) == -1)
-				free_and_exit(m, ERR_WRT);
+			errlog(m, "unset: `", params[i], "`: not a valid identifier\n");
 		}
 		else
 			delete_var(&m->env, params[i]);
