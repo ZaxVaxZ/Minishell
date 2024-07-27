@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/27 09:58:25 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/27 16:28:50 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_bool	should_exec(t_exec *exec, t_cmd *cmd)
 
 int	exec_type(t_exec *exec, t_cmd **cmd)
 {
-	if ((*cmd)->rep == RP)
+	if (!*cmd || (*cmd)->rep == RP)
 		return (DO_NOT_EXECUTE);
 	while (*cmd)
 	{

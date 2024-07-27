@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   last_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/27 13:23:50 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/27 16:28:32 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,9 +120,11 @@ int	execute_commands(t_main *m)
 	{
 		exec.curr_depth -= (cmd->rep == RP);
 		exec.status_depth -= (exec.curr_depth < exec.status_depth);
+		if (cmd->rep == RP)
+			cmd = cmd->next;
 		if (!handle_cmds(m, &cmd, &exec))
 			break ;
-		if (cmd)
+		if (cmd && cmd->rep != RP)
 			cmd = cmd->next;
 	}
 	if (post_command(m, &exec) == -1)
