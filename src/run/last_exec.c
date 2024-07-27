@@ -6,11 +6,12 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:21:47 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/25 16:26:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/27 13:23:50 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+#include <errno.h>
 
 t_bool	execute(t_main *m, t_cmd *cmd, t_exec *exec)
 {
@@ -29,11 +30,11 @@ t_bool	execute(t_main *m, t_cmd *cmd, t_exec *exec)
 			free(com);
 		if (tmp)
 			ft_freeup(tmp);
-		if (write(2, cmd->params[0], ft_strlen(cmd->params[0])) == -1)
-			free_and_exit(m, ERR_WRT);
-		if (write(2, ": command not found\n", 21) == -1)
-			free_and_exit(m, ERR_WRT);
-		exec->last_status = 127;
+		perror(cmd->params[0]);
+		if (errno == EACCES)
+			exec->last_status = 126;
+		else
+			exec->last_status = 127;
 	}
 	return (False);
 }

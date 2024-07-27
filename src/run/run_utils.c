@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 05:55:43 by codespace         #+#    #+#             */
-/*   Updated: 2024/07/26 18:55:15 by ehammoud         ###   ########.fr       */
+/*   Updated: 2024/07/27 09:58:25 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,11 @@ int	exec_type(t_exec *exec, t_cmd **cmd)
 					|| (*cmd)->before == OR_OP) && (exec->last_status != 1))
 				wait_for_children(exec);
 			if (!should_exec(exec, *cmd))
+			{
+				if ((*cmd)->in_fd > 0)
+					close((*cmd)->in_fd);
 				(*cmd) = (*cmd)->next;
+			}
 			else
 				break ;
 		}

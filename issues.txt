@@ -1,3 +1,10 @@
+<<a ls | <<b cat || <<c uwu
+
+
+
+
+
+
 heredoc issues:
 	$$USER expected behaviour: print the result of the variable $$ and then print USER
 
@@ -17,6 +24,8 @@ valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp --
 assign not being put into the commands (FIXED)
 when opening a file fails, needs to free (FIXED)
 <flkdjsf | ls: open fds in pipe (FIXED)
+
+
 
  <file1 ls | echo hi > file1 || <<a ls
 
