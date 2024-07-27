@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ehammoud <ehammoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 13:21:55 by ehammoud          #+#    #+#             */
-/*   Updated: 2024/07/10 18:43:09 by pipolint         ###   ########.fr       */
+/*   Updated: 2024/07/27 17:05:50 by ehammoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ t_bool	parse_op(t_queue **q, char **s, char op, int max_occurs)
 	sub = ft_substr(*s, 0, occurs);
 	if (!sub)
 		return (False);
+	if (op == DS && occurs > 0 && (*(*s + 1) == DQ || *(*s + 1) == SQ))
+		return (*(++(*s) - 1) == DS);
 	if (!add_str_to_queue(q, sub))
 		return (False);
 	*s += occurs;
